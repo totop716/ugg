@@ -30,3 +30,35 @@ class HomePage(models.Model):
     @property
     def field(self):
         return 'body'
+
+class Entry(models.Model):
+    name = models.CharField(max_length=100)
+    class Meta:
+        verbose_name_plural = 'Entries'
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def api(self):
+        return f'/api/v1/entry/{self.id}/'
+    @property
+    def field(self):
+        return 'name'
+
+class Lottery(models.Model):
+    name = models.CharField(max_length=100)
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    class Meta:
+        verbose_name_plural = 'Lotteries'
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def api(self):
+        return f'/api/v1/lottery/{self.id}/'
+    @property
+    def field(self):
+        return 'name'
+    
