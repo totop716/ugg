@@ -23,7 +23,7 @@ env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = "*1_(=mc+3q&=%4n$h1)v!zwrl-n+pr-s#xfpd##!l+ek4&x‌​y2x"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
@@ -31,6 +31,11 @@ DEBUG = env.bool('DEBUG', default=True)
 ALLOWED_HOSTS = ['*']
 
 SITE_ID = 1
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'phone'
 
 # Application definition
 
@@ -41,10 +46,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites'
+    'django.contrib.sites',
+    'import_export'
 ]
 LOCAL_APPS = [
     'home',
+    'customauth'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
@@ -88,7 +95,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ugg_2957.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -96,17 +102,19 @@ DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.postgresql_psycopg2',
        'NAME': 'ugg_2957',
-       'USER': 'ugg_2957',
-       'PASSWORD': 'ugg_2957',
+       'USER': 'postgres',
+       'PASSWORD': '123',
        'HOST': 'localhost',
        'PORT': '5432',
     }
 }
 
-if env.str('DATABASE_URL', default=None):
-    DATABASES = {
-        'default': env.db()
-    }
+AUTH_USER_MODEL = 'customauth.MyUser'
+
+# if env.str('DATABASE_URL', default=None):
+#     DATABASES = {
+#         'default': env.db()
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -158,9 +166,10 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # allauth
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'phone'
 ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_PASSWORD_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = None
 LOGIN_REDIRECT_URL = '/'
 

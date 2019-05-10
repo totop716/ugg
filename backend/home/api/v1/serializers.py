@@ -9,13 +9,16 @@ from home.models import CustomText, HomePage
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'password')
+        fields = ('id', 'first_name', 'last_name', 'phone','email', 'password')
         extra_kwargs = {
             'password': {
                 'write_only': True,
                 'style': {
                     'input_type': 'password'
                 }
+            },
+            'phone': {
+                'required':True
             },
             'email': {
                 'required': True
@@ -24,12 +27,13 @@ class SignupSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User(
+            phone=validated_data.get('phone'),
             email=validated_data.get('email'),
             first_name=validated_data.get('first_name'),
             last_name=validated_data.get('last_name'),
             username=generate_unique_username([
                 validated_data.get('first_name'), validated_data.get('last_name'),
-                validated_data.get('email'), 'user'
+                validated_data.get('phone'), 'user'
             ])
         )
         user.set_password(validated_data.get('password'))
