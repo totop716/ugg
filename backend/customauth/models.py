@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 # Create your models here.
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, email, phone, address, city, state, zipcode):
+    def create_user(self, first_name, last_name, email, phone, address, city, state, zipcode, password):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -24,13 +24,14 @@ class MyUserManager(BaseUserManager):
             address=address,
             city=city,
             state=state,
-            zipcode=zipcode,
+            zipcode=zipcode
         )
 
+        user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, phone, email):
+    def create_superuser(self, phone, email, password):
         """
         Creates and saves a superuser with the given phone no.
         """
@@ -42,7 +43,8 @@ class MyUserManager(BaseUserManager):
             address = "",
             city = "",
             state = "",
-            zipcode=""
+            zipcode="",
+            password=password
         )
         user.is_admin = True
         user.save(using=self._db)

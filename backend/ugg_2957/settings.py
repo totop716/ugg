@@ -169,14 +169,12 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
 )
 
 # allauth
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'phone'
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_PASSWORD_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = None
 LOGIN_REDIRECT_URL = '/'
 

@@ -21,7 +21,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = MyUser
-        fields = ('first_name','last_name','email','address','city','state','zipcode')
+        fields = ('first_name','last_name','email','address','city','state','zipcode','password')
 
     def save(self, commit=True):
         # Save the provided password in hashed format
@@ -40,7 +40,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = MyUser
-        fields = ('first_name', 'last_name', 'email', 'phone', 'address','city','state','zipcode')
+        fields = ('first_name', 'last_name', 'email', 'phone', 'address','city','state','zipcode','password')
 
 class UserAdmin(BaseUserAdmin):
     # The forms to add and change user instances
@@ -50,7 +50,7 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('first_name', 'last_name', 'email', 'phone', 'address','city','state','zipcode')
+    list_display = ('first_name', 'last_name', 'email', 'phone', 'address','city','state','zipcode','password')
     list_filter = ('is_admin',)
     ordering = ('phone','email')
     filter_horizontal = ()
