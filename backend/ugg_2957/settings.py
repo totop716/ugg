@@ -23,7 +23,7 @@ env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "*1_(=mc+3q&=%4n$h1)v!zwrl-n+pr-s#xfpd##!l+ek4&x‌​y2x"
+SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
@@ -111,10 +111,17 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'customauth.MyUser'
 
-# if env.str('DATABASE_URL', default=None):
-#     DATABASES = {
-#         'default': env.db()
-#     }
+if env.str('DATABASE_URL', default=None):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env.str('DATABASE_NAME'),
+            'USER': env.str('DATABASE_USER'),
+            'PASSWORD': env.str('DATABASE_PASS'),
+            'HOST': env.str('DATABASE_HOST'),
+            'PORT': env.str('DATABASE_PORT'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
