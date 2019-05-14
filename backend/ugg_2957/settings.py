@@ -109,7 +109,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'django.contrib.auth.User'
+# AUTH_USER_MODEL = 'customauth.MyUser'
 
 if env.str('DATABASE_URL', default=None):
     DATABASES = {
@@ -171,13 +171,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
-
-# allauth
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = None
-LOGIN_REDIRECT_URL = '/'
 
 if DEBUG:
     # output email to console instead of sending
