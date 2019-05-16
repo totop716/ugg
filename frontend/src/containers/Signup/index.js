@@ -12,10 +12,12 @@ import {
   Item,
   Input,
   Text,
+  Icon,
+  CheckBox,
+  StyleProvider
 } from 'native-base';
 
 import styles from './styles';
-
 
 class Signup extends Component {
   state = {
@@ -27,7 +29,6 @@ class Signup extends Component {
   // navigate to login screen after a successful signup
   onSignupButtonPressed = () => {
     // TODO: Login
-
     this.props.navigation.navigate('Login');
   }
 
@@ -40,56 +41,61 @@ class Signup extends Component {
     return (
       <Container style={styles.container}>
         <Content contentContainerStyle={styles.content}>
-          {/* Logo */}
-          <View style={styles.logoContainer}>
-            <Image
-              style={styles.logo}
-              source={require('../../assets/images/icon.png')}
-            />
-            <Text style={styles.logoText}>Crowdbotics</Text>
+          <View style={styles.topBar}>
+            <Text style={styles.topBarText}>Thank you for registering Universal Gaming Group</Text>
+            <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideThankyouBox}/>
           </View>
-
           {/* Form */}
           <Form style={styles.form}>
             <Item
               style={styles.item}
-              rounded
               last
             >
               <Input
                 style={styles.input}
-                placeholder="Username"
+                placeholder="First Name"
                 placeholderTextColor="#afb0d1"
                 autoCapitalize="none"
-                onChangeText={username => this.setState({ username })}
+                onChangeText={firstname => this.setState({ firstname })}
+              />
+              <Input
+                style={styles.input}
+                placeholder="Last Name"
+                placeholderTextColor="#afb0d1"
+                autoCapitalize="none"
+                onChangeText={lastname => this.setState({ lastname })}
               />
             </Item>
             <Item
               style={styles.item}
-              rounded
               last
             >
               <Input
                 style={styles.input}
-                placeholder="Password"
+                placeholder="Address"
                 placeholderTextColor="#afb0d1"
-                onChangeText={password => this.setState({ password })}
-                secureTextEntry
+                onChangeText={address => this.setState({ address })}
               />
             </Item>
             <Item
               style={styles.item}
-              rounded
               last
             >
               <Input
                 style={styles.input}
-                placeholder="Confirm Password"
+                placeholder="Email Address"
                 placeholderTextColor="#afb0d1"
-                onChangeText={confirmPassword => this.setState({ confirmPassword })}
-                secureTextEntry
+                onChangeText={emailaddress => this.setState({ emailaddress })}
               />
             </Item>
+            <View style={styles.listItem}>
+              <CheckBox checked={true} checkboxSize={40} />
+              <Text style={styles.checkboxText}>Receiving emails, newsletters, and promotions</Text>
+            </View>
+            <View style={styles.listItem}>
+              <CheckBox checked={true} CheckboxFontSize={40} />
+              <Text style={styles.checkboxText}>Receiving SMS text message notifications</Text>
+            </View>
           </Form>
 
           <View style={styles.buttonContainer}>
@@ -105,14 +111,6 @@ class Signup extends Component {
             >
               <Text style={styles.signupText}>SIGNUP</Text>
             </Button>
-
-            {/* Signup Button */}
-            <View style={styles.loginContainer}>
-              <Text style={styles.haveAccountText}>Already have an account?</Text>
-              <TouchableOpacity onPress={this.onLoginButtonPressed}>
-                <Text style={styles.loginText}>Login Now.</Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </Content>
       </Container>

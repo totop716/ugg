@@ -9,14 +9,71 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0a1142',
   },
+  thankyouBox: {
+    position: 'absolute',
+    width: '80%',
+    height: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    top: '50%',
+    transform: [{translateY: -50}],
+    backgroundColor: '#ddd',
+    zIndex: 999
+  },
+  thankyouText: {
+    fontSize: 20
+  },
+  closeIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 20,
+  },
+  passwordBox: {
+    padding: 10,
+  },
+  inputMenuPass:{
+    borderWidth: 1,
+    borderColor: '#333',
+    width: '100%',
+    height: 30,
+    textAlign: 'center',
+    fontSize: 25
+  },
   content: {
     flex: 1,
-    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: PixelRatio.getPixelSizeForLayoutSize(12),
+  },
+  menuIcon: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    fontSize: 35, 
+    color: 'gray'
+  },
+  menuContainer: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+  },
+  menuItem: {
+    width: 150,
+    height: 40,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#333',
+    fontSize: 25,
+    backgroundColor: '#fff',
   },
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    width: '50%',
     marginTop: PixelRatio.getPixelSizeForLayoutSize(40),
     marginBottom: PixelRatio.getPixelSizeForLayoutSize(40),
   },
@@ -31,32 +88,42 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   form: {
-    flex: 1,
-    justifyContent: 'flex-end',
+    width: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   item: {
-    marginVertical: PixelRatio.getPixelSizeForLayoutSize(2),
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(15),
     backgroundColor: '#121d56',
     borderColor: '#121d56',
   },
   input: {
     color: 'white',
   },
+  inputPhoneNo: {
+    width: '100%',
+    height: 50,
+    fontSize: 25,
+    color: '#fff'
+  },
+  disclaimerContain: {
+    width: '100%',
+    height: 180,
+    padding: 10
+  },
+  disclaimerText: {  
+    fontSize: 20,
+    color: '#fff'
+  },
   buttonContainer: {
     flex: 1,
-    marginTop: PixelRatio.getPixelSizeForLayoutSize(10),
-  },
-  forgotPasswordContainer: {
-    alignItems: 'center',
-    marginTop: PixelRatio.getPixelSizeForLayoutSize(2),
-  },
-  forgotPasswordText: {
-    color: 'white',
-    fontSize: 16,
+    marginTop: PixelRatio.getPixelSizeForLayoutSize(15),
   },
   button: {
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(2),
     backgroundColor: '#7646e4',
+    width: '60%',
+    alignSelf: 'center'
   },
   loginText: {
     color: 'white',
@@ -76,6 +143,18 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
+  inputTabletID: {
+    borderWidth: 2,
+    marginVertical: 20,
+    borderColor: '#333',
+    width: '100%'
+  },
+  tabletBox: {
+    height: 'auto',
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    transform: [{translateY: -80}]
+  }
 });
 
 

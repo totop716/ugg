@@ -17,6 +17,7 @@
     "prop-types": "^15.6.2",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-masked-text": "^1.12.2",
     "react-navigation": "^3.0.9",
     "react-navigation-redux-helpers": "^2.0.9",
     "react-redux": "^6.0.0",

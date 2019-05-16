@@ -3,7 +3,6 @@ import {
   StyleSheet,
 } from 'react-native';
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -11,7 +10,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     padding: PixelRatio.getPixelSizeForLayoutSize(12),
   },
   logoContainer: {
@@ -31,19 +30,36 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   form: {
-    flex: 1,
     justifyContent: 'flex-end',
   },
   item: {
-    marginVertical: PixelRatio.getPixelSizeForLayoutSize(2),
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(3),
     backgroundColor: '#121d56',
     borderColor: '#121d56',
+    marginBottom: 10,
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   input: {
     color: 'white',
+    fontSize: 20
+  },
+  listItem: {
+    flexDirection: 'row',
+    marginTop: 10
+  },
+  checkbox: {
+    fontSize: 40
+  },
+  checkboxText: {
+    fontSize: 30,
+    color: '#fff',
+    marginLeft: 20
   },
   buttonContainer: {
-    flex: 1,
     marginTop: PixelRatio.getPixelSizeForLayoutSize(15),
   },
   button: {
@@ -68,6 +84,24 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
+  topBar: {
+    padding: 15,
+    backgroundColor: '#555',
+    height: 70,
+    justifyContent: 'center',
+    marginBottom: 30
+  },
+  topBarText: {
+    color: '#fff',
+    fontSize: 28
+  },
+  closeIcon: {
+    position: 'absolute',
+    top: 0,
+    right: 20,
+    fontSize: 50,
+    color: '#fff'
+  }
 });
 
 
