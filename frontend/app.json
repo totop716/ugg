@@ -23,7 +23,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ugg.ugg2957"
+    },
+    "android": {
+      "package": "com.ugg.ugg2957"
     },
     "description": ""
   }

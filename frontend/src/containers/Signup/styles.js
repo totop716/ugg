@@ -6,7 +6,10 @@ import {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a1142',
+    position: 'relative'
+  },
+  backgroundImage: {
+    position: 'absolute'
   },
   content: {
     flex: 1,
@@ -96,7 +99,7 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     fontSize: 30,
-    color: '#fff',
+    color: '#333',
     marginLeft: 20
   },
   buttonContainer: {

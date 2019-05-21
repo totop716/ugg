@@ -7,7 +7,14 @@ import {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a1142',
+    position: 'relative',
+    width: '100%',
+    height: '100%'
+  },
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
   thankyouBox: {
     position: 'absolute',
@@ -20,6 +27,19 @@ const styles = StyleSheet.create({
     transform: [{translateY: -50}],
     backgroundColor: '#ddd',
     zIndex: 999
+  },
+  passwordContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  closeIconPass: {
+    position: 'absolute',
+    top: 0,
+    right: 10,
   },
   thankyouText: {
     fontSize: 20
@@ -52,7 +72,7 @@ const styles = StyleSheet.create({
     top: 40,
     right: 20,
     fontSize: 35, 
-    color: 'gray'
+    color: '#333'
   },
   menuContainer: {
     position: 'absolute',
@@ -83,8 +103,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   logo: {
-    height: PixelRatio.getPixelSizeForLayoutSize(40),
-    width: PixelRatio.getPixelSizeForLayoutSize(40),
+    height: PixelRatio.getPixelSizeForLayoutSize(150),
+    width: PixelRatio.getPixelSizeForLayoutSize(150),
     resizeMode: 'contain',
   },
   form: {

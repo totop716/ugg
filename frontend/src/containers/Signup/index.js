@@ -100,6 +100,7 @@ class Signup extends Component {
     return (
       <StyleProvider style={getTheme(material)}>
         <Container style={styles.container}>
+          <Image source={require('../../assets/images/SummerShoppingBg.png')} style={styles.backgroundImage} />
           <Content contentContainerStyle={styles.content}>
             {this.state.registeredVisible && <View style={styles.thankyouBox}>
               <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideRegisteredBox}/>

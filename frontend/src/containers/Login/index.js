@@ -33,6 +33,7 @@ class Login extends Component {
     showTabletForm: false,
     phoneNumber: "", 
     phoneNumberFormat: "",
+    tabletID: "",
     userData: null
   };
 
@@ -62,6 +63,7 @@ class Login extends Component {
       this.setState({userData: res.user});
       const currenttime = new Date().getTime();
       const checkedtime = new Date(this.state.userData.check_time).getTime();
+      this.setState({tabletID: this.state.userData.tablet_id});
       if(currenttime - checkedtime > 24 * 3600 * 1000){
         this.setState({thankyouBoxVisible: true});
         const currentDate = new Date();
@@ -75,6 +77,9 @@ class Login extends Component {
       }else{
         this.setState({comebackBoxVisible: true});
       }
+      setTimeout(() => {
+        this.setState({phoneNumberFormat: ""});
+      }, 3000)
     }).catch((error)=>{
       if(error)
         this.goToSignup();
@@ -93,6 +98,10 @@ class Login extends Component {
     this.setState({showPasswordBox: true});
   }
 
+  hidePasswordBox = () => {
+    this.setState({showPasswordBox: false});
+  }
+
   showTabletForm = () => {
     this.setState({showTabletForm: true})
   }
@@ -103,7 +112,7 @@ class Login extends Component {
   }
 
   exitFunction = () => {
-    this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: ''});
+    this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', userData: null});
   }
 
   submitTabletID = () => {
@@ -120,6 +129,7 @@ class Login extends Component {
   render() {
     return (
       <Container style={styles.container}>
+        <Image source={require('../../assets/images/SummerShoppingBg.png')} style={styles.backgroundImage} />
         {this.state.thankyouBoxVisible && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideThankyouBox}/>
           <Text style={styles.thankyouText}>Thank you “{this.state.userData.first_name}“ for checking in “{this.state.userData.tablet_id }“</Text>
@@ -131,15 +141,23 @@ class Login extends Component {
         </View>
         }
         {this.state.showPasswordBox && <View style={[styles.thankyouBox, styles.passwordBox]}>
-          <Input
-            style={styles.inputMenuPass}
-            placeholder="Enter Password"
-            placeholderTextColor="#333"
-            autoCapitalize="none"
-            onChangeText={menuPass => this.setState({ menuPass })}
-            onSubmitEditing={this.passwordSubmit}
-            secureTextEntry
-          />
+          {this.state.phoneNumber != "" && 
+            <Input
+              style={styles.inputMenuPass}
+              placeholder="Enter Password"
+              placeholderTextColor="#333"
+              autoCapitalize="none"
+              onChangeText={menuPass => this.setState({ menuPass })}
+              onSubmitEditing={this.passwordSubmit}
+              secureTextEntry
+            />
+          }
+          {this.state.phoneNumber == "" &&
+            <View style={styles.passwordContainer}>
+              <Icon ios='ios-close' android="md-close" style={[styles.closeIcon, styles.closeIconPass]} onPress={this.hidePasswordBox}/>
+              <Text style={styles.thankyouText}>You need to login with Phone NO at first.</Text>
+            </View>
+          }
         </View>
         }
         {this.state.showTabletForm && <View style={[styles.thankyouBox, styles.tabletBox]}>
@@ -148,6 +166,7 @@ class Login extends Component {
             placeholder="Tablet ID"
             placeholderTextColor="#333"
             autoCapitalize="none"
+            value={this.state.tabletID}
             onChangeText={tabletID => this.setState({ tabletID })}
           />
           <Button
@@ -177,9 +196,8 @@ class Login extends Component {
           <View style={styles.logoContainer}>
             <Image
               style={styles.logo}
-              source={require('../../assets/images/icon.png')}
+              source={require('../../assets/images/Summer_Shopping.png')}
             />
-            <Text style={styles.logoText}>Crowdbotics</Text>
           </View>
 
           {/* Form */}
@@ -243,7 +261,6 @@ class Login extends Component {
               </TouchableOpacity>
             </View>
           </View>
-
         </Content>
       </Container>
     );
