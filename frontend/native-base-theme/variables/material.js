@@ -95,13 +95,13 @@ export default {
   // CheckBox
   CheckboxRadius: 0,
   CheckboxBorderWidth: 2,
-  CheckboxPaddingLeft: 2,
+  CheckboxPaddingLeft: 4,
   CheckboxPaddingBottom: 5,
-  CheckboxIconSize: 16,
-  CheckboxIconMarginTop: 1,
-  CheckboxFontSize: 17,
+  CheckboxIconSize: 40,
+  CheckboxIconMarginTop: -2,
+  CheckboxFontSize: 40,
   checkboxBgColor: "#039BE5",
-  checkboxSize: 20,
+  checkboxSize: 40,
   checkboxTickColor: "#fff",
 
   // Color

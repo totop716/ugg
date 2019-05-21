@@ -20,18 +20,24 @@ import {
 } from 'react-native-masked-text'
 
 import styles from './styles';
+import { getUserAPI, updateCheckTime, updateTabletID } from '../../services/Authentication';
 
 class Login extends Component {
   state = {
     username: '',
     password: '',
     thankyouBoxVisible: false,
+    comebackBoxVisible: false,
     showPasswordBox: false,
     showMenu: false,
     showTabletForm: false,
     phoneNumber: "", 
-    phoneNumberFormat: ""
+    phoneNumberFormat: "",
+    userData: null
   };
+
+  componentDidMount() {
+  }
 
   // navigate to home after a successful login
   onLoginButtonPressed = () => {
@@ -51,14 +57,36 @@ class Login extends Component {
   }
 
   showThankyouBox = () => {
-    this.setState({thankyouBoxVisible: true});
-    setTimeout(() => {
-      this.setState({thankyouBoxVisible: false});
-    }, 3000)
+    getUserAPI(this.state.phoneNumber).then((res) => {
+      console.log(res);
+      this.setState({userData: res.user});
+      const currenttime = new Date().getTime();
+      const checkedtime = new Date(this.state.userData.check_time).getTime();
+      if(currenttime - checkedtime > 24 * 3600 * 1000){
+        this.setState({thankyouBoxVisible: true});
+        const currentDate = new Date();
+        const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+        updateCheckTime(this.state.phoneNumber, check_time).then((res1) => {
+          console.log(res1);
+        })
+        setTimeout(() => {
+          this.setState({thankyouBoxVisible: false});
+        }, 3000);
+      }else{
+        this.setState({comebackBoxVisible: true});
+      }
+    }).catch((error)=>{
+      if(error)
+        this.goToSignup();
+    })
   }
 
   hideThankyouBox = () => {
     this.setState({thankyouBoxVisible: false});
+  }
+
+  hidecomeebackBox = () => {
+    this.setState({comebackBoxVisible: false});
   }
 
   showPasswordBox = () => {
@@ -75,15 +103,18 @@ class Login extends Component {
   }
 
   exitFunction = () => {
-    this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false});
+    this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: ''});
   }
 
   submitTabletID = () => {
-    this.setState({showTabletForm: false});
+    updateTabletID(this.state.phoneNumber, this.state.tabletID).then((res1) => {
+      console.log(res1);
+      this.setState({showTabletForm: false});
+    })
   }
 
   goToSignup = () => {
-    this.props.navigation.navigate('Signup');
+    this.props.navigation.navigate('Signup', {phoneNumber: this.state.phoneNumber});
   }
 
   render() {
@@ -91,7 +122,12 @@ class Login extends Component {
       <Container style={styles.container}>
         {this.state.thankyouBoxVisible && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideThankyouBox}/>
-          <Text style={styles.thankyouText}>Thank you for checking in</Text>
+          <Text style={styles.thankyouText}>Thank you “{this.state.userData.first_name}“ for checking in “{this.state.userData.tablet_id }“</Text>
+        </View>
+        }
+        {this.state.comebackBoxVisible && <View style={styles.thankyouBox}>
+          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidecomeebackBox}/>
+          <Text style={styles.thankyouText}>You have already checked in to “{this.state.userData.tablet_id }” for Today.</Text><Text style={styles.thankyouText}>Come back tomorrow.</Text>
         </View>
         }
         {this.state.showPasswordBox && <View style={[styles.thankyouBox, styles.passwordBox]}>
@@ -169,8 +205,8 @@ class Login extends Component {
                   }
                 }
                 style={styles.inputPhoneNo}
-                placeholder="Phone No"
-                placeholderTextColor="#fff"
+                placeholder="+1 (234) 567 - 7890"
+                placeholderTextColor="rgba(255, 255, 255, 0.3)"
               />
             </Item>
             <Button
@@ -187,7 +223,7 @@ class Login extends Component {
               style={styles.item}
               last
             >
-              <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>AAA</Text></View>
+              <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>Disclaimer Text</Text></View>
             </Item>
           </Form>
           <View style={styles.buttonContainer}>

@@ -29,6 +29,46 @@ const styles = StyleSheet.create({
     width: PixelRatio.getPixelSizeForLayoutSize(40),
     resizeMode: 'contain',
   },
+  cancelBox: {
+    position: 'absolute',
+    width: '80%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    top: '50%',
+    transform: [{translateY: -75}],
+    backgroundColor: '#ddd',
+    zIndex: 999,
+    paddingTop: 20,
+    height: 150
+  },
+  errorMsg: {
+    color: '#f00',
+    fontSize: 20,
+    marginLeft: 10,
+    marginBottom: 10,
+  },
+  thankyouText: {
+    fontSize: 30,
+    textAlign: 'center',
+    marginBottom: 20
+  },
+  closeIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 20,
+    color: '#000'
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    marginVertical: 20
+  },
+  cancelBut: {
+    marginHorizontal: 10,
+  },
+  textCancel: {
+    fontSize: 25
+  },
   form: {
     justifyContent: 'flex-end',
   },
