@@ -56,23 +56,22 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser):
-    first_name = models.TextField()
-    last_name = models.TextField()
+    first_name = models.CharField(max_length =50)
+    last_name = models.CharField(max_length =50)
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
         unique=True,
     )
-    address = models.TextField()
-    last_name = models.TextField()
-    city = models.TextField()
-    state = models.TextField()
-    zipcode = models.TextField()
-    phone = models.TextField(unique=True,)
+    address = models.CharField(max_length =200)
+    city = models.CharField(max_length =50)
+    state = models.CharField(max_length =50)
+    zipcode = models.CharField(max_length =50)
+    phone = models.CharField(max_length =50, unique=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    tablet_id = models.TextField()
-    check_time = models.TextField()
+    tablet_id = models.CharField(max_length =50)
+    check_time = models.CharField(max_length =200)
 
     objects = MyUserManager()
 

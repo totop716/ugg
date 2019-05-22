@@ -14,6 +14,7 @@ class MyUserResource(resources.ModelResource):
 
 class MyUserAdmin(ImportExportModelAdmin):
     resource_class = MyUserResource
+    exclude = ('password', 'last_login', 'is_active', 'is_admin')
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
