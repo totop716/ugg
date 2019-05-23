@@ -26,6 +26,7 @@ class Login extends Component {
   state = {
     username: '',
     password: '',
+    phoneNoAlert: false,
     thankyouBoxVisible: false,
     comebackBoxVisible: false,
     showPasswordBox: false,
@@ -57,33 +58,41 @@ class Login extends Component {
     this.props.navigation.navigate('ForgotPassword');
   }
 
+  hidePhoneNoAlert = () => {
+    this.setState({phoneNoAlert: false});
+  }
+
   showThankyouBox = () => {
-    getUserAPI(this.state.phoneNumber).then((res) => {
-      console.log(res);
-      this.setState({userData: res.user});
-      const currenttime = new Date().getTime();
-      const checkedtime = new Date(this.state.userData.check_time).getTime();
-      this.setState({tabletID: this.state.userData.tablet_id});
-      if(currenttime - checkedtime > 24 * 3600 * 1000){
-        this.setState({thankyouBoxVisible: true});
-        const currentDate = new Date();
-        const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
-        updateCheckTime(this.state.phoneNumber, check_time).then((res1) => {
-          console.log(res1);
-        })
+    if(this.state.phoneNumber == ""){
+      this.setState({phoneNoAlert: true})
+    }else{
+      getUserAPI(this.state.phoneNumber).then((res) => {
+        console.log(res);
+        this.setState({userData: res.user});
+        const currenttime = new Date().getTime();
+        const checkedtime = new Date(this.state.userData.check_time).getTime();
+        this.setState({tabletID: this.state.userData.tablet_id});
+        if(currenttime - checkedtime > 24 * 3600 * 1000){
+          this.setState({thankyouBoxVisible: true});
+          const currentDate = new Date();
+          const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+          updateCheckTime(this.state.phoneNumber, check_time).then((res1) => {
+            console.log(res1);
+          })
+          setTimeout(() => {
+            this.setState({thankyouBoxVisible: false});
+          }, 3000);
+        }else{
+          this.setState({comebackBoxVisible: true});
+        }
         setTimeout(() => {
-          this.setState({thankyouBoxVisible: false});
-        }, 3000);
-      }else{
-        this.setState({comebackBoxVisible: true});
-      }
-      setTimeout(() => {
-        this.setState({phoneNumberFormat: ""});
-      }, 3000)
-    }).catch((error)=>{
-      if(error)
-        this.goToSignup();
-    })
+          this.setState({phoneNumberFormat: ""});
+        }, 3000)
+      }).catch((error)=>{
+        if(error)
+          this.goToSignup();
+      })  
+    }
   }
 
   hideThankyouBox = () => {
@@ -130,6 +139,11 @@ class Login extends Component {
     return (
       <Container style={styles.container}>
         <Image source={require('../../assets/images/SummerShoppingBg.png')} style={styles.backgroundImage} />
+        {this.state.phoneNoAlert && <View style={styles.thankyouBox}>
+          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePhoneNoAlert}/>
+          <Text style={styles.thankyouText}>You need to input Phone NO</Text>
+        </View>
+        }
         {this.state.thankyouBoxVisible && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideThankyouBox}/>
           <Text style={styles.thankyouText}>Thank you “{this.state.userData.first_name}“ for checking in “{this.state.userData.tablet_id }“</Text>
@@ -202,31 +216,26 @@ class Login extends Component {
 
           {/* Form */}
           <Form style={styles.form}>
-            <Item
-              style={styles.item}
-              last
-            >
-              <TextInputMask
-                value={this.state.phoneNumberFormat}
-                onChangeText={(phoneNumberFormat) => {
-                    let phoneNumber = phoneNumberFormat.toString().replace(/\D+/g, '');
-                    this.setState({phoneNumberFormat: phoneNumberFormat, phoneNumber: phoneNumber})
-                }}
-                type={'cel-phone'}
-                maxLength={this.state.phoneNumberFormat.toString().startsWith("1") ? 18 : 16}
-                options={
-                  this.state.phoneNumber.startsWith("1") ?
-                  {
-                      dddMask: '9 (999) 999 - '
-                  } : {
-                      dddMask: '(999) 999 - '
-                  }
+            <TextInputMask
+              value={this.state.phoneNumberFormat}
+              onChangeText={(phoneNumberFormat) => {
+                  let phoneNumber = phoneNumberFormat.toString().replace(/\D+/g, '');
+                  this.setState({phoneNumberFormat: phoneNumberFormat, phoneNumber: phoneNumber})
+              }}
+              type={'cel-phone'}
+              maxLength={this.state.phoneNumberFormat.toString().startsWith("1") ? 18 : 16}
+              options={
+                this.state.phoneNumber.startsWith("1") ?
+                {
+                    dddMask: '9 (999) 999 - '
+                } : {
+                    dddMask: '(999) 999 - '
                 }
-                style={styles.inputPhoneNo}
-                placeholder="+1 (234) 567 - 7890"
-                placeholderTextColor="rgba(255, 255, 255, 0.3)"
-              />
-            </Item>
+              }
+              style={styles.inputPhoneNo}
+              placeholder="+1 (000) 000 - 0000"
+              placeholderTextColor="#a1a1a1"
+            />
             <Button
               style={styles.button}
               onPress={this.showThankyouBox}
@@ -237,12 +246,7 @@ class Login extends Component {
               <Text style={styles.loginText}>Submit</Text>
             </Button>
 
-            <Item
-              style={styles.item}
-              last
-            >
-              <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>Disclaimer Text</Text></View>
-            </Item>
+            <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>Disclaimer Text</Text></View>
           </Form>
           <View style={styles.buttonContainer}>
             {/* Login Button */}

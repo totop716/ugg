@@ -14,7 +14,7 @@ class MyUserResource(resources.ModelResource):
 
 class MyUserAdmin(ImportExportModelAdmin):
     resource_class = MyUserResource
-    exclude = ('password', 'last_login', 'is_active', 'is_admin')
+    fields =  ('first_name','last_name','address','po_box','unit_number','suite','city','state','zipcode','email','tablet_id','check_time')
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
@@ -51,7 +51,7 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('first_name', 'last_name', 'email', 'phone', 'address','city','state','zipcode','password')
+    list_display = ('first_name', 'last_name', 'email', 'phone', 'address','city','state', 'zipcode', 'po_box', 'password')
     list_filter = ('is_admin',)
     ordering = ('phone','email')
     filter_horizontal = ()

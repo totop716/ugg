@@ -114,8 +114,8 @@ const styles = StyleSheet.create({
   },
   item: {
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(15),
-    backgroundColor: '#121d56',
-    borderColor: '#121d56',
+    backgroundColor: '#a1a1a1',
+    borderColor: '#d7d7d7',
   },
   input: {
     color: 'white',
@@ -124,24 +124,28 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     fontSize: 25,
-    color: '#fff'
+    color: '#000',
+    backgroundColor: '#d7d7d7',
+    paddingLeft: 10
   },
   disclaimerContain: {
     width: '100%',
     height: 180,
-    padding: 10
+    padding: 10,
+    borderColor: '#000',
+    borderWidth: 1
   },
   disclaimerText: {  
     fontSize: 20,
-    color: '#fff'
+    color: '#000'
   },
   buttonContainer: {
     flex: 1,
     marginTop: PixelRatio.getPixelSizeForLayoutSize(15),
   },
   button: {
-    marginVertical: PixelRatio.getPixelSizeForLayoutSize(2),
-    backgroundColor: '#7646e4',
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(5),
+    backgroundColor: '#41823f',
     width: '60%',
     alignSelf: 'center'
   },

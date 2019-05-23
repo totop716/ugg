@@ -41,6 +41,9 @@ const styles = StyleSheet.create({
     top: '50%',
     transform: [{translateY: -75}],
     backgroundColor: '#ddd',
+    borderColor: '#333',
+    borderWidth: 1,
+    borderBottomWidth: 2,
     zIndex: 999,
     paddingTop: 20,
     height: 150
@@ -77,7 +80,7 @@ const styles = StyleSheet.create({
   },
   item: {
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(3),
-    backgroundColor: '#121d56',
+    backgroundColor: '#d7d7d7',
     borderColor: '#121d56',
     marginBottom: 10,
   },
@@ -87,8 +90,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   input: {
-    color: 'white',
-    fontSize: 20
+    color: '#000',
+    fontSize: 20,
+    backgroundColor: '#d7d7d7',
+    paddingLeft: 10
   },
   listItem: {
     flexDirection: 'row',
@@ -107,7 +112,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(2),
-    backgroundColor: '#7646e4',
+    backgroundColor: '#41823f',
   },
   signupText: {
     color: 'white',

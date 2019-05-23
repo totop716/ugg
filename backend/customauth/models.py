@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 # Create your models here.
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, email, phone, address, city, state, zipcode, password, tablet_id, check_time):
+    def create_user(self, first_name, last_name, email, phone, address, city, state, zipcode, password, tablet_id, check_time, po_box, unit_number, suite):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -26,7 +26,10 @@ class MyUserManager(BaseUserManager):
             state=state,
             zipcode=zipcode,
             tablet_id=tablet_id,
-            check_time=check_time
+            check_time=check_time,
+            po_box = po_box,
+            unit_number = unit_number,
+            suite = suite
         )
 
         user.set_password(password)
@@ -48,7 +51,10 @@ class MyUserManager(BaseUserManager):
             zipcode="",
             password=password,
             tablet_id="",
-            check_time=""
+            check_time="",
+            po_box = "",
+            unit_number = "",
+            suite = ""
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -72,6 +78,9 @@ class MyUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     tablet_id = models.CharField(max_length =50)
     check_time = models.CharField(max_length =200)
+    po_box = models.CharField(max_length =50)
+    unit_number = models.CharField(max_length =50)
+    suite = models.CharField(max_length =50)
 
     objects = MyUserManager()
 

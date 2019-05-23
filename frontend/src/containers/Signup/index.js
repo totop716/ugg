@@ -29,11 +29,17 @@ class Signup extends Component {
     firstname: '',
     lastname: '',
     address: '',
+    city: '',
+    po_box: '',
+    unit_number: '',
+    suite: '',
+    txtState: '',
+    zipcode: '',
     emailaddress: '',
     checkEmail: true,
     checkSMS: true,
     cancelBox: false,
-    error: {name: '', address: ''}
+    error: {name: '', address: '', city: '', zipcode: ''}
   };
 
   // navigate to login screen after a successful signup
@@ -87,10 +93,26 @@ class Signup extends Component {
     }else{
       error.address = '';
     }
+
+    if(this.state.city == '' && this.state.txtState != ''){
+      error.city = 'You need to input city';
+    }else if(this.state.city != '' && this.state.txtState == ''){
+      error.city = 'You need to input state';
+    }else if(this.state.city == '' && this.state.txtState == ''){
+      error.city = 'You need to input city and state';
+    }else{
+      error.city = '';
+    }
+
+    if(this.state.zipcode == ''){
+      error.zipcode = 'You need to input zip code';
+    }else{
+      error.zipcode = '';
+    }
     
     this.setState({error});
     if(this.state.error.name == '' && this.state.error.address == ''){
-      signupUserAPI(this.state.firstname, this.state.lastname, this.state.address, this.state.emailaddress, phoneNo).then(res => {
+      signupUserAPI(this.state.firstname, this.state.lastname, this.state.address, this.state.city, this.state.txtState, this.state.zipcode, this.state.emailaddress, phoneNo,this.state.po_box, this.state.unit_number, this.state.suite).then(res => {
         this.props.navigation.navigate('Login');
       })
     }
@@ -132,49 +154,88 @@ class Signup extends Component {
             </View>
             {/* Form */}
             <Form style={styles.form}>
-              <Item
-                style={styles.item}
-                last
-              >
+              <View style={styles.listItem}>
                 <Input
                   style={styles.input}
-                  placeholder="First Name"
-                  placeholderTextColor="#afb0d1"
+                  placeholder="First Name *"
+                  placeholderTextColor="#919191"
                   autoCapitalize="none"
                   onChangeText={firstname => this.setState({ firstname })}
                 />
                 <Input
                   style={styles.input}
-                  placeholder="Last Name"
-                  placeholderTextColor="#afb0d1"
+                  placeholder="Last Name *"
+                  placeholderTextColor="#919191"
                   autoCapitalize="none"
                   onChangeText={lastname => this.setState({ lastname })}
                 />
-              </Item>
+              </View>
               {this.state.error.name != '' && <Text style={styles.errorMsg}>{this.state.error.name}</Text>}
-              <Item
-                style={styles.item}
-                last
-              >
+              <View style={styles.listItem}>
                 <Input
                   style={styles.input}
-                  placeholder="Address"
-                  placeholderTextColor="#afb0d1"
+                  placeholder="Address *"
+                  placeholderTextColor="#919191"
                   onChangeText={address => this.setState({ address })}
                 />
-              </Item>
+              </View>
               {this.state.error.address != '' && <Text style={styles.errorMsg}>{this.state.error.address}</Text>}
-              <Item
-                style={styles.item}
-                last
-              >
+              <View style={styles.listItem}>
+                <Input
+                  style={styles.input}
+                  placeholder="PO Box"
+                  placeholderTextColor="#919191"
+                  onChangeText={po_box => this.setState({ po_box })}
+                />
+              </View>
+              <View style={styles.listItem}>
+                <Input
+                  style={styles.input}
+                  placeholder="Unit Number"
+                  placeholderTextColor="#919191"
+                  onChangeText={unit_number => this.setState({ unit_number })}
+                />
+              </View>
+              <View style={styles.listItem}>
+                <Input
+                  style={styles.input}
+                  placeholder="Suite"
+                  placeholderTextColor="#919191"
+                  onChangeText={suite => this.setState({ suite })}
+                />
+              </View>
+              <View style={styles.listItem}>
+                <Input
+                  style={styles.input}
+                  placeholder="City *"
+                  placeholderTextColor="#919191"
+                  onChangeText={city => this.setState({ city })}
+                />
+                <Input
+                  style={styles.input}
+                  placeholder="State *"
+                  placeholderTextColor="#919191"
+                  onChangeText={txtState => this.setState({ txtState })}
+                />
+              </View>
+              {this.state.error.city != '' && <Text style={styles.errorMsg}>{this.state.error.city}</Text>}
+              <View style={styles.listItem}>
+                <Input
+                  style={styles.input}
+                  placeholder="Zip Code *"
+                  placeholderTextColor="#919191"
+                  onChangeText={zipcode => this.setState({ zipcode })}
+                />
+              </View>
+              {this.state.error.zipcode != '' && <Text style={styles.errorMsg}>{this.state.error.zipcode}</Text>}
+              <View style={styles.listItem}>
                 <Input
                   style={styles.input}
                   placeholder="Email Address"
-                  placeholderTextColor="#afb0d1"
+                  placeholderTextColor="#919191"
                   onChangeText={emailaddress => this.setState({ emailaddress })}
                 />
-              </Item>
+              </View>
               <View style={styles.listItem}>
                 <CheckBox checked={this.state.checkEmail} onPress={this.setCheckEmail} />
                 <Text style={styles.checkboxText}>Receiving emails, newsletters, and promotions</Text>
