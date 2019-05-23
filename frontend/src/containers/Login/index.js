@@ -246,7 +246,7 @@ class Login extends Component {
               <Text style={styles.loginText}>Submit</Text>
             </Button>
 
-            <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>Disclaimer Text</Text></View>
+            <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>Welcome to{'\n'}Universal Gaming Group!!!</Text></View>
           </Form>
           <View style={styles.buttonContainer}>
             {/* Login Button */}

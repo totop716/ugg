@@ -14,7 +14,7 @@ class MyUserResource(resources.ModelResource):
 
 class MyUserAdmin(ImportExportModelAdmin):
     resource_class = MyUserResource
-    fields =  ('first_name','last_name','address','po_box','unit_number','suite','city','state','zipcode','email','tablet_id','check_time')
+    fields =  ('first_name','last_name','address','po_box','unit_number','suite','city','state','zipcode','email','tablet_id')
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required

@@ -187,16 +187,12 @@ class Signup extends Component {
                   placeholderTextColor="#919191"
                   onChangeText={po_box => this.setState({ po_box })}
                 />
-              </View>
-              <View style={styles.listItem}>
                 <Input
                   style={styles.input}
                   placeholder="Unit Number"
                   placeholderTextColor="#919191"
                   onChangeText={unit_number => this.setState({ unit_number })}
                 />
-              </View>
-              <View style={styles.listItem}>
                 <Input
                   style={styles.input}
                   placeholder="Suite"

@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     height: 180,
     padding: 10,
     borderColor: '#000',
-    borderWidth: 1
+    marginTop: 10
   },
   disclaimerText: {  
     fontSize: 20,
