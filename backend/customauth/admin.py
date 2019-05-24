@@ -14,7 +14,7 @@ class MyUserResource(resources.ModelResource):
 
 class MyUserAdmin(ImportMixin, admin.ModelAdmin):
     resource_class = MyUserResource
-    fields =  ('first_name','last_name','address','po_box','unit_number','suite','city','state','zipcode','email','tablet_id')
+    fields =  ('first_name','last_name','address','phone','po_box','unit_number','suite','city','state','zipcode','email','tablet_id')
     list_display = ('first_name','last_name','email','phone','address','city','state','zipcode','po_box','unit_number','suite')
     search_fields = ('phone',)
 
