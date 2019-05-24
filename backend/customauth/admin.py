@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from import_export import resources
-from import_export.admin import ImportExportModelAdmin
+from import_export.admin import ImportExportModelAdmin, ImportMixin
 
 from customauth.models import MyUser
 
@@ -12,9 +12,11 @@ class MyUserResource(resources.ModelResource):
     class Meta:
         model = MyUser
 
-class MyUserAdmin(ImportExportModelAdmin):
+class MyUserAdmin(ImportMixin, admin.ModelAdmin):
     resource_class = MyUserResource
     fields =  ('first_name','last_name','address','po_box','unit_number','suite','city','state','zipcode','email','tablet_id')
+    list_display = ('first_name','last_name','email','phone','address','city','state','zipcode','po_box','unit_number','suite')
+    search_fields = ('phone',)
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required

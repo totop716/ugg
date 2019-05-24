@@ -40,6 +40,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'phone'
 # Application definition
 
 INSTALLED_APPS = [
+    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'import_export'
+    'django.contrib.redirects',
+    'import_export',
 ]
 LOCAL_APPS = [
     'home',
@@ -92,6 +94,17 @@ TEMPLATES = [
         },
     },
 ]
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'UGG Admin',
+    'SEARCH_URL': '',
+    'MENU': (
+    {'label': 'Users', 'icon':'icon-user', 'url': '/admin/customauth/myuser/', 'models': ('MyUser')},
+    {'label': 'Sweepstakes', 'icon':'icon-bell', 'url': '/admin/sweepstakes/'},
+    {'label': 'Tablets', 'icon':'icon-camera', 'url': '/admin/tablets/'},
+    {'label': 'Reports', 'icon':'icon-book', 'url': '/admin/reports/'},
+    ),
+}
 
 WSGI_APPLICATION = 'ugg_2957.wsgi.application'
 

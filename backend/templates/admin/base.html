@@ -1,0 +1,23 @@
+{% extends 'admin/base.html' %}
+{% load i18n admin_static suit_tags %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static 'suit/css/suit.css' %}" media="all">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900' rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            {{ site_header|default:_('Django administration') }}
+            <span class="header-label">{% trans 'Admin' %}</span></a>
+    </h1>
+{% endblock %}
+
+{% block header_time %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
