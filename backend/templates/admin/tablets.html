@@ -12,8 +12,65 @@
 
 {% block breadcrumbs %}{% endblock %}
 
+{% load custom_tags %}
+
 {% block content %}
-    <div id="content-main">
-        Tablets
-    </div>
+  <div id="content-main">
+    {% gettablets as tablets %}
+    <table id="result_list" class="table table-striped table-bordered table-hover table-condensed">
+      <thead>
+      <tr>
+        <th scope="col" {{ header.class_attrib }}>
+          Tablet ID
+        </th>
+        <th scope="col" {{ header.class_attrib }}>
+          Address
+        </th>
+        <th scope="col" {{ header.class_attrib }}>
+          City
+        </th>
+        <th scope="col" {{ header.class_attrib }}>
+          State
+        </th>
+        <th scope="col" {{ header.class_attrib }}>
+          Zip
+        </th>
+        <th scope="col" {{ header.class_attrib }}>
+          Feature
+        </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tablet in tablets %}
+          <tr>
+            <td>
+              {{ tablet.tablet_id }}
+            </td>
+            <td>
+              {{ tablet.address }}
+            </td>
+            <td>
+              {{ tablet.city }}
+            </td>
+            <td>
+              {{ tablet.state }}
+            </td>
+            <td>
+              {{ tablet.zipcode }}
+            </td>
+            <td>
+              {% if tablet.sweep_ids != '' %}
+                <div class="sweepstakes">
+                  {% for sweep in tablet.sweeps %}
+                    <input type='button' class='btn btn-info' value="{{ sweep.name }}" />
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <a class='btn btn-info' class='sweep_add'>Add</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

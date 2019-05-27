@@ -78,4 +78,26 @@ class Participants(models.Model):
     @property
     def field(self):
         return 'name'
+
+class Sweepstakes(models.Model):
+    name = models.CharField(max_length=100)
+    startdate = models.DateTimeField()
+    enddate = models.DateTimeField()
+    logo = models.ImageField()
+    background = models.ImageField()
+    disclaimer = models.TextField()
+    current = models.BooleanField()
+
+    class Meta:
+        verbose_name_plural = 'Sweepstakes'
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def api(self):
+        return f'/api/v1/lottery/{self.id}/'
+    @property
+    def field(self):
+        return 'name'
     

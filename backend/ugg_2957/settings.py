@@ -50,9 +50,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.redirects',
     'import_export',
+    'home'
 ]
 LOCAL_APPS = [
-    'home',
+    # 'home',
     'customauth'
 ]
 THIRD_PARTY_APPS = [
@@ -79,6 +80,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'ugg_2957.urls'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/img/uploads')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -100,7 +103,7 @@ SUIT_CONFIG = {
     'SEARCH_URL': '',
     'MENU': (
     {'label': 'Users', 'icon':'icon-user', 'url': '/admin/customauth/myuser/', 'models': ('MyUser')},
-    {'label': 'Sweepstakes', 'icon':'icon-bell', 'url': '/admin/sweepstakes/'},
+    {'label': 'Sweepstakes', 'icon':'icon-bell', 'url': '/admin/home/sweepstakes/'},
     {'label': 'Tablets', 'icon':'icon-camera', 'url': '/admin/tablets/'},
     {'label': 'Reports', 'icon':'icon-book', 'url': '/admin/reports/'},
     ),
@@ -126,15 +129,15 @@ DATABASES = {
 
 if env.str('DATABASE_URL', default=None):
     DATABASES = {
-        # 'default': {
-        #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        #     'NAME': env.str('DATABASE_NAME'),
-        #     'USER': env.str('DATABASE_USER'),
-        #     'PASSWORD': env.str('DATABASE_PASS'),
-        #     'HOST': env.str('DATABASE_HOST'),
-        #     'PORT': env.str('DATABASE_PORT'),
-        # }
-        'default': env.db()
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': env.str('DATABASE_NAME'),
+            'USER': env.str('DATABASE_USER'),
+            'PASSWORD': env.str('DATABASE_PASS'),
+            'HOST': env.str('DATABASE_HOST'),
+            'PORT': env.str('DATABASE_PORT'),
+        }
+        # 'default': env.db()
     }
 
 # Password validation

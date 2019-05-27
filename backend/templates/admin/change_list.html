@@ -54,12 +54,16 @@
           {% block object-tools %}
             <div class="object-tools">
               {% block object-tools-items %}
+                {% if cl.opts.verbose_name == 'sweepstakes' %}
+                  <input type="button" value="Current" class="btn btn-info" id="currentSweep" />
+                  <input type="button" value="Previous(Ended)" class="btn btn-info" id="currentEnded" />
+                {% endif %}
                 {% if has_add_permission %}
                   <a href="{% url cl.opts|admin_urlname:'add' %}{% if is_popup %}?_popup=1{% endif %}" class="btn btn-success">
                     <i class="icon-plus-sign icon-white"></i>&nbsp;
-                    {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
+                    {% blocktrans with cl.opts.verbose_name as name %}Add New{% endblocktrans %}
                   </a>
-                {% endif %}
+                {% endif %}              
               {% endblock %}
             </div>
           {% endblock %}

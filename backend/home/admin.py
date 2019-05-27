@@ -5,10 +5,14 @@ from django.contrib import admin
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 
-from .models import Entry, Lottery
+from .models import Entry, Lottery, Sweepstakes
 
-admin.site.register(Entry)
-admin.site.register(Lottery)
+class SweepstakesAdmin(admin.ModelAdmin):
+    fields =  ('name','startdate','enddate','logo','background','disclaimer','current')
+    list_display = ('name','startdate','enddate','logo','background','disclaimer','current')
+    search_fields = ('name','startdate','enddate','logo','background','disclaimer','current')
+
+admin.site.register(Sweepstakes, SweepstakesAdmin)
 
 admin.site.unregister(Site)
 admin.site.unregister(User)
