@@ -9,6 +9,17 @@ RUN apk add --no-cache --update \
   python3 \
   python3-dev \
   py3-pip \
+  # Pillow dependencies
+  jpeg-dev \
+  zlib-dev \
+  freetype-dev \
+  lcms2-dev \
+  openjpeg-dev \
+  tiff-dev \
+  tk-dev \
+  tcl-dev \
+  harfbuzz-dev \
+  fribidi-dev \
   git \
   nodejs \
   nodejs-npm
@@ -25,12 +36,6 @@ RUN npm ci
 WORKDIR /app/webapp/backend
 
 # Install backend dependencies
-
-RUN apt-get update && apt-get install -y \
-        python-dev python-pip python-setuptools \
-        libffi-dev libxml2-dev libxslt1-dev \
-        libtiff4-dev libjpeg8-dev zlib1g-dev libfreetype6-dev \
-        liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev python-tk
 
 RUN pipenv install --deploy --system
 
