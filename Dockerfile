@@ -25,6 +25,13 @@ RUN npm ci
 WORKDIR /app/webapp/backend
 
 # Install backend dependencies
+
+RUN apt-get update && apt-get install -y \
+        python-dev python-pip python-setuptools \
+        libffi-dev libxml2-dev libxslt1-dev \
+        libtiff4-dev libjpeg8-dev zlib1g-dev libfreetype6-dev \
+        liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev python-tk
+
 RUN pipenv install --deploy --system
 
 # Run the image as a non-root user
