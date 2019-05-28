@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^api/v1/', include('home.api.v1.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^admin/sweepstakes/$', TemplateView.as_view(template_name='admin/sweepstakes.html')),
+    url(r'^admin/sweepstake', TemplateView.as_view(template_name='admin/sweepstake_detail.html')),
     url(r'^admin/tablets/$', TemplateView.as_view(template_name='admin/tablets.html')),
     url(r'^admin/reports/$', TemplateView.as_view(template_name='admin/reports.html')),
 ]

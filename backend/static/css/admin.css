@@ -10,3 +10,20 @@
 .sweep_add{
   margin-top: 10px;
 }
+
+.sweepstake_row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  width: 500px;
+}
+
+.sweepstake_row h1{
+  margin-left: 10px;
+}
+
+.sweepstake_row .textbox{
+  margin-bottom: 0;
+  margin-left: 7px;
+}

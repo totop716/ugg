@@ -15,28 +15,35 @@
 {% load custom_tags %}
 
 {% block content %}
-  <div id="content-main">{{ request.GET.id }}
-    {% gettablets as tablets %}
+  <div id="content-main">
+    {% get_sweepstakedata request.GET.id as sweepstake %}
+    <div class="sweepstake_row">
+      <h1>{{ sweepstake.name }}</h1>
+      <input type="button" class="btn btn-info" value="Settings" />
+    </div>
+    <div class="sweepstake_row">
+      <input type="text" class="textbox" placeholder="Search by Tablet ID" />
+      <input type="button" class="btn btn-info" value="Generate Winner" />
+      <input type="button" class="btn btn-info" value="Winners" />
+    </div>
+    {% gettablets_fromsweepid request.GET.id as tablets %}
     <table id="result_list" class="table table-striped table-bordered table-hover table-condensed">
       <thead>
       <tr>
         <th scope="col" {{ header.class_attrib }}>
+          First Name
+        </th>
+        <th scope="col" {{ header.class_attrib }}>
+          Last Name
+        </th>
+        <th scope="col" {{ header.class_attrib }}>
+          Phone
+        </th>
+        <th scope="col" {{ header.class_attrib }}>
           Tablet ID
         </th>
         <th scope="col" {{ header.class_attrib }}>
-          Address
-        </th>
-        <th scope="col" {{ header.class_attrib }}>
-          City
-        </th>
-        <th scope="col" {{ header.class_attrib }}>
-          State
-        </th>
-        <th scope="col" {{ header.class_attrib }}>
-          Zip
-        </th>
-        <th scope="col" {{ header.class_attrib }}>
-          Feature
+          Check In
         </th>
         </tr>
       </thead>
@@ -44,29 +51,19 @@
         {% for tablet in tablets %}
           <tr>
             <td>
+              {{ tablet.first_name }}
+            </td>
+            <td>
+              {{ tablet.last_name }}
+            </td>
+            <td>
+              {{ tablet.phone }}
+            </td>
+            <td>
               {{ tablet.tablet_id }}
             </td>
             <td>
-              {{ tablet.address }}
-            </td>
-            <td>
-              {{ tablet.city }}
-            </td>
-            <td>
-              {{ tablet.state }}
-            </td>
-            <td>
-              {{ tablet.zipcode }}
-            </td>
-            <td>
-              {% if tablet.sweep_ids != '' %}
-                <div class="sweepstakes">
-                  {% for sweep in tablet.sweeps %}
-                    <input type='button' class='btn btn-info' value="{{ sweep.name }}" />
-                  {% endfor %}
-                </div>
-              {% endif %}
-              <a class='btn btn-info' class='sweep_add'>Add</a>
+              {{ tablet.check_time }}
             </td>
           </tr>
         {% endfor %}

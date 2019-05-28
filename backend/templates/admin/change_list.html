@@ -55,8 +55,8 @@
             <div class="object-tools">
               {% block object-tools-items %}
                 {% if cl.opts.verbose_name == 'sweepstakes' %}
-                  <input type="button" value="Current" class="btn btn-info" id="currentSweep" />
-                  <input type="button" value="Previous(Ended)" class="btn btn-info" id="currentEnded" />
+                  <a href="?current=1" class="btn btn-info" id="currentSweep">Current</a>
+                  <a href="?current=0" class="btn btn-info" id="currentEnded">Previous(Ended)</a>
                 {% endif %}
                 {% if has_add_permission %}
                   <a href="{% url cl.opts|admin_urlname:'add' %}{% if is_popup %}?_popup=1{% endif %}" class="btn btn-success">
