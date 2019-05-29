@@ -11,11 +11,11 @@ from customauth.models import MyUser
 class MyUserResource(resources.ModelResource):
     class Meta:
         model = MyUser
-        fields =  ('first_name','last_name','address','phone','po_box','unit_number','suite','city','state','zipcode','email')
+        fields =  ('first_name','last_name','address','phone','po_box','unit_number','suite','city','state','zipcode','email','tablet_id')
 
 class MyUserAdmin(ImportMixin, admin.ModelAdmin):
     resource_class = MyUserResource
-    fields =  ('first_name','last_name','address','phone','po_box','unit_number','suite','city','state','zipcode','email')
+    fields =  ('first_name','last_name','address','phone','po_box','unit_number','suite','city','state','zipcode','email','tablet_id')
     list_display = ('first_name','last_name','email','phone','address','city','state','zipcode','po_box','unit_number','suite')
     search_fields = ('first_name','last_name','email','phone','address','city','state','zipcode','po_box','unit_number','suite')
 
