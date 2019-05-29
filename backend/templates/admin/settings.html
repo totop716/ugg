@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+
+{% load i18n admin_static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% load custom_tags %}
+
+{% block content %}
+<div id="content-main">
+    <div class="settingspanel">
+        {% if request.GET.select == 'tablet' %}
+            {% gettablets as tabletData %}
+            <div class="sweepItems">
+            {% for tablet in tabletData %}
+                {% if request.GET.id|add:"0" in tablet.sweeps_id %}
+                    <div class="sweepItemContainer"><input type="button" class="sweepItem active" value="{{ tablet.tablet_id }}" /><input type="hidden" class="tablet_phone" value="{{ tablet.phone }}" /><input type="hidden" class="tablet_sweepids" value="{{ tablet.sweep_ids }}" /></div>
+                {% else %}
+                    <div class="sweepItemContainer"><input type="button" class="sweepItem" value="{{ tablet.tablet_id }}" /><input type="hidden" class="tablet_phone" value="{{ tablet.phone }}" /><input type="hidden" class="tablet_sweepids" value="{{ tablet.sweep_ids }}" /></div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <input type="hidden" id="currentSweepID" value="{{request.GET.id}}" />
+        {% else %}
+            {% gettabletData request.GET.id as tabletData %}
+            {% getselectedsweep request.GET.id as sweep_ids %}
+            {% getcurrentsweepstakes as currentsweeps %}
+            <div class="sweepItems">
+            {% for sweep in currentsweeps %}
+                {% if sweep.id|stringformat:'i' in sweep_ids %}
+                    <div class="sweepItemContainer"><input type="button" class="sweepItem active" value="{{ sweep.name }}" /><input type="hidden" class="sweepItemID" value="{{ sweep.id }}" /></div>
+                {% else %}
+                    <div class="sweepItemContainer"><input type="button" class="sweepItem" value="{{ sweep.name }}" /><input type="hidden" class="sweepItemID" value="{{ sweep.id }}" /></div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <input type="hidden" id="tabletID" value="{{tabletData.phone}}" />
+        {% endif %}
+        <input type="hidden" id="settingType" value="{{request.GET.select}}" />
+        <input type="button" class="btn btn-success saveSettings" value="Save" />
+    </div>
+</div>
+{% endblock %}

@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 class MyUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
-        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'tablet_id', 'po_box', 'unit_number', 'suite')
+        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'tablet_id', 'po_box', 'unit_number', 'suite', 'sweep_ids', 'active_sweep')
         extra_kwargs = {
             'first_name' : {
                 'required': True
@@ -37,7 +37,9 @@ class MyUserSerializer(serializers.ModelSerializer):
             tablet_id=validated_data.get('tablet_id'),
             po_box=validated_data.get('po_box'),
             unit_number=validated_data.get('unit_number'),
-            suite=validated_data.get('suite')
+            suite=validated_data.get('suite'),
+            sweep_ids=validated_data.get('sweep_ids'),
+            active_sweep=validated_data.get('active_sweep')
         )
         user.save()
         return user
@@ -67,6 +69,10 @@ class MyUserSerializer(serializers.ModelSerializer):
             instance.unit_number = validated_data.get('unit_number')
         if validated_data.get('suite') != None:
             instance.suite = validated_data.get('suite')
+        if validated_data.get('sweep_ids') != None:
+            instance.sweep_ids = validated_data.get('sweep_ids')
+        if validated_data.get('active_sweep') != None:
+            instance.active_sweep = validated_data.get('active_sweep')
         instance.save()
         return instance
 

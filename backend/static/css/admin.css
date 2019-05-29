@@ -5,6 +5,11 @@
 
 .sweepstakes{
   margin-bottom: 10px;
+  display: flex;
+}
+
+.sweepstakes .sweepstakecontain{
+  margin-right: 5px;
 }
 
 .sweep_add{
@@ -26,4 +31,62 @@
 .sweepstake_row .textbox{
   margin-bottom: 0;
   margin-left: 7px;
+}
+
+#content-main .settingspanel{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.sweepItems{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#content-main  .saveSettings{
+  padding: 10px;
+  width: 15%;
+  font-size: 25px;
+  align-self: center;
+}
+
+#content-main  .sweepItemContainer{
+  width: 50%;
+  align-self: center;
+}
+
+#content-main  .sweepItem{
+  font-size: 25px;
+  margin-bottom: 15px;
+  padding: 10px;
+  width: 100%;
+  background: transparent;
+  border: 1px solid #999;
+  outline: none;
+}
+
+.sweepstakes .selectedsweep{
+  outline: none;
+  background: none;
+  border: 1px solid #999;
+}
+
+.sweepstakes .selectedsweep.active{
+  background: #ddd;
+}
+
+#content-main  .sweepItem.active{
+  background: #ccc;
+}
+
+.searchTabletContainer{
+  display: flex;
+  margin-bottom: 10px;
+}
+
+#searchTabletText{
+  margin-bottom: 0 !important;
+  margin-right: 10px;
 }

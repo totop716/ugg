@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 # Create your models here.
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, email, phone, address, city, state, zipcode, password, tablet_id, check_time, po_box, unit_number, suite, label, sweep_ids):
+    def create_user(self, first_name, last_name, email, phone, address, city, state, zipcode, password, tablet_id, check_time, po_box, unit_number, suite, label, sweep_ids, active_sweep):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -31,7 +31,8 @@ class MyUserManager(BaseUserManager):
             unit_number = unit_number,
             suite = suite,
             label = label,
-            sweep_ids = sweep_ids
+            sweep_ids = sweep_ids,
+            active_sweep = active_sweep
         )
 
         user.set_password(password)
@@ -58,7 +59,8 @@ class MyUserManager(BaseUserManager):
             unit_number = "",
             suite = "",
             label = "",
-            sweep_ids = ""
+            sweep_ids = "",
+            active_sweep = ""
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -87,6 +89,7 @@ class MyUser(AbstractBaseUser):
     suite = models.CharField(max_length =50)
     label = models.CharField(max_length = 100)
     sweep_ids = models.CharField(max_length = 100)
+    active_sweep = models.CharField(max_length = 10)
 
     objects = MyUserManager()
 

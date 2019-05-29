@@ -15,7 +15,11 @@
 {% load custom_tags %}
 
 {% block content %}
-  <div id="content-main">{{ request.GET.id }}
+  <div id="content-main">
+    <div class="searchTabletContainer">
+        <input type="text" id="searchTabletText" placeholder="Search" />
+        <input type="button" class="btn btn-info" id="searchTablet" value="Search" />
+    </div>
     {% gettablets as tablets %}
     <table id="result_list" class="table table-striped table-bordered table-hover table-condensed">
       <thead>
@@ -60,12 +64,20 @@
             <td>
               {% if tablet.sweep_ids != '' %}
                 <div class="sweepstakes">
+                  <input type='hidden' class='tabletIDVal' value="{{ tablet.phone }}" />
                   {% for sweep in tablet.sweeps %}
-                    <input type='button' class='btn btn-info' value="{{ sweep.name }}" />
+                    <div class="sweepstakecontain">
+                      {% if sweep.id == tablet.active_sweep|add:"0" %}
+                        <input type='button' class='btn selectedsweep active' value="{{ sweep.name }}" />
+                      {% else %}
+                        <input type='button' class='btn selectedsweep' value="{{ sweep.name }}" />
+                      {% endif %}
+                      <input type='hidden' class='selectedsweepid' value="{{ sweep.id }}" />
+                    </div>
                   {% endfor %}
                 </div>
               {% endif %}
-              <a class='btn btn-info' class='sweep_add'>Add Sweepstake</a>
+              <a class='btn btn-info' href='/admin/settings?select=sweepstake&id={{tablet.id}}' class='sweep_add'>Add Sweepstake</a>
             </td>
           </tr>
         {% endfor %}

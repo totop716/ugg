@@ -45,7 +45,13 @@
                 <tr{% result_row_attrs cl forloop.counter %}>
                     {% for item in result %}{{ item }}{% endfor %}
                     {% if cl.opts.verbose_name == 'sweepstakes' %}
-                    <td><a href="/admin/sweepstake?id={{ sweepstakes_list|getid_by_index:forloop.counter0 }}" class="btn btn-info">Go to Detail</a></td>
+                    <td>
+                        {% with sweepdata=sweepstakes_list|getdata_by_index:forloop.counter0 %}
+                        {% if sweepdata.current == 1 %}
+                        <a href="/admin/sweepstake?id={{ sweepdata.id }}" class="btn btn-info">Go to Detail</a>
+                        {% endif %}
+                        {% endwith %}
+                    </td>
                     {% endif %}
                 </tr>
             {% endfor %}

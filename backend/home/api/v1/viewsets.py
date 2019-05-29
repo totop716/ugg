@@ -12,6 +12,7 @@ from rest_framework.generics import get_object_or_404
 
 from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer
 from home.models import CustomText, HomePage
+from django.db.models import Q
 from customauth.models import MyUser
 
 class SignupViewSet(ModelViewSet):
@@ -23,6 +24,16 @@ class LoginViewSet(ViewSet):
 
     def create(self, request):
         return ObtainAuthToken().post(request)
+
+class TabletViewSet(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            user = MyUser.objects.filter(Q(tablet_id__contains = pk) | Q(address__contains = pk) | Q(city__contains = pk) | Q(state__contains = pk) | Q(zipcode__contains = pk)).order_by('id')
+            serializer = MyUserSerializer(user)
+            return Response({"tablets": serializer.data})
+        users = MyUser.objects.filter(~Q(tablet_id = '')).order_by('id')
+        serializer = MyUserSerializer(users, many=True)
+        return Response({"tablets": serializer.data})
 
 class MyUserViewSet(APIView):
     def get(self, request, pk=None):

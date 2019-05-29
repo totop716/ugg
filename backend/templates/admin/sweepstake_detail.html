@@ -19,7 +19,7 @@
     {% get_sweepstakedata request.GET.id as sweepstake %}
     <div class="sweepstake_row">
       <h1>{{ sweepstake.name }}</h1>
-      <input type="button" class="btn btn-info" value="Settings" />
+      <a class='btn btn-info' href='/admin/settings?select=tablet&id={{sweepstake.id}}'>Settings</a>
     </div>
     <div class="sweepstake_row">
       <input type="text" class="textbox" placeholder="Search by Tablet ID" />
