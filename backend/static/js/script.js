@@ -104,6 +104,10 @@
 
         $('#searchTablet').click(function(){
             window.location.href = "?key="+$("#searchTabletText").val();
-        })
+        });
+
+        $("#generatewinner").click(function(){
+            
+        });
     })
 }(Suit.$));

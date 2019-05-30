@@ -82,7 +82,7 @@ class MyUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     tablet_id = models.CharField(max_length =50)
     check_time = models.CharField(max_length =200)
-    po_box_unit_number = models.CharField("PO Box(Unit Number)", max_length =50)
+    po_box_unit_number = models.CharField("PO Box/Unit Number", max_length =50)
     suite = models.CharField(max_length =50)
     label = models.CharField(max_length = 100, default="Added by Admin")
     sweep_ids = models.CharField(max_length = 100)

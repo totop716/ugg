@@ -79,6 +79,24 @@ class Participants(models.Model):
     def field(self):
         return 'name'
 
+class SweepWinner(models.Model):
+    windate = models.CharField(max_length=100)
+    sweep_id = models.IntegerField(max_length=20)
+    tablet_id = models.IntegerField(max_length=20)
+
+    class Meta:
+        verbose_name_plural = 'SweepstakesWinner'
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def api(self):
+        return f'/api/v1/sweepwinner/{self.id}/'
+    @property
+    def field(self):
+        return 'name'
+
 class Sweepstakes(models.Model):
     name = models.CharField(max_length=100)
     startdate = models.DateTimeField()
@@ -96,7 +114,7 @@ class Sweepstakes(models.Model):
 
     @property
     def api(self):
-        return f'/api/v1/lottery/{self.id}/'
+        return f'/api/v1/sweepstakes/{self.id}/'
     @property
     def field(self):
         return 'name'

@@ -38,8 +38,8 @@
     </div>
     <div class="sweepstake_row">
       <input type="text" class="textbox" id="searchbyTableID" placeholder="Search by Tablet ID" />
-      <input type="button" class="btn btn-info" value="Generate Winner" />
-      <input type="button" class="btn btn-info" value="Winners" />
+      <input type="button" class="btn btn-info" id="generatewinner" value="Generate Winner" />
+      <input type="button" class="btn btn-info" id="showwinners" value="Winners" />
     </div>
     {% gettablets_fromsweepid request.GET.id request.GET.key as tablets %}
     <table id="result_list" class="table table-striped table-bordered table-hover table-condensed">
