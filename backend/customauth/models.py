@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 # Create your models here.
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, email, phone, address, city, state, zipcode, password, tablet_id, check_time, po_box, unit_number, suite, label, sweep_ids, active_sweep):
+    def create_user(self, first_name, last_name, email, phone, address, city, state, zipcode, password, tablet_id, check_time, po_box_unit_number, suite, label, sweep_ids, active_sweep):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -27,12 +27,11 @@ class MyUserManager(BaseUserManager):
             zipcode=zipcode,
             tablet_id=tablet_id,
             check_time=check_time,
-            po_box = po_box,
-            unit_number = unit_number,
+            po_box_unit_number = po_box_unit_number,
             suite = suite,
             label = label,
             sweep_ids = sweep_ids,
-            active_sweep = active_sweep
+            active_sweep = active_sweep,
         )
 
         user.set_password(password)
@@ -55,8 +54,7 @@ class MyUserManager(BaseUserManager):
             password=password,
             tablet_id="",
             check_time="",
-            po_box = "",
-            unit_number = "",
+            po_box_unit_number = "",
             suite = "",
             label = "",
             sweep_ids = "",
@@ -84,10 +82,9 @@ class MyUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     tablet_id = models.CharField(max_length =50)
     check_time = models.CharField(max_length =200)
-    po_box = models.CharField(max_length =50)
-    unit_number = models.CharField(max_length =50)
+    po_box_unit_number = models.CharField("PO Box(Unit Number)", max_length =50)
     suite = models.CharField(max_length =50)
-    label = models.CharField(max_length = 100)
+    label = models.CharField(max_length = 100, default="Added by Admin")
     sweep_ids = models.CharField(max_length = 100)
     active_sweep = models.CharField(max_length = 10)
 

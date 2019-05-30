@@ -82,9 +82,28 @@
                 url: '/myusers/'+$(this).parent().parent().find('.tabletIDVal').val()+"/?active_sweep="+sweep_id,
                 type: 'PUT',
                 success: function() {
-                    window.location.href='/admin/tablets/';
+                    window.location.reload();
                 }
             });
         });
+        
+        $("#searchTabletText").keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                window.location.href = "?key="+$(this).val();
+            }
+        });
+
+        $("#searchbyTableID").keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                var url = window.location.href + "&key="+$(this).val();
+                window.location.href = url;
+            }
+        });
+
+        $('#searchTablet').click(function(){
+            window.location.href = "?key="+$("#searchTabletText").val();
+        })
     })
 }(Suit.$));

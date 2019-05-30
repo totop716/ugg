@@ -10,10 +10,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 
-from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer
+from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer
 from home.models import CustomText, HomePage
 from django.db.models import Q
 from customauth.models import MyUser
+from home.models import Sweepstakes
 
 class SignupViewSet(ModelViewSet):
     serializer_class = MyUserSerializer
@@ -27,13 +28,20 @@ class LoginViewSet(ViewSet):
 
 class TabletViewSet(APIView):
     def get(self, request, pk=None):
-        if pk:
-            user = MyUser.objects.filter(Q(tablet_id__contains = pk) | Q(address__contains = pk) | Q(city__contains = pk) | Q(state__contains = pk) | Q(zipcode__contains = pk)).order_by('id')
-            serializer = MyUserSerializer(user)
-            return Response({"tablets": serializer.data})
-        users = MyUser.objects.filter(~Q(tablet_id = '')).order_by('id')
-        serializer = MyUserSerializer(users, many=True)
+        data = request.query_params
+        tablets = MyUser.objects.filter(Q(tablet_id__contains=data['key']) | Q(address__contains=data['key']) | Q(city__contains=data['key']) | Q(state__contains=data['key']) | Q(zipcode__contains=data['key'])).order_by('id')
+        serializer = MyUserSerializer(tablets, many=True)
         return Response({"tablets": serializer.data})
+
+class SweepstakeViewSet(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            sweepstake = get_object_or_404(Sweepstakes.objects.all(), id=pk)
+            serializer = SweepstakesSerializer(sweepstake)
+            return Response({"sweepstake": serializer.data})
+        sweepstakes = Sweepstakes.objects.all()
+        serializer = SweepstakesSerializer(sweepstakes, many=True)
+        return Response({"sweepstakes": serializer.data})
 
 class MyUserViewSet(APIView):
     def get(self, request, pk=None):

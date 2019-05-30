@@ -30,8 +30,7 @@ class Signup extends Component {
     lastname: '',
     address: '',
     city: '',
-    po_box: '',
-    unit_number: '',
+    po_box_unit_number: '',
     suite: '',
     txtState: '',
     zipcode: '',
@@ -112,7 +111,7 @@ class Signup extends Component {
     
     this.setState({error});
     if(this.state.error.name == '' && this.state.error.address == ''){
-      signupUserAPI(this.state.firstname, this.state.lastname, this.state.address, this.state.city, this.state.txtState, this.state.zipcode, this.state.emailaddress, phoneNo,this.state.po_box, this.state.unit_number, this.state.suite).then(res => {
+      signupUserAPI(this.state.firstname, this.state.lastname, this.state.address, this.state.city, this.state.txtState, this.state.zipcode, this.state.emailaddress, phoneNo,this.state.po_box_unit_number, this.state.suite).then(res => {
         this.props.navigation.navigate('Login');
       })
     }
@@ -183,15 +182,9 @@ class Signup extends Component {
               <View style={styles.listItem}>
                 <Input
                   style={styles.input}
-                  placeholder="PO Box"
+                  placeholder="PO Box(Unit Number)"
                   placeholderTextColor="#919191"
-                  onChangeText={po_box => this.setState({ po_box })}
-                />
-                <Input
-                  style={styles.input}
-                  placeholder="Unit Number"
-                  placeholderTextColor="#919191"
-                  onChangeText={unit_number => this.setState({ unit_number })}
+                  onChangeText={po_box_unit_number => this.setState({ po_box_unit_number })}
                 />
                 <Input
                   style={styles.input}

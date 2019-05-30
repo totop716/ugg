@@ -1,12 +1,12 @@
 from customauth.models import MyUser
 from rest_framework import serializers
-from home.models import CustomText, HomePage
+from home.models import CustomText, HomePage, Sweepstakes
 from rest_framework.decorators import api_view
 
 class MyUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
-        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'tablet_id', 'po_box', 'unit_number', 'suite', 'sweep_ids', 'active_sweep')
+        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'tablet_id', 'po_box_unit_number', 'suite', 'sweep_ids', 'active_sweep','label')
         extra_kwargs = {
             'first_name' : {
                 'required': True
@@ -35,11 +35,11 @@ class MyUserSerializer(serializers.ModelSerializer):
             zipcode=validated_data.get('zipcode'),
             password='',
             tablet_id=validated_data.get('tablet_id'),
-            po_box=validated_data.get('po_box'),
-            unit_number=validated_data.get('unit_number'),
+            po_box_unit_number=validated_data.get('po_box_unit_number'),
             suite=validated_data.get('suite'),
             sweep_ids=validated_data.get('sweep_ids'),
-            active_sweep=validated_data.get('active_sweep')
+            active_sweep=validated_data.get('active_sweep'),
+            label= validated_data.get('label')
         )
         user.save()
         return user
@@ -63,10 +63,8 @@ class MyUserSerializer(serializers.ModelSerializer):
             instance.state = validated_data.get('state')
         if validated_data.get('zipcode') != None:
             instance.zipcode = validated_data.get('zipcode')
-        if validated_data.get('po_box') != None:
-            instance.po_box = validated_data.get('po_box')
-        if validated_data.get('unit_number') != None:
-            instance.unit_number = validated_data.get('unit_number')
+        if validated_data.get('po_box_unit_number') != None:
+            instance.po_box_unit_number = validated_data.get('po_box_unit_number')
         if validated_data.get('suite') != None:
             instance.suite = validated_data.get('suite')
         if validated_data.get('sweep_ids') != None:
@@ -85,3 +83,9 @@ class HomePageSerializer(serializers.ModelSerializer):
     class Meta:
         model = HomePage
         fields = '__all__'
+
+class SweepstakesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sweepstakes
+        fields = '__all__'
+

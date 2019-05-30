@@ -10,15 +10,25 @@
 
 {% block bodyclass %}dashboard{% endblock %}
 
-{% block breadcrumbs %}{% endblock %}
-
 {% load custom_tags %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+    <li>
+    <a href="/admin/">Home</a>
+    <span class="divider">»</span>
+    </li>
+    <li class="active">
+    Settings
+    </li>
+</ul>
+{% endblock %}
 
 {% block content %}
 <div id="content-main">
     <div class="settingspanel">
         {% if request.GET.select == 'tablet' %}
-            {% gettablets as tabletData %}
+            {% gettablets None as tabletData %}
             <div class="sweepItems">
             {% for tablet in tabletData %}
                 {% if request.GET.id|add:"0" in tablet.sweeps_id %}

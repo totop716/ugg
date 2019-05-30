@@ -37,14 +37,14 @@ const getUserAPI = (phoneNo) => {
   return users.sendRequest();
 }
 
-const signupUserAPI = (first_name, last_name, address, city, state, zipcode, email, phone, po_box, unit_number, suite) => {
+const signupUserAPI = (first_name, last_name, address, city, state, zipcode, email, phone, po_box_unit_number , suite) => {
   const path = 'api/v1/signup/';
   const url = `${Utils.serverUrl}${path}`;
   const users = new APIClient(url, APIConstants.HTTPMethod.POST);
   const currentDate = new Date();
   const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
   const tablet_id = 'Tablet';
-  return users.sendRequest({first_name, last_name, address, city, state, zipcode, email, phone, check_time, tablet_id, po_box, unit_number, suite});
+  return users.sendRequest({first_name, last_name, address, city, state, zipcode, email, phone, check_time, tablet_id, po_box_unit_number, suite, label: 'Manual Signup', sweep_ids: ',', active_sweep: '0'});
 }
 
 const updateCheckTime = (phone, check_time) => {

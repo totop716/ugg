@@ -38,6 +38,19 @@
 
 {% if not is_popup %}
   {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li>
+        <a href="/admin/">Home</a>
+        <span class="divider">»</span>
+      </li>
+      <li class="active">
+        {% if cl.opts.verbose_name == 'my user' %}
+        Users
+        {% elif cl.opts.verbose_name == 'sweepstakes' %}
+        Sweepstakes
+        {% endif %}
+      </li>
+    </ul>
   {% endblock %}
 {% endif %}
 

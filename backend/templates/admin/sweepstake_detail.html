@@ -10,23 +10,38 @@
 
 {% block bodyclass %}dashboard{% endblock %}
 
-{% block breadcrumbs %}{% endblock %}
-
 {% load custom_tags %}
 
+{% block breadcrumbs %}
+{% get_sweepstakedata request.GET.id as sweepstake %}
+<ul class="breadcrumb">
+    <li>
+    <a href="/admin/">Home</a>
+    <span class="divider">»</span>
+    </li>
+    <li>
+      <a href="/admin/home/sweepstakes/">Sweepstakes</a>
+      <span class="divider">»</span>
+    </li>
+    <li class="active">
+    {{sweepstake.name}}
+    </li>
+</ul>
+{% endblock %}
+
 {% block content %}
+  {% get_sweepstakedata request.GET.id as sweepstake %}
   <div id="content-main">
-    {% get_sweepstakedata request.GET.id as sweepstake %}
     <div class="sweepstake_row">
       <h1>{{ sweepstake.name }}</h1>
       <a class='btn btn-info' href='/admin/settings?select=tablet&id={{sweepstake.id}}'>Settings</a>
     </div>
     <div class="sweepstake_row">
-      <input type="text" class="textbox" placeholder="Search by Tablet ID" />
+      <input type="text" class="textbox" id="searchbyTableID" placeholder="Search by Tablet ID" />
       <input type="button" class="btn btn-info" value="Generate Winner" />
       <input type="button" class="btn btn-info" value="Winners" />
     </div>
-    {% gettablets_fromsweepid request.GET.id as tablets %}
+    {% gettablets_fromsweepid request.GET.id request.GET.key as tablets %}
     <table id="result_list" class="table table-striped table-bordered table-hover table-condensed">
       <thead>
       <tr>

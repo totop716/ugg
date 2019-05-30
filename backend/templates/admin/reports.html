@@ -10,7 +10,17 @@
 
 {% block bodyclass %}dashboard{% endblock %}
 
-{% block breadcrumbs %}{% endblock %}
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li>
+        <a href="/admin/">Home</a>
+        <span class="divider">»</span>
+      </li>
+      <li class="active">
+        Reports
+      </li>
+    </ul>
+  {% endblock %}
 
 {% block content %}
     <div id="content-main">
