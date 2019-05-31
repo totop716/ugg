@@ -59,7 +59,10 @@ def getsweepwinners(id):
     winner.name = tablet[0].name
     user = MyUser.objects.filter(Q(id=tablet[0].user_id_id))
     winner.user = user[0]
-    winner.checktime = dateutil.parser.parse(winner.user.check_time)
+    if winner.user.check_time != '':
+      winner.checktime = dateutil.parser.parse(winner.user.check_time)
+    else:
+      winner.checktime = ''
     winner.wintime = dateutil.parser.parse(winner.windate)
   return {'data': winners }
 
