@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^admin/sweepstake', TemplateView.as_view(template_name='admin/sweepstake_detail.html')),
     url(r'^admin/tablets/$', TemplateView.as_view(template_name='admin/tablets.html')),
+    url(r'^admin/sweepwinners', TemplateView.as_view(template_name='admin/sweepwinner.html')),
     url(r'^admin/settings', TemplateView.as_view(template_name='admin/settings.html')),
     url(r'^admin/reports/$', TemplateView.as_view(template_name='admin/reports.html')),
 ]

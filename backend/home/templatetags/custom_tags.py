@@ -1,11 +1,13 @@
 from django import template
 import datetime
 import pytz
+import dateutil.parser
+from django.utils import timezone
 from django.db.models import Q
 register = template.Library()
 
 from customauth.models import MyUser
-from home.models import Sweepstakes, Tablet
+from home.models import Sweepstakes, Tablet, SweepWinner
 
 @register.simple_tag
 def gettablets(id):
@@ -31,12 +33,33 @@ def gettablets_fromsweepid(id, key):
     tablets = Tablet.objects.filter(Q(sweep_ids__contains = filter_str) & Q(name__contains = key))
   else:
     tablets = Tablet.objects.filter(Q(sweep_ids__contains = filter_str))
+
+  winners = SweepWinner.objects.filter(Q(sweep_id_id=id) & Q(windate__gt=datetime.datetime.now()-datetime.timedelta(days=1)))
+  winner_ids = []
+  for winner in winners:
+    winner_ids.append(winner.tablet_id_id)
+  
   tablet_ids = []
+  tabletsData = []
   for tablet in tablets:
-    user = MyUser.objects.filter(Q(id=tablet.user_id_id))
-    tablet.user = user[0]
-    tablet_ids.append(tablet.id)
-  return {'data': tablets, 'ids': tablet_ids}
+    if tablet.id not in winner_ids:
+      user = MyUser.objects.filter(Q(id=tablet.user_id_id))
+      tablet.user = user[0]
+      tablet_ids.append(tablet.id)
+      tabletsData.append(tablet)
+  return {'data': tabletsData, 'ids': tablet_ids}
+
+@register.simple_tag
+def getsweepwinners(id):
+  winners = SweepWinner.objects.filter(Q(sweep_id_id=id) & Q(windate__gt=datetime.datetime.now()-datetime.timedelta(days=1)))
+  
+  for winner in winners:
+    tablet = Tablet.objects.filter(Q(id=winner.tablet_id_id))
+    winner.name = tablet[0].name
+    user = MyUser.objects.filter(Q(id=tablet[0].user_id_id))
+    winner.user = user[0]
+    winner.wintime = timezone.localtime(winner.windate)
+  return {'data': winners }
 
 @register.simple_tag
 def get_sweepstakedata(id):

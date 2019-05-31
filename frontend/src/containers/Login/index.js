@@ -77,9 +77,9 @@ class Login extends Component {
           if(this.state.userData.check_time == "" || currenttime - checkedtime > 24 * 3600 * 1000){
             this.setState({thankyouBoxVisible: true});
             const currentDate = new Date();
-            const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
-            updateCheckTime(this.state.phoneNumber, check_time).then((res1) => {
-              console.log(res1);
+            const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
+            updateCheckTime(this.state.phoneNumber, check_time).then((res2) => {
+              console.log(res2);
             })
             setTimeout(() => {
               this.setState({thankyouBoxVisible: false});
@@ -99,9 +99,9 @@ class Login extends Component {
             if(this.state.userData.check_time == "" || currenttime - checkedtime > 24 * 3600 * 1000){
               this.setState({thankyouBoxVisible: true});
               const currentDate = new Date();
-              const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
-              updateCheckTime(this.state.phoneNumber, check_time).then((res1) => {
-                console.log(res1);
+              const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
+              updateCheckTime(this.state.phoneNumber, check_time).then((res2) => {
+                console.log(res2);
               })
               setTimeout(() => {
                 this.setState({thankyouBoxVisible: false});

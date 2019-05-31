@@ -49,7 +49,7 @@ const signupUserAPI = (first_name, last_name, address, city, state, zipcode, ema
   const url = `${Utils.serverUrl}${path}`;
   const users = new APIClient(url, APIConstants.HTTPMethod.POST);
   const currentDate = new Date();
-  const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+  const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
   return users.sendRequest({first_name, last_name, address, city, state, zipcode, email, phone, check_time, po_box_unit_number, suite, label: 'Manual Signup'});
 }
 
