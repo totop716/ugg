@@ -134,12 +134,12 @@ class SweepWinner(models.Model):
         verbose_name_plural = 'SweepstakesWinner'
     
     def __str__(self):
-        return self.name
+        return self.windate
 
     @property
     def api(self):
         return f'/api/v1/sweepwinner/{self.id}/'
     @property
     def field(self):
-        return 'name'
+        return 'id'
     
