@@ -1,6 +1,7 @@
 (function ($) {
     $(document).ready(function(){
         // Here you can use regular $ sign
+        $("#winnerpopup").hide();
         $('.sweepItem').click(function(){
             if($(this).hasClass('active')){
                 $(this).removeClass('active');
@@ -50,7 +51,7 @@
                             sweep_ids = sweep_ids.replace(currentSweep, '');
                     }
                     $.ajax({
-                        url: '/myusers/'+$(this).parent().find('.tablet_phone').val()+"/?sweep_ids="+sweep_ids,
+                        url: '/tablets/'+$(this).parent().find('.tablet_id').val()+"/?sweep_ids="+sweep_ids,
                         type: 'PUT',
                         success: function() {
                             if(index == tabletCount - 1){
@@ -68,10 +69,10 @@
                 });
                 console.log({sweep_ids});
                 $.ajax({
-                    url: '/myusers/'+$("#tabletID").val()+"/?sweep_ids="+sweep_ids,
+                    url: '/tablets/'+$("#tabletID").val()+"/?sweep_ids="+sweep_ids,
                     type: 'PUT',
                     success: function() {
-                        window.location.href='/admin/tablets/';
+                        window.location.href='/admin/home/tablet/';
                     }
                 });
             }
@@ -79,7 +80,7 @@
         $('.selectedsweep').click(function(){
             var sweep_id = $(this).parent().find(".selectedsweepid").val();
             $.ajax({
-                url: '/myusers/'+$(this).parent().parent().find('.tabletIDVal').val()+"/?active_sweep="+sweep_id,
+                url: '/tablets/'+$(this).parent().parent().find('.tabletIDVal').val()+"/?active_sweep="+sweep_id,
                 type: 'PUT',
                 success: function() {
                     window.location.reload();
@@ -97,7 +98,11 @@
         $("#searchbyTableID").keypress(function(event){
             var keycode = (event.keyCode ? event.keyCode : event.which);
             if(keycode == '13'){
-                var url = window.location.href + "&key="+$(this).val();
+                var url;
+                if(window.location.href.indexOf("&key") == -1)
+                    url = window.location.href + "&key="+$(this).val();
+                else
+                    url = window.location.href.substring(0, window.location.href.indexOf("&key")) + "&key="+$(this).val();
                 window.location.href = url;
             }
         });
@@ -107,7 +112,19 @@
         });
 
         $("#generatewinner").click(function(){
-            
+            var ids = $("#tabletIDS").val().split(",");
+            var winner_id = ids[Math.floor(Math.random() * ids.length)];
+            $.ajax({
+                url: '/generatewinner/?sweep_id='+$("#sweepID").val()+"&winner_id="+winner_id,
+                type: 'POST',
+                success: function(res) {
+                    $("#winnerpopup").html(res.success);
+                    $("#winnerpopup").fadeIn(500);
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 5000)
+                }
+            });
         });
     })
 }(Suit.$));

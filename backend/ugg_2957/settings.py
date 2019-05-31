@@ -103,8 +103,8 @@ SUIT_CONFIG = {
     'SEARCH_URL': '',
     'MENU': (
     {'label': 'Users', 'icon':'icon-user', 'url': '/admin/customauth/myuser/', 'models': ('MyUser')},
-    {'label': 'Sweepstakes', 'icon':'icon-bell', 'url': '/admin/home/sweepstakes/'},
-    {'label': 'Tablets', 'icon':'icon-camera', 'url': '/admin/tablets/'},
+    {'label': 'Sweepstakes', 'icon':'icon-bell', 'url': '/admin/home/sweepstakes/' },
+    {'label': 'Tablets', 'icon':'icon-camera', 'url': '/admin/home/tablet/'},
     {'label': 'Reports', 'icon':'icon-book', 'url': '/admin/reports/'},
     ),
 }

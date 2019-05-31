@@ -11,11 +11,11 @@ from customauth.models import MyUser
 class MyUserResource(resources.ModelResource):
     class Meta:
         model = MyUser
-        fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode','email','tablet_id')
+        fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode','email')
 
 class MyUserAdmin(ImportMixin, admin.ModelAdmin):
     resource_class = MyUserResource
-    fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode','email','tablet_id')
+    fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode','email')
     list_display = ('first_name','last_name','email','phone','address','city','state','zipcode','po_box_unit_number','suite','label')
     search_fields = ('first_name','last_name','email','phone','address','city','state','zipcode','po_box_unit_number','suite')
 
@@ -54,7 +54,7 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('first_name', 'last_name', 'email', 'phone', 'address','city','state', 'zipcode', 'po_box', 'password')
+    list_display = ('first_name', 'last_name', 'email', 'phone', 'address','city','state', 'zipcode', 'po_box_unit_number', 'password')
     list_filter = ('is_admin',)
     ordering = ('phone','email')
     filter_horizontal = ()

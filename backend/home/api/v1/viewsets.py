@@ -10,11 +10,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 
-from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer
+from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer, TabletSerializer, SweepwinnerSerializer
 from home.models import CustomText, HomePage
 from django.db.models import Q
 from customauth.models import MyUser
-from home.models import Sweepstakes
+from home.models import Sweepstakes, Tablet, SweepWinner
+import datetime
 
 class SignupViewSet(ModelViewSet):
     serializer_class = MyUserSerializer
@@ -28,10 +29,38 @@ class LoginViewSet(ViewSet):
 
 class TabletViewSet(APIView):
     def get(self, request, pk=None):
+        if pk:
+            user = get_object_or_404(Tablet.objects.all(), user_id_id=pk)
+            serializer = TabletSerializer(user)
+            return Response({"tablet": serializer.data})
         data = request.query_params
-        tablets = MyUser.objects.filter(Q(tablet_id__contains=data['key']) | Q(address__contains=data['key']) | Q(city__contains=data['key']) | Q(state__contains=data['key']) | Q(zipcode__contains=data['key'])).order_by('id')
-        serializer = MyUserSerializer(tablets, many=True)
+        tablets = Tablet.objects.all()
+        serializer = TabletSerializer(tablets, many=True)
         return Response({"tablets": serializer.data})
+
+    def post(self, request):
+        data = request.query_params
+        tablet = Tablet.objects.create(name = data.get('name'),
+            user_id_id = data.get('user_id_id'))
+        tablet.save()
+
+        return Response({"success": "Tablet '{}' created successfully".format(data)})
+        
+    def put(self, request, pk):
+        saved_tablet = get_object_or_404(Tablet.objects.all(), id=pk)
+        data = request.query_params
+        serializer = TabletSerializer(instance=saved_tablet, data=data, partial=True)
+
+        if serializer.is_valid(raise_exception=True):
+            saved_tablet = serializer.save()
+        return Response({"success": "Tablet '{}' updated successfully".format(data)})
+
+
+    def delete(self, request, pk):
+        # Get object with this pk
+        tablet = get_object_or_404(Tablet.objects.all(), id=pk)
+        tablet.delete()
+        return Response({"message": "Tablet with id `{}` has been deleted.".format(pk)},status=204)
 
 class SweepstakeViewSet(APIView):
     def get(self, request, pk=None):
@@ -42,6 +71,18 @@ class SweepstakeViewSet(APIView):
         sweepstakes = Sweepstakes.objects.all()
         serializer = SweepstakesSerializer(sweepstakes, many=True)
         return Response({"sweepstakes": serializer.data})
+
+class SweepwinnerViewSet(APIView):
+    def post(self, request, pk=None):
+        data = request.query_params
+        sweep=Sweepstakes.objects.filter(id=data.get('sweep_id'))
+        wintablet=Tablet.objects.filter(id=data.get('winner_id'))
+        winItem = SweepWinner.objects.create(
+            windate=datetime.datetime.now(),
+            sweep_id_id=data.get('sweep_id'),
+            tablet_id_id=data.get('winner_id'))
+        winItem.save()
+        return Response({"success": "'{}' won in '{}'".format(wintablet[0].name, sweep[0].name)})
 
 class MyUserViewSet(APIView):
     def get(self, request, pk=None):

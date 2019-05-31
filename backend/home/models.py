@@ -4,6 +4,7 @@ from django.db import models
 
 from django.db import models
 from django.contrib.auth.models import User
+from customauth.models import MyUser
 
 
 class CustomText(models.Model):
@@ -79,24 +80,6 @@ class Participants(models.Model):
     def field(self):
         return 'name'
 
-class SweepWinner(models.Model):
-    windate = models.CharField(max_length=100)
-    sweep_id = models.IntegerField(max_length=20)
-    tablet_id = models.IntegerField(max_length=20)
-
-    class Meta:
-        verbose_name_plural = 'SweepstakesWinner'
-    
-    def __str__(self):
-        return self.name
-
-    @property
-    def api(self):
-        return f'/api/v1/sweepwinner/{self.id}/'
-    @property
-    def field(self):
-        return 'name'
-
 class Sweepstakes(models.Model):
     name = models.CharField(max_length=100)
     startdate = models.DateTimeField()
@@ -115,6 +98,47 @@ class Sweepstakes(models.Model):
     @property
     def api(self):
         return f'/api/v1/sweepstakes/{self.id}/'
+    @property
+    def field(self):
+        return 'name'
+
+class Tablet(models.Model):
+    name = models.CharField('Tablet ID', max_length=100)
+    user_id = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    address = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    zipcode = models.CharField(max_length=100)
+    sweep_ids = models.CharField(max_length = 100)
+    active_sweep = models.CharField(max_length = 10)
+
+    class Meta:
+        verbose_name_plural = 'Tablets'
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def api(self):
+        return f'/api/v1/sweepstakes/{self.id}/'
+    @property
+    def field(self):
+        return 'name'
+
+class SweepWinner(models.Model):
+    windate = models.CharField(max_length=100)
+    sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE)
+    tablet_id = models.ForeignKey(Tablet, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = 'SweepstakesWinner'
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def api(self):
+        return f'/api/v1/sweepwinner/{self.id}/'
     @property
     def field(self):
         return 'name'

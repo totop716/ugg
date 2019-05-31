@@ -37,14 +37,20 @@ const getUserAPI = (phoneNo) => {
   return users.sendRequest();
 }
 
-const signupUserAPI = (first_name, last_name, address, city, state, zipcode, email, phone, po_box_unit_number , suite) => {
+const getTabletAPI = (id) => {
+  const path = 'tablets/'+id;
+  const url = `${Utils.serverUrl}${path}/`;
+  const users = new APIClient(url, APIConstants.HTTPMethod.GET);
+  return users.sendRequest();
+}
+
+const signupUserAPI = (first_name, last_name, address, city, state, zipcode, email, phone, po_box_unit_number, suite) => {
   const path = 'api/v1/signup/';
   const url = `${Utils.serverUrl}${path}`;
   const users = new APIClient(url, APIConstants.HTTPMethod.POST);
   const currentDate = new Date();
   const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
-  const tablet_id = 'Tablet';
-  return users.sendRequest({first_name, last_name, address, city, state, zipcode, email, phone, check_time, tablet_id, po_box_unit_number, suite, label: 'Manual Signup', sweep_ids: ',', active_sweep: '0'});
+  return users.sendRequest({first_name, last_name, address, city, state, zipcode, email, phone, check_time, po_box_unit_number, suite, label: 'Manual Signup'});
 }
 
 const updateCheckTime = (phone, check_time) => {
@@ -54,11 +60,17 @@ const updateCheckTime = (phone, check_time) => {
   return users.sendRequest();
 }
 
-const updateTabletID = (phone, tablet_id) => {
-  const path = 'myusers/'+phone;
-  const url = `${Utils.serverUrl}${path}/?tablet_id=`+tablet_id;
-  const users = new APIClient(url, APIConstants.HTTPMethod.PUT);
+const updateTabletID = (tabletData, tablet_id, user_id) => {
+  if(tabletData.name == ""){
+    const path = 'tablets/';
+    const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+`&user_id_id=`+user_id;
+    users = new APIClient(url, APIConstants.HTTPMethod.POST);  
+  }else{
+    const path = 'tablets/'+tabletData.id;
+    const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+`&user_id_id=`+user_id;
+    users = new APIClient(url, APIConstants.HTTPMethod.PUT);
+  }
   return users.sendRequest();
 }
 
-export { loginAPI, signupAPI, getUserAPI, signupUserAPI, updateCheckTime, updateTabletID };
+export { loginAPI, signupAPI, getUserAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI };

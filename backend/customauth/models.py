@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 # Create your models here.
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, first_name, last_name, email, phone, address, city, state, zipcode, password, tablet_id, check_time, po_box_unit_number, suite, label, sweep_ids, active_sweep):
+    def create_user(self, first_name, last_name, email, phone, address, city, state, zipcode, password, check_time, po_box_unit_number, suite, label):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -25,13 +25,10 @@ class MyUserManager(BaseUserManager):
             city=city,
             state=state,
             zipcode=zipcode,
-            tablet_id=tablet_id,
             check_time=check_time,
             po_box_unit_number = po_box_unit_number,
             suite = suite,
             label = label,
-            sweep_ids = sweep_ids,
-            active_sweep = active_sweep,
         )
 
         user.set_password(password)
@@ -52,13 +49,10 @@ class MyUserManager(BaseUserManager):
             state = "",
             zipcode="",
             password=password,
-            tablet_id="",
             check_time="",
             po_box_unit_number = "",
             suite = "",
             label = "",
-            sweep_ids = "",
-            active_sweep = ""
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -77,16 +71,13 @@ class MyUser(AbstractBaseUser):
     city = models.CharField(max_length =50)
     state = models.CharField(max_length =50)
     zipcode = models.CharField(max_length =50)
-    phone = models.CharField(max_length =50, unique=True)
+    phone = models.CharField(max_length =50, unique=True, help_text="Please input Phone No in this format ( ex: 1234566788 )")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    tablet_id = models.CharField(max_length =50)
     check_time = models.CharField(max_length =200)
     po_box_unit_number = models.CharField("PO Box/Unit Number", max_length =50)
     suite = models.CharField(max_length =50)
     label = models.CharField(max_length = 100, default="Added by Admin")
-    sweep_ids = models.CharField(max_length = 100)
-    active_sweep = models.CharField(max_length = 10)
 
     objects = MyUserManager()
 
@@ -94,7 +85,7 @@ class MyUser(AbstractBaseUser):
     REQUIRED_FIELDS = ['email']
 
     def __str__(self):
-        return self.phone
+        return self.email
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"

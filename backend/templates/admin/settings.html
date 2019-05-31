@@ -28,13 +28,13 @@
 <div id="content-main">
     <div class="settingspanel">
         {% if request.GET.select == 'tablet' %}
-            {% gettablets None as tabletData %}
+            {% gettablets '' as tabletData %}
             <div class="sweepItems">
             {% for tablet in tabletData %}
                 {% if request.GET.id|add:"0" in tablet.sweeps_id %}
-                    <div class="sweepItemContainer"><input type="button" class="sweepItem active" value="{{ tablet.tablet_id }}" /><input type="hidden" class="tablet_phone" value="{{ tablet.phone }}" /><input type="hidden" class="tablet_sweepids" value="{{ tablet.sweep_ids }}" /></div>
+                    <div class="sweepItemContainer"><input type="button" class="sweepItem active" value="{{ tablet.name }}" /><input type="hidden" class="tablet_id" value="{{ tablet.id }}" /><input type="hidden" class="tablet_sweepids" value="{{ tablet.sweep_ids }}" /></div>
                 {% else %}
-                    <div class="sweepItemContainer"><input type="button" class="sweepItem" value="{{ tablet.tablet_id }}" /><input type="hidden" class="tablet_phone" value="{{ tablet.phone }}" /><input type="hidden" class="tablet_sweepids" value="{{ tablet.sweep_ids }}" /></div>
+                    <div class="sweepItemContainer"><input type="button" class="sweepItem" value="{{ tablet.name }}" /><input type="hidden" class="tablet_id" value="{{ tablet.id }}" /><input type="hidden" class="tablet_sweepids" value="{{ tablet.sweep_ids }}" /></div>
                 {% endif %}
             {% endfor %}
             </div>
@@ -52,7 +52,7 @@
                 {% endif %}
             {% endfor %}
             </div>
-            <input type="hidden" id="tabletID" value="{{tabletData.phone}}" />
+            <input type="hidden" id="tabletID" value="{{tabletData.id}}" />
         {% endif %}
         <input type="hidden" id="settingType" value="{{request.GET.select}}" />
         <input type="button" class="btn btn-success saveSettings" value="Save" />

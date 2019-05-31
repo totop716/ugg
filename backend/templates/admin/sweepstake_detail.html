@@ -63,25 +63,28 @@
         </tr>
       </thead>
       <tbody>
-        {% for tablet in tablets %}
+        {% for tablet in tablets.data %}
           <tr>
             <td>
-              {{ tablet.first_name }}
+              {{ tablet.user.first_name }}
             </td>
             <td>
-              {{ tablet.last_name }}
+              {{ tablet.user.last_name }}
             </td>
             <td>
-              {{ tablet.phone }}
+              {{ tablet.user.phone }}
             </td>
             <td>
-              {{ tablet.tablet_id }}
+              {{ tablet.name }}
             </td>
             <td>
-              {{ tablet.check_time }}
+              {{ tablet.user.check_time }}
             </td>
           </tr>
         {% endfor %}
+        <div id="winnerpopup">aaaaa</div>
+        <input type="hidden" id="sweepID" value="{{ request.GET.id }}" />
+        <input type="hidden" id="tabletIDS" value="{{ tablets.ids|join:',' }}" />
       </tbody>
     </table>
   </div>

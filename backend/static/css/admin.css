@@ -90,3 +90,15 @@
   margin-bottom: 0 !important;
   margin-right: 10px;
 }
+
+#winnerpopup{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  border: 1px solid #333;
+  padding: 20px;
+  background: #ddd;
+  display: none;
+}

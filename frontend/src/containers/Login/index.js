@@ -20,7 +20,7 @@ import {
 } from 'react-native-masked-text'
 
 import styles from './styles';
-import { getUserAPI, updateCheckTime, updateTabletID } from '../../services/Authentication';
+import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI } from '../../services/Authentication';
 
 class Login extends Component {
   state = {
@@ -35,7 +35,8 @@ class Login extends Component {
     phoneNumber: "", 
     phoneNumberFormat: "",
     tabletID: "",
-    userData: null
+    userData: null,
+    tabletData: null
   };
 
   componentDidMount() {
@@ -67,27 +68,52 @@ class Login extends Component {
       this.setState({phoneNoAlert: true})
     }else{
       getUserAPI(this.state.phoneNumber).then((res) => {
-        console.log(res);
         this.setState({userData: res.user});
-        const currenttime = new Date().getTime();
-        const checkedtime = new Date(this.state.userData.check_time).getTime();
-        this.setState({tabletID: this.state.userData.tablet_id});
-        if(currenttime - checkedtime > 24 * 3600 * 1000){
-          this.setState({thankyouBoxVisible: true});
-          const currentDate = new Date();
-          const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
-          updateCheckTime(this.state.phoneNumber, check_time).then((res1) => {
-            console.log(res1);
-          })
+        getTabletAPI(this.state.userData.id).then((res1)=>{
+          this.setState({tabletData: res1.tablet})
+          this.setState({tabletID: res1.tablet.name});
+          const currenttime = new Date().getTime();
+          const checkedtime = new Date(this.state.userData.check_time).getTime();
+          if(this.state.userData.check_time == "" || currenttime - checkedtime > 24 * 3600 * 1000){
+            this.setState({thankyouBoxVisible: true});
+            const currentDate = new Date();
+            const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+            updateCheckTime(this.state.phoneNumber, check_time).then((res1) => {
+              console.log(res1);
+            })
+            setTimeout(() => {
+              this.setState({thankyouBoxVisible: false});
+            }, 3000);
+          }else{
+            this.setState({comebackBoxVisible: true});
+          }
           setTimeout(() => {
-            this.setState({thankyouBoxVisible: false});
-          }, 3000);
-        }else{
-          this.setState({comebackBoxVisible: true});
-        }
-        setTimeout(() => {
-          this.setState({phoneNumberFormat: ""});
-        }, 3000)
+            this.setState({phoneNumberFormat: ""});
+          }, 3000)  
+        }).catch((error)=>{
+          if(error){
+            this.setState({tabletData: {name: ''}})
+            this.setState({tabletID: ''});
+            const currenttime = new Date().getTime();
+            const checkedtime = new Date(this.state.userData.check_time).getTime();
+            if(this.state.userData.check_time == "" || currenttime - checkedtime > 24 * 3600 * 1000){
+              this.setState({thankyouBoxVisible: true});
+              const currentDate = new Date();
+              const check_time = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+              updateCheckTime(this.state.phoneNumber, check_time).then((res1) => {
+                console.log(res1);
+              })
+              setTimeout(() => {
+                this.setState({thankyouBoxVisible: false});
+              }, 3000);
+            }else{
+              this.setState({comebackBoxVisible: true});
+            }
+            setTimeout(() => {
+              this.setState({phoneNumberFormat: ""});
+            }, 3000)
+          }
+        })
       }).catch((error)=>{
         if(error)
           this.goToSignup();
@@ -125,7 +151,7 @@ class Login extends Component {
   }
 
   submitTabletID = () => {
-    updateTabletID(this.state.phoneNumber, this.state.tabletID).then((res1) => {
+    updateTabletID(this.state.tabletData, this.state.tabletID, this.state.userData.id).then((res1) => {
       console.log(res1);
       this.setState({showTabletForm: false});
     })
@@ -146,12 +172,12 @@ class Login extends Component {
         }
         {this.state.thankyouBoxVisible && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideThankyouBox}/>
-          <Text style={styles.thankyouText}>Thank you “{this.state.userData.first_name}“ for checking in “{this.state.userData.tablet_id }“</Text>
+          <Text style={styles.thankyouText}>Thank you “{this.state.userData.first_name}“ for checking in “{this.state.tabletData.name }“</Text>
         </View>
         }
         {this.state.comebackBoxVisible && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidecomeebackBox}/>
-          <Text style={styles.thankyouText}>You have already checked in to “{this.state.userData.tablet_id }” for Today.</Text><Text style={styles.thankyouText}>Come back tomorrow.</Text>
+          <Text style={styles.thankyouText}>You have already checked in to “{this.state.tabletData.name }” for Today.</Text><Text style={styles.thankyouText}>Come back tomorrow.</Text>
         </View>
         }
         {this.state.showPasswordBox && <View style={[styles.thankyouBox, styles.passwordBox]}>
