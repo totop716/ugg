@@ -4,6 +4,7 @@ import pytz
 import dateutil.parser
 from django.utils import timezone
 from django.db.models import Q
+import dateutil.parser
 register = template.Library()
 
 from customauth.models import MyUser
@@ -58,7 +59,8 @@ def getsweepwinners(id):
     winner.name = tablet[0].name
     user = MyUser.objects.filter(Q(id=tablet[0].user_id_id))
     winner.user = user[0]
-    winner.wintime = timezone.localtime(winner.windate)
+    winner.checktime = dateutil.parser.parse(winner.user.check_time)
+    winner.wintime = dateutil.parser.parse(winner.windate)
   return {'data': winners }
 
 @register.simple_tag
