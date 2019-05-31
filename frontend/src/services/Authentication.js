@@ -62,7 +62,7 @@ const updateCheckTime = (phone, check_time) => {
 
 const updateTabletID = (tabletData, tablet_id, user_id) => {
   if(tabletData.name == ""){
-    const path = 'tablets/';
+    const path = 'tablets';
     const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+`&user_id_id=`+user_id;
     users = new APIClient(url, APIConstants.HTTPMethod.POST);  
   }else{

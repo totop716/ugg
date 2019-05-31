@@ -104,7 +104,7 @@ class Sweepstakes(models.Model):
 
 class Tablet(models.Model):
     name = models.CharField('Tablet ID', max_length=100)
-    user_id = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(MyUser, on_delete=models.CASCADE, blank=True)
     address = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
