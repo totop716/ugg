@@ -51,14 +51,20 @@ const styles = StyleSheet.create({
   },
   passwordBox: {
     padding: 10,
+    height: 'auto'
+  },
+  errorText: {
+    color: '#f00',
+    fontSize: 25,
+    marginLeft: 10,
+    marginTop: 5
   },
   inputMenuPass:{
+    width: '100%',
     borderWidth: 1,
     borderColor: '#333',
-    width: '100%',
-    height: 30,
     textAlign: 'center',
-    fontSize: 25
+    fontSize: 25,
   },
   content: {
     flex: 1,
@@ -137,7 +143,8 @@ const styles = StyleSheet.create({
   },
   disclaimerText: {  
     fontSize: 20,
-    color: '#000'
+    color: '#000',
+    width: 300
   },
   buttonContainer: {
     flex: 1,

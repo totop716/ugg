@@ -1,4 +1,5 @@
 from django.db import models
+import base64
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
@@ -31,7 +32,7 @@ class MyUserManager(BaseUserManager):
             label = label,
         )
 
-        user.set_password(password)
+        user.set_password(base64.b64encode(password))
         user.save(using=self._db)
         return user
 
@@ -48,7 +49,7 @@ class MyUserManager(BaseUserManager):
             city = "",
             state = "",
             zipcode="",
-            password=password,
+            password=base64.b64encode(password),
             check_time="",
             po_box_unit_number = "",
             suite = "",
@@ -71,7 +72,7 @@ class MyUser(AbstractBaseUser):
     city = models.CharField(max_length =50)
     state = models.CharField(max_length =50)
     zipcode = models.CharField(max_length =50)
-    phone = models.CharField(max_length =50, unique=True, help_text="Please input Phone No in this format ( ex: 1234566788 )")
+    phone = models.CharField(max_length =50, unique=True, help_text="Please input Phone No in this format ( ex: 12345667889 or 2345678890)")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     check_time = models.CharField(max_length =200)

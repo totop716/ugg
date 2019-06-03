@@ -2,11 +2,12 @@ from customauth.models import MyUser
 from rest_framework import serializers
 from home.models import CustomText, HomePage, Sweepstakes, Tablet, SweepWinner
 from rest_framework.decorators import api_view
+import base64
 
 class MyUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
-        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'po_box_unit_number', 'suite', 'label')
+        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'po_box_unit_number', 'suite', 'label', 'password')
         extra_kwargs = {
             'first_name' : {
                 'required': True
@@ -33,7 +34,7 @@ class MyUserSerializer(serializers.ModelSerializer):
             city=validated_data.get('city'),
             state=validated_data.get('state'),
             zipcode=validated_data.get('zipcode'),
-            password='',
+            password=base64.b64encode(validated_data.get('password')),
             po_box_unit_number=validated_data.get('po_box_unit_number'),
             suite=validated_data.get('suite'),
             label= validated_data.get('label')
@@ -62,6 +63,8 @@ class MyUserSerializer(serializers.ModelSerializer):
             instance.po_box_unit_number = validated_data.get('po_box_unit_number')
         if validated_data.get('suite') != None:
             instance.suite = validated_data.get('suite')
+        if validated_data.get('password') != None:
+            instance.setPassword(base64.b64encode(validated_data.get('password')))
         instance.save()
         return instance
 

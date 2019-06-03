@@ -13,12 +13,6 @@ class MyUserResource(resources.ModelResource):
         model = MyUser
         fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode','email')
 
-class MyUserAdmin(ImportMixin, admin.ModelAdmin):
-    resource_class = MyUserResource
-    fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode','email')
-    list_display = ('first_name','last_name','email','phone','address','city','state','zipcode','po_box_unit_number','suite','label')
-    search_fields = ('first_name','last_name','email','phone','address','city','state','zipcode','po_box_unit_number','suite')
-
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
@@ -40,11 +34,22 @@ class UserChangeForm(forms.ModelForm):
     the user, but replaces the password field with admin's
     password hash display field.
     """
-    password = ReadOnlyPasswordHashField()
+    # password = ReadOnlyPasswordHashField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         model = MyUser
         fields = ('first_name', 'last_name', 'email', 'phone', 'address','city','state','zipcode','password')
+
+class MyUserAdmin(ImportMixin, admin.ModelAdmin):
+    # The forms to add and change user instances
+    form = UserChangeForm
+    add_form = UserCreationForm
+
+    resource_class = MyUserResource
+    fields =  ('first_name','last_name','password','address','phone','po_box_unit_number','suite','city','state','zipcode','email')
+    list_display = ('first_name','last_name','email','phone','address','city','state','zipcode','po_box_unit_number','suite','label')
+    search_fields = ('first_name','last_name','email','phone','address','city','state','zipcode','po_box_unit_number','suite')
 
 class UserAdmin(BaseUserAdmin):
     # The forms to add and change user instances

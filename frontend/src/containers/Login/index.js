@@ -20,7 +20,8 @@ import {
 } from 'react-native-masked-text'
 
 import styles from './styles';
-import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI } from '../../services/Authentication';
+import Utils from '../../utils'
+import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI } from '../../services/Authentication';
 
 class Login extends Component {
   state = {
@@ -36,7 +37,12 @@ class Login extends Component {
     phoneNumberFormat: "",
     tabletID: "",
     userData: null,
-    tabletData: null
+    tabletData: null,
+    passwordError: '',
+    sweepstakeData: null,
+    sweepbackground: require('../../assets/images/SummerShoppingBg.png'),
+    sweeplogo: require('../../assets/images/Summer_Shopping.png'),
+    sweepdisclaimer: "Welcome to\nUniversal Gaming Group!!!"
   };
 
   componentDidMount() {
@@ -70,8 +76,15 @@ class Login extends Component {
       getUserAPI(this.state.phoneNumber).then((res) => {
         this.setState({userData: res.user});
         getTabletAPI(this.state.userData.id).then((res1)=>{
+          console.log(res1.tablet);
           this.setState({tabletData: res1.tablet})
           this.setState({tabletID: res1.tablet.name});
+          getSweepstakeAPI(this.state.tabletData.active_sweep).then((res2)=>{
+            this.setState({sweepstakeData: res2.sweepstake});
+            this.setState({sweepbackground: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}})
+            this.setState({sweeplogo: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.logo}})
+            this.setState({sweepdisclaimer: this.state.sweepstakeData.disclaimer})
+          })
           const currenttime = new Date().getTime();
           const checkedtime = new Date(this.state.userData.check_time).getTime();
           if(this.state.userData.check_time == "" || currenttime - checkedtime > 24 * 3600 * 1000){
@@ -130,7 +143,10 @@ class Login extends Component {
   }
 
   showPasswordBox = () => {
-    this.setState({showPasswordBox: true});
+    if(this.state.phoneNumber != '')
+      this.setState({showPasswordBox: true});
+    else
+      this.setState({phoneNoAlert: true});
   }
 
   hidePasswordBox = () => {
@@ -142,8 +158,13 @@ class Login extends Component {
   }
 
   passwordSubmit = () => {
-    this.setState({showPasswordBox: false});
-    this.setState({showMenu: true});
+    if(this.state.menuPass == this.state.userData.password){
+      this.setState({passwordError: ''});
+      this.setState({showPasswordBox: false});
+      this.setState({showMenu: true});
+    }else{
+      this.setState({passwordError: 'Please input correct password'});
+    }
   }
 
   exitFunction = () => {
@@ -164,7 +185,9 @@ class Login extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        <Image source={require('../../assets/images/SummerShoppingBg.png')} style={styles.backgroundImage} />
+        {this.state.sweepstakeData == null &&
+          <Image source={this.state.sweepbackground} style={styles.backgroundImage} />
+        }
         {this.state.phoneNoAlert && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePhoneNoAlert}/>
           <Text style={styles.thankyouText}>You need to input Phone NO</Text>
@@ -181,22 +204,18 @@ class Login extends Component {
         </View>
         }
         {this.state.showPasswordBox && <View style={[styles.thankyouBox, styles.passwordBox]}>
-          {this.state.phoneNumber != "" && 
-            <Input
-              style={styles.inputMenuPass}
-              placeholder="Enter Password"
-              placeholderTextColor="#333"
-              autoCapitalize="none"
-              onChangeText={menuPass => this.setState({ menuPass })}
-              onSubmitEditing={this.passwordSubmit}
-              secureTextEntry
-            />
-          }
-          {this.state.phoneNumber == "" &&
-            <View style={styles.passwordContainer}>
-              <Icon ios='ios-close' android="md-close" style={[styles.closeIcon, styles.closeIconPass]} onPress={this.hidePasswordBox}/>
-              <Text style={styles.thankyouText}>You need to login with Phone NO at first.</Text>
-            </View>
+          <Input
+            style={styles.inputMenuPass}
+            placeholder="Enter Password"
+            placeholderTextColor="#333"
+            autoCapitalize="none"
+            onChangeText={menuPass => this.setState({ menuPass })}
+            onSubmitEditing={this.passwordSubmit}
+            secureTextEntry
+          />
+          {
+            this.state.passwordError != "" &&
+              <Text style={styles.errorText}>{this.state.passwordError}</Text>
           }
         </View>
         }
@@ -236,7 +255,7 @@ class Login extends Component {
           <View style={styles.logoContainer}>
             <Image
               style={styles.logo}
-              source={require('../../assets/images/Summer_Shopping.png')}
+              source={this.state.sweeplogo}
             />
           </View>
 
@@ -271,8 +290,7 @@ class Login extends Component {
             >
               <Text style={styles.loginText}>Submit</Text>
             </Button>
-
-            <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>Welcome to{'\n'}Universal Gaming Group!!!</Text></View>
+            <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>{this.state.sweepdisclaimer}</Text></View>
           </Form>
           <View style={styles.buttonContainer}>
             {/* Login Button */}
