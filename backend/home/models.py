@@ -80,6 +80,41 @@ class Participants(models.Model):
     def field(self):
         return 'name'
 
+class SweepUser(models.Model):
+    first_name = models.CharField("First Name", max_length =50)
+    last_name = models.CharField("Last Name", max_length =50)
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+        blank=True
+    )
+    address = models.CharField(max_length =200)
+    city = models.CharField(max_length =50)
+    state = models.CharField(max_length =50)
+    zipcode = models.CharField(max_length =50)
+    phone = models.CharField(max_length =50, unique=True, help_text="Please input Phone No in this format ( ex: 12345667889 or 2345678890)")
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    check_time = models.CharField(max_length =200)
+    po_box_unit_number = models.CharField("PO Box/Unit Number", max_length =50, blank=True)
+    suite = models.CharField(max_length =50, blank=True)
+    label = models.CharField(max_length = 100, default="Added by Admin")
+    password = models.CharField(max_length = 100, blank=True)
+
+    class Meta:
+        verbose_name_plural = 'Users'
+    
+    def __str__(self):
+        return self.email
+
+    @property
+    def api(self):
+        return f'/api/v1/sweepusers/{self.phone}/'
+    @property
+    def field(self):
+        return 'email'
+
 class Sweepstakes(models.Model):
     name = models.CharField(max_length=100)
     startdate = models.DateTimeField()
@@ -104,7 +139,7 @@ class Sweepstakes(models.Model):
 
 class Tablet(models.Model):
     name = models.CharField('Tablet ID', max_length=100)
-    user_id = models.ForeignKey(MyUser, on_delete=models.CASCADE, blank=True)
+    user_id = models.ForeignKey(SweepUser, on_delete=models.CASCADE, blank=True)
     address = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     city = models.CharField(max_length=100)

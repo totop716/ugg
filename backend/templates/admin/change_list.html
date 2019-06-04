@@ -44,7 +44,7 @@
         <span class="divider">»</span>
       </li>
       <li class="active">
-        {% if cl.opts.verbose_name == 'my user' %}
+        {% if cl.opts.verbose_name == 'sweep user' %}
         Users
         {% elif cl.opts.verbose_name == 'sweepstakes' %}
         Sweepstakes
@@ -121,7 +121,15 @@
                 {% else %}
                   {% blocktrans with cl.opts.verbose_name_plural|capfirst as name_plural %}{{ name_plural }} are not created yet{% endblocktrans %}.
                   {% if has_add_permission %}<a href="{% url cl.opts|admin_urlname:'add' %}{% if is_popup %}?{{ POPUP_VAR }}=1{% endif %}">
-                    {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</a>{% endif %}
+                    Add 
+                    {% if cl.opts.verbose_name == 'sweep user' %}
+                    User
+                    {% elif cl.opts.verbose_name == 'sweepstakes' %}
+                    Sweepstake
+                    {% elif cl.opts.verbose_name == 'tablet' %}
+                    Tablet
+                    {% endif %}
+                    </a>{% endif %}
                 {% endif %}
               </div>
             {% endif %}

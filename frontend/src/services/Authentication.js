@@ -31,7 +31,7 @@ const signupAPI = (username, password, confirmPassword) => {
 };
 
 const getUserAPI = (phoneNo) => {
-  const path = 'myusers/'+phoneNo;
+  const path = 'sweepusers/'+phoneNo;
   const url = `${Utils.serverUrl}${path}/`;
   const users = new APIClient(url, APIConstants.HTTPMethod.GET);
   return users.sendRequest();
@@ -57,11 +57,11 @@ const signupUserAPI = (first_name, last_name, address, city, state, zipcode, ema
   const users = new APIClient(url, APIConstants.HTTPMethod.POST);
   const currentDate = new Date();
   const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
-  return users.sendRequest({first_name, last_name, address, city, state, zipcode, email, phone, check_time, po_box_unit_number, suite, label: 'Manual Signup'});
+  return users.sendRequest({first_name, last_name, address, city, state, zipcode, email, phone, check_time, po_box_unit_number, suite, label: 'Manual Signup', password: ''});
 }
 
 const updateCheckTime = (phone, check_time) => {
-  const path = 'myusers/'+phone;
+  const path = 'sweepusers/'+phone;
   const url = `${Utils.serverUrl}${path}/?check_time=`+check_time;
   const users = new APIClient(url, APIConstants.HTTPMethod.PUT);
   return users.sendRequest();

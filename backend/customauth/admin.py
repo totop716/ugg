@@ -35,7 +35,7 @@ class UserChangeForm(forms.ModelForm):
     password hash display field.
     """
     # password = ReadOnlyPasswordHashField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput, required=False)
 
     class Meta:
         model = MyUser
@@ -64,6 +64,6 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('phone','email')
     filter_horizontal = ()
 
-admin.site.register(MyUser, MyUserAdmin)
+# admin.site.register(MyUser, MyUserAdmin)
 # admin.site.register(MyUser, UserAdmin)
 admin.site.unregister(Group)

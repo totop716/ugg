@@ -39,6 +39,7 @@ class Login extends Component {
     userData: null,
     tabletData: null,
     passwordError: '',
+    tabletidError: '',
     sweepstakeData: null,
     sweepbackground: require('../../assets/images/SummerShoppingBg.png'),
     sweeplogo: require('../../assets/images/Summer_Shopping.png'),
@@ -158,6 +159,7 @@ class Login extends Component {
   }
 
   passwordSubmit = () => {
+    console.log(this.state.userData.password);
     if(this.state.menuPass == this.state.userData.password){
       this.setState({passwordError: ''});
       this.setState({showPasswordBox: false});
@@ -172,10 +174,14 @@ class Login extends Component {
   }
 
   submitTabletID = () => {
-    updateTabletID(this.state.tabletData, this.state.tabletID, this.state.userData.id).then((res1) => {
-      console.log(res1);
-      this.setState({showTabletForm: false});
-    })
+    if(this.state.tabletID == ""){
+      this.state.tabletidError = "Please input tablet ID";
+    }else{
+      updateTabletID(this.state.tabletData, this.state.tabletID, this.state.userData.id).then((res1) => {
+        console.log(res1);
+        this.setState({showTabletForm: false});
+      })
+    }
   }
 
   goToSignup = () => {
@@ -228,6 +234,10 @@ class Login extends Component {
             value={this.state.tabletID}
             onChangeText={tabletID => this.setState({ tabletID })}
           />
+          {
+            this.state.tabletidError != "" &&
+              <Text style={styles.errorText}>{this.state.tabletidError}</Text>
+          }
           <Button
               style={styles.button}
               onPress={this.submitTabletID}
