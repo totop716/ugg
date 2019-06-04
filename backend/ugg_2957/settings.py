@@ -102,7 +102,7 @@ SUIT_CONFIG = {
     'ADMIN_NAME': 'UGG Admin',
     'SEARCH_URL': '',
     'MENU': (
-    {'label': 'Users', 'icon':'icon-user', 'url': '/admin/customauth/myuser/', 'models': ('MyUser')},
+    {'label': 'Users', 'icon':'icon-user', 'url': '/admin/home/sweepuser/' },
     {'label': 'Sweepstakes', 'icon':'icon-bell', 'url': '/admin/home/sweepstakes/' },
     {'label': 'Tablets', 'icon':'icon-camera', 'url': '/admin/home/tablet/'},
     {'label': 'Reports', 'icon':'icon-book', 'url': '/admin/reports/'},
