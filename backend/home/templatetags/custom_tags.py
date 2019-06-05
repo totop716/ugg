@@ -72,8 +72,11 @@ def get_sweepstakedata(id):
   return sweepstake[0]
 
 @register.simple_tag
-def getsweepstakes(id):
-  sweepstakes = Sweepstakes.objects.filter(Q(name__icontains=id) | Q(disclaimer__icontains=id)).order_by('-id')
+def getsweepstakes(id, current):
+  if current:
+    sweepstakes = Sweepstakes.objects.filter((Q(name__icontains=id) | Q(disclaimer__icontains=id)) & Q(current=current)).order_by('-id')
+  else:
+    sweepstakes = Sweepstakes.objects.filter(Q(name__icontains=id) | Q(disclaimer__icontains=id)).order_by('-id')
   utc=pytz.UTC
   for sweepstake in sweepstakes:
     if(sweepstake.enddate.replace(tzinfo=pytz.UTC) < datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)):

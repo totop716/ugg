@@ -45,7 +45,7 @@
                     {% for item in result %}{{ item }}{% endfor %}
                     {% if cl.opts.verbose_name == 'sweepstakes' %}
                     <td>
-                        {% getsweepstakes request.GET.q as sweepstakes_list %}
+                        {% getsweepstakes request.GET.q request.GET.current as sweepstakes_list %}
                         {% with sweepdata=sweepstakes_list|getdata_by_index:forloop.counter0 %}
                         {% if sweepdata.current == 1 %}
                         <a href="/admin/sweepstake?id={{ sweepdata.id }}" class="btn btn-info">Go to Detail</a>
