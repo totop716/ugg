@@ -52,7 +52,7 @@ def gettablets_fromsweepid(id, key):
 
 @register.simple_tag
 def getsweepwinners(id):
-  winners = SweepWinner.objects.filter(Q(sweep_id_id=id) & Q(windate__gt=datetime.datetime.now()-datetime.timedelta(days=1)))
+  winners = SweepWinner.objects.filter(Q(sweep_id_id=id))
   
   for winner in winners:
     tablet = Tablet.objects.filter(Q(id=winner.tablet_id_id))
