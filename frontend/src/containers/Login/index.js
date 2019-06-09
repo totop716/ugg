@@ -46,6 +46,11 @@ class Login extends Component {
     sweepdisclaimer: "Welcome to\nUniversal Gaming Group!!!"
   };
 
+  componentWillReceiveProps(props){
+    if (props.navigation.getParam('exit') == 1){
+      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', userData: null});
+    }
+  }
   componentDidMount() {
   }
 

@@ -69,7 +69,7 @@ class Signup extends Component {
   }
 
   cancelRegister = () => {
-    this.props.navigation.navigate('Login');
+    this.props.navigation.navigate('Login', {exit: 1});
   }
 
   userRegister = () => {
