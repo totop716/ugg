@@ -1,6 +1,6 @@
 from customauth.models import MyUser
 from rest_framework import serializers
-from home.models import CustomText, HomePage, Sweepstakes, Tablet, SweepWinner, SweepUser
+from home.models import CustomText, HomePage, Sweepstakes, Tablet, SweepWinner, SweepUser, Settings
 from rest_framework.decorators import api_view
 import base64
 
@@ -147,44 +147,27 @@ class SweepstakesSerializer(serializers.ModelSerializer):
         model = Sweepstakes
         fields = '__all__'
 
-class TabletSerializer(serializers.ModelSerializer):
+class SettingsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Tablet
+        model = Settings
         fields = '__all__'
 
     def create(self, validated_data):
-        tablet = Tablet.objects.create(
-            name=validated_data.get('name'),
-            address=validated_data.get('address'),
-            city=validated_data.get('city'),
-            state=validated_data.get('state'),
-            zipcode=validated_data.get('zipcode'),
-            sweep_ids=validated_data.get('sweep_ids'),
-            active_sweep=validated_data.get('active_sweep'))
-        tablet.save()
-        return tablet
+        settings = Settings.objects.create(
+            name=validated_data.get('device_code')
+            )
+        settings.save()
+        return settings
 
     def update(self, instance, validated_data):
-        if validated_data.get('name') != None:
-            instance.name = validated_data.get('name')
-        if validated_data.get('address') != None:
-            instance.address = validated_data.get('address')
-        if validated_data.get('city') != None:
-            instance.city = validated_data.get('city')
-        if validated_data.get('state') != None:
-            instance.state = validated_data.get('state')
-        if validated_data.get('zipcode') != None:
-            instance.zipcode = validated_data.get('zipcode')
-        if validated_data.get('sweep_ids') != None:
-            instance.sweep_ids = validated_data.get('sweep_ids')
-        if validated_data.get('active_sweep') != None:
-            instance.active_sweep = validated_data.get('active_sweep')
+        if validated_data.get('device_code') != None:
+            instance.device_code = validated_data.get('device_code')
         instance.save()
         return instance
 
-class SweepUserViewSet(serializers.ModelSerializer):
+class TabletSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SweepUser
+        model = Tablet
         fields = '__all__'
 
     def create(self, validated_data):

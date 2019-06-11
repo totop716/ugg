@@ -50,7 +50,9 @@ const styles = StyleSheet.create({
     right: 20,
   },
   passwordBox: {
-    padding: 10,
+    paddingTop: 40,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
     height: 'auto'
   },
   errorText: {

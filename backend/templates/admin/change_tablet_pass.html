@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+
+{% load i18n admin_static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li>
+        <a href="/admin/">Home</a>
+        <span class="divider">»</span>
+      </li>
+      <li class="active">
+        Set Password on Tablet
+      </li>
+    </ul>
+  {% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <form action="{{ form_url }}" method="post" id="{% firstof opts.model_name opts.module_name %}_form" class="form-horizontal">
+    {% csrf_token %}{% block form_top %}{% endblock %}
+    <div>
+      <fieldset class="module aligned">
+
+        <div class="control-group{{ form.password1.errors|yesno:' error,' }}">
+          <div class="control-label">
+            <label for="tablet_pass" class="required">{% trans 'Password' %}:</label>
+          </div>
+          <div class="controls">
+            <input type="password" id="tablet_pass" />
+          </div>
+        </div>
+
+      </fieldset>
+
+      <div class="submit-row submit-row-bottom">
+        <input type="button" value="{% trans 'Set password' %}" class="default btn btn-info" id="set_tablet_password" />
+      </div>
+
+      <script type="text/javascript">document.getElementById("tablet_pass").focus();</script>
+    </div>
+  </form>
+</div>
+{% endblock %}

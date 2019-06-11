@@ -10,11 +10,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 
-from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer, TabletSerializer, SweepwinnerSerializer, SweepUserSerializer
+from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer, TabletSerializer, SweepwinnerSerializer, SweepUserSerializer, SettingsSerializer
 from home.models import CustomText, HomePage
 from django.db.models import Q
 from customauth.models import MyUser
-from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser
+from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser, Settings
 import datetime
 
 class SignupViewSet(ModelViewSet):
@@ -62,32 +62,28 @@ class TabletViewSet(APIView):
         tablet.delete()
         return Response({"message": "Tablet with id `{}` has been deleted.".format(pk)},status=204)
 
-class SweepUserViewSet(APIView):
+class SettingsViewSet(APIView):
     def get(self, request, pk=None):
-        if pk:
-            user = get_object_or_404(SweepUser.objects.all(), phone=pk)
-            serializer = SweepUserSerializer(user)
-            return Response({"user": serializer.data})
-        data = request.query_params
-        users = SweepUser.objects.all()
-        serializer = SweepUserSerializer(users, many=True)
-        return Response({"users": serializer.data})
+        users = Settings.objects.all()
+        serializer = SettingsSerializer(users, many=True)
+        return Response({"settings": serializer.data})
 
-    def put(self, request, pk):
-        saved_user = get_object_or_404(SweepUser.objects.all(), id=pk)
+    def post(self, request):
         data = request.query_params
-        serializer = SweepUserSerializer(instance=saved_user, data=data, partial=True)
+        settings = Settings.objects.create(device_code = data.get('device_code'))
+        settings.save()
+
+        return Response({"success": "Setting '{}' created successfully".format(data)})
+
+    def put(self, request, pk=None):
+        saved_setting = Settings.objects.all()
+        data = request.query_params
+        serializer = SettingsSerializer(instance=saved_setting[0], data=data, partial=True)
 
         if serializer.is_valid(raise_exception=True):
-            saved_user = serializer.save()
-        return Response({"success": "User '{}' updated successfully".format(data)})
+            saved_setting = serializer.save()
+        return Response({"success": "Setting '{}' updated successfully".format(data)})
 
-
-    def delete(self, request, pk):
-        # Get object with this pk
-        user = get_object_or_404(SweepUser.objects.all(), id=pk)
-        user.delete()
-        return Response({"message": "User with id `{}` has been deleted.".format(pk)},status=204)
 
 class SweepstakeViewSet(APIView):
     def get(self, request, pk=None):
@@ -134,6 +130,32 @@ class MyUserViewSet(APIView):
     def delete(self, request, pk):
         # Get object with this pk
         user = get_object_or_404(MyUser.objects.all(), phone=pk)
+        user.delete()
+        return Response({"message": "User with phone `{}` has been deleted.".format(pk)},status=204)
+
+class SweepUserViewSet(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            user = get_object_or_404(SweepUser.objects.all(), phone=pk)
+            serializer = SweepUserSerializer(user)
+            return Response({"user": serializer.data})
+        users = SweepUser.objects.all()
+        serializer = SweepUserSerializer(users, many=True)
+        return Response({"users": serializer.data})
+
+    def put(self, request, pk):
+        saved_user = get_object_or_404(SweepUser.objects.all(), phone=pk)
+        data = request.query_params
+        serializer = SweepUserSerializer(instance=saved_user, data=data, partial=True)
+
+        if serializer.is_valid(raise_exception=True):
+            saved_user = serializer.save()
+        return Response({"success": "User '{}' updated successfully".format(data)})
+
+
+    def delete(self, request, pk):
+        # Get object with this pk
+        user = get_object_or_404(SweepUser.objects.all(), phone=pk)
         user.delete()
         return Response({"message": "User with phone `{}` has been deleted.".format(pk)},status=204)
 

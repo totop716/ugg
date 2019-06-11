@@ -20,6 +20,19 @@
     </h1>
 {% endblock %}
 
+{% block userlinks %}
+    {% url 'django-admindocs-docroot' as docsroot %}
+    {% if docsroot %}
+    <a href="{{ docsroot }}">{% trans 'Documentation' %}</a>
+    <span class="separator">|</span>
+    {% endif %}
+    <a href="/admin/tabletpass">{% trans 'Set password on Tablet' %}</a>
+    <span class="separator">|</span>
+    <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a>
+    <span class="separator">|</span>
+    <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+{% endblock %}
+
 {% block header_time %}
 {% endblock %}
 

@@ -64,6 +64,21 @@ class Lottery(models.Model):
     def field(self):
         return 'name'
 
+class Settings(models.Model):
+    device_code = models.CharField(max_length=100)
+    class Meta:
+        verbose_name_plural = 'Settings'
+    
+    def __str__(self):
+        return self.device_code
+
+    @property
+    def api(self):
+        return f'/api/v1/settings/{self.id}/'
+    @property
+    def field(self):
+        return 'device_code'
+
 class Participants(models.Model):
     name = models.CharField(max_length=100)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)

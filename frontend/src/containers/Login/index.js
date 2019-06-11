@@ -21,7 +21,7 @@ import {
 
 import styles from './styles';
 import Utils from '../../utils'
-import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI } from '../../services/Authentication';
+import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI } from '../../services/Authentication';
 
 class Login extends Component {
   state = {
@@ -149,10 +149,7 @@ class Login extends Component {
   }
 
   showPasswordBox = () => {
-    if(this.state.phoneNumber != '')
-      this.setState({showPasswordBox: true});
-    else
-      this.setState({phoneNoAlert: true});
+    this.setState({showPasswordBox: true});
   }
 
   hidePasswordBox = () => {
@@ -164,14 +161,15 @@ class Login extends Component {
   }
 
   passwordSubmit = () => {
-    console.log(this.state.userData.password);
-    if(this.state.menuPass == this.state.userData.password){
-      this.setState({passwordError: ''});
-      this.setState({showPasswordBox: false});
-      this.setState({showMenu: true});
-    }else{
-      this.setState({passwordError: 'Please input correct password'});
-    }
+    getSettingsAPI().then((res) => {
+      if((res.settings.length == 0 && this.state.menuPass == "") || (res.settings.length > 0 && this.state.menuPass == res.settings[0].device_code)){
+        this.setState({passwordError: ''});
+        this.setState({showPasswordBox: false});
+        this.setState({showMenu: true});
+      }else{
+        this.setState({passwordError: 'Please input correct password'});
+      }  
+    });
   }
 
   exitFunction = () => {
@@ -215,6 +213,7 @@ class Login extends Component {
         </View>
         }
         {this.state.showPasswordBox && <View style={[styles.thankyouBox, styles.passwordBox]}>
+          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePasswordBox}/>
           <Input
             style={styles.inputMenuPass}
             placeholder="Enter Password"
@@ -228,6 +227,15 @@ class Login extends Component {
             this.state.passwordError != "" &&
               <Text style={styles.errorText}>{this.state.passwordError}</Text>
           }
+          <Button
+              style={styles.button}
+              onPress={this.passwordSubmit}
+              hasText
+              block
+              dark
+            >
+            <Text style={styles.loginText}>Submit</Text>
+          </Button>
         </View>
         }
         {this.state.showTabletForm && <View style={[styles.thankyouBox, styles.tabletBox]}>

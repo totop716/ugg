@@ -107,6 +107,33 @@
             }
         });
 
+        $("#set_tablet_password").click(function(){
+            var tablet_pass = $("#tablet_pass").val();
+            $.ajax({
+                url: '/settings/',
+                type: 'GET',
+                success: function(res) {
+                    if(res.settings.length == 0){
+                        $.ajax({
+                            url: '/settings/?device_code='+tablet_pass,
+                            type: 'POST',
+                            success: function() {
+                                window.location.reload()
+                            }
+                        });
+                    }else{
+                        $.ajax({
+                            url: '/settings/?device_code='+tablet_pass,
+                            type: 'PUT',
+                            success: function() {
+                                window.location.reload()
+                            }
+                        });
+                    }
+                }
+            });
+        })
+
         $('#searchTablet').click(function(){
             window.location.href = "?key="+$("#searchTabletText").val();
         });

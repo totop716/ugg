@@ -51,6 +51,13 @@ const getSweepstakeAPI = (id) => {
   return users.sendRequest();
 }
 
+const getSettingsAPI = () => {
+  const path = 'settings/';
+  const url = `${Utils.serverUrl}${path}`;
+  const users = new APIClient(url, APIConstants.HTTPMethod.GET);
+  return users.sendRequest();
+}
+
 const signupUserAPI = (first_name, last_name, address, city, state, zipcode, email, phone, po_box_unit_number, suite) => {
   const path = 'api/v1/signup/';
   const url = `${Utils.serverUrl}${path}`;
@@ -80,4 +87,4 @@ const updateTabletID = (tabletData, tablet_id, user_id) => {
   return users.sendRequest();
 }
 
-export { loginAPI, signupAPI, getUserAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI };
+export { loginAPI, signupAPI, getUserAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI };
