@@ -19,14 +19,23 @@ const styles = StyleSheet.create({
   thankyouBox: {
     position: 'absolute',
     width: '80%',
-    height: 100,
+    paddingTop: 30,
+    paddingHorizontal: 30,
+    paddingBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     top: '50%',
     transform: [{translateY: -50}],
-    backgroundColor: '#ddd',
-    zIndex: 999
+    backgroundColor: '#fff',
+    zIndex: 999,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
   },
   passwordContainer: {
     position: 'relative',
@@ -42,12 +51,13 @@ const styles = StyleSheet.create({
     right: 10,
   },
   thankyouText: {
-    fontSize: 20
+    fontSize: 25,
+    marginBottom: 20
   },
   closeIcon: {
     position: 'absolute',
-    top: 10,
-    right: 20,
+    top: 5,
+    right: 5,
   },
   passwordBox: {
     paddingTop: 40,
@@ -63,8 +73,11 @@ const styles = StyleSheet.create({
   },
   inputMenuPass:{
     width: '100%',
-    borderWidth: 1,
-    borderColor: '#333',
+    borderTopWidth: 1,
+    borderLeftWidth: 0.5,
+    borderBottomWidth: 1,
+    borderRightWidth: 1.5,
+    borderColor: '#666',
     textAlign: 'center',
     fontSize: 25,
   },
@@ -79,13 +92,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     right: 20,
-    fontSize: 35, 
     color: '#333'
   },
   menuContainer: {
     position: 'absolute',
     top: 40,
     right: 20,
+    borderLeftWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#333',
   },
   menuItem: {
     width: 150,
@@ -102,8 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '50%',
-    marginTop: PixelRatio.getPixelSizeForLayoutSize(40),
-    marginBottom: PixelRatio.getPixelSizeForLayoutSize(40),
+    height: '100%',
   },
   logoText: {
     color: 'white',
@@ -111,8 +125,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   logo: {
-    height: PixelRatio.getPixelSizeForLayoutSize(150),
-    width: PixelRatio.getPixelSizeForLayoutSize(150),
+    width: '100%',
     resizeMode: 'contain',
   },
   form: {
@@ -134,6 +147,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: '#000',
     backgroundColor: '#d7d7d7',
+    textAlign: 'center',
     paddingLeft: 10
   },
   disclaimerContain: {
@@ -154,14 +168,16 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(5),
-    backgroundColor: '#41823f',
-    width: '60%',
-    alignSelf: 'center'
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10
   },
   loginText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 23,
     fontWeight: '600',
+    textAlign: 'center'
   },
   signupContainer: {
     flexDirection: 'row',
@@ -177,8 +193,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputTabletID: {
-    borderWidth: 2,
-    marginVertical: 20,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 0.5,
     borderColor: '#333',
     width: '100%'
   },

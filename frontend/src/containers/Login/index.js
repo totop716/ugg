@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
+import { Icon } from 'react-native-material-ui'
 import {
   Image,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {
-  Button,
   Container,
   Content,
+  Button,
   Form,
   Item,
   Input,
   Text,
   Textarea,
-  Icon,
 } from 'native-base';
 import {
   TextInputMask
@@ -43,8 +43,8 @@ class Login extends Component {
     sweepstakeData: null,
     sweepbackground: require('../../assets/images/SummerShoppingBg.png'),
     sweeplogo: require('../../assets/images/Summer_Shopping.png'),
-    sweepdisclaimer: "Welcome to\nUniversal Gaming Group!!!"
-  };
+    sweepdisclaimer: "Disclaimer Text"
+    };
 
   componentWillReceiveProps(props){
     if (props.navigation.getParam('exit') == 1){
@@ -160,6 +160,10 @@ class Login extends Component {
     this.setState({showTabletForm: true})
   }
 
+  hideTabletForm = () => {
+    this.setState({showTabletForm: false})
+  }
+
   passwordSubmit = () => {
     getSettingsAPI().then((res) => {
       if((res.settings.length == 0 && this.state.menuPass == "") || (res.settings.length > 0 && this.state.menuPass == res.settings[0].device_code)){
@@ -198,47 +202,45 @@ class Login extends Component {
           <Image source={this.state.sweepbackground} style={styles.backgroundImage} />
         }
         {this.state.phoneNoAlert && <View style={styles.thankyouBox}>
-          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePhoneNoAlert}/>
+          <TouchableOpacity style={styles.closeIcon} onPress={this.hidePhoneNoAlert}><Icon name="close" /></TouchableOpacity>
           <Text style={styles.thankyouText}>You need to input Phone NO</Text>
         </View>
         }
         {this.state.thankyouBoxVisible && <View style={styles.thankyouBox}>
-          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideThankyouBox}/>
+          <TouchableOpacity style={styles.closeIcon} onPress={this.hideThankyouBox}><Icon name="close" /></TouchableOpacity>
           <Text style={styles.thankyouText}>Thank you “{this.state.userData.first_name}“ for checking in “{this.state.tabletData.name }“</Text>
         </View>
         }
         {this.state.comebackBoxVisible && <View style={styles.thankyouBox}>
-          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidecomeebackBox}/>
+          <TouchableOpacity style={styles.closeIcon} onPress={this.hidecomeebackBox}><Icon name="close" /></TouchableOpacity>
           <Text style={styles.thankyouText}>You have already checked in to “{this.state.tabletData.name }” for Today.</Text><Text style={styles.thankyouText}>Come back tomorrow.</Text>
         </View>
         }
-        {this.state.showPasswordBox && <View style={[styles.thankyouBox, styles.passwordBox]}>
-          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePasswordBox}/>
-          <Input
-            style={styles.inputMenuPass}
-            placeholder="Enter Password"
-            placeholderTextColor="#333"
-            autoCapitalize="none"
-            onChangeText={menuPass => this.setState({ menuPass })}
-            onSubmitEditing={this.passwordSubmit}
-            secureTextEntry
-          />
-          {
-            this.state.passwordError != "" &&
-              <Text style={styles.errorText}>{this.state.passwordError}</Text>
-          }
-          <Button
-              style={styles.button}
-              onPress={this.passwordSubmit}
-              hasText
-              block
-              dark
-            >
-            <Text style={styles.loginText}>Submit</Text>
-          </Button>
-        </View>
+        {this.state.showPasswordBox && <View style={styles.thankyouBox}>
+            <TouchableOpacity style={styles.closeIcon} onPress={this.hidePasswordBox}><Icon name="close"/></TouchableOpacity>
+            <Input
+              style={styles.inputMenuPass}
+              placeholder="Enter Password"
+              placeholderTextColor="#333"
+              autoCapitalize="none"
+              onChangeText={menuPass => this.setState({ menuPass })}
+              onSubmitEditing={this.passwordSubmit}
+              secureTextEntry
+            />
+            {
+              this.state.passwordError != "" &&
+                <Text style={styles.errorText}>{this.state.passwordError}</Text>
+            }
+            <Button
+                style={styles.button}
+                onPress={this.passwordSubmit}
+              >
+              <Text style={styles.loginText}>SUBMIT</Text>
+            </Button>
+          </View>
         }
         {this.state.showTabletForm && <View style={[styles.thankyouBox, styles.tabletBox]}>
+          <TouchableOpacity style={styles.closeIcon} onPress={this.hideTabletForm}><Icon name="close" /></TouchableOpacity>
           <Input
             style={styles.inputTabletID}
             placeholder="Tablet ID"
@@ -254,16 +256,13 @@ class Login extends Component {
           <Button
               style={styles.button}
               onPress={this.submitTabletID}
-              hasText
-              block
-              dark
             >
             <Text style={styles.loginText}>Submit</Text>
           </Button>
         </View>
         }
         <Content contentContainerStyle={styles.content}>
-          {!this.state.showMenu && <Icon ios='ios-menu' android="md-menu" style={styles.menuIcon} onPress={this.showPasswordBox}/>
+          {!this.state.showMenu && <TouchableOpacity style={styles.menuIcon} onPress={this.showPasswordBox}><Icon name="menu" size={40} /></TouchableOpacity>
           }
           {this.state.showMenu && <View style={styles.menuContainer}>
             <TouchableOpacity onPress={this.exitFunction} style={styles.menuItem}>
@@ -305,14 +304,11 @@ class Login extends Component {
               placeholderTextColor="#a1a1a1"
             />
             <Button
-              style={styles.button}
               onPress={this.showThankyouBox}
-              hasText
-              block
-              dark
-            >
-              <Text style={styles.loginText}>Submit</Text>
-            </Button>
+              fontSize='20'
+              style={styles.button}
+              primary
+            ><Text style={styles.loginText}>SUBMIT</Text></Button>
             <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>{this.state.sweepdisclaimer}</Text></View>
           </Form>
           <View style={styles.buttonContainer}>
