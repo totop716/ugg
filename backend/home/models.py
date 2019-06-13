@@ -154,13 +154,14 @@ class Sweepstakes(models.Model):
 
 class Tablet(models.Model):
     name = models.CharField('Tablet ID', max_length=100)
-    user_id = models.ForeignKey(SweepUser, on_delete=models.CASCADE, blank=True)
+    user_id = models.ForeignKey(SweepUser, on_delete=models.CASCADE, blank=True, null=True)
     address = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     zipcode = models.CharField(max_length=100)
     sweep_ids = models.CharField(max_length = 100)
     active_sweep = models.CharField(max_length = 10)
+    tablet_id_code = models.CharField(max_length = 100)
 
     class Meta:
         verbose_name_plural = 'Tablets'
