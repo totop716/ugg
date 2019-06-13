@@ -111,7 +111,7 @@ class SweepUser(models.Model):
     phone = models.CharField(max_length =50, unique=True, help_text="Please input Phone No in this format ( ex: 12345667889 or 2345678890)")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    check_time = models.CharField(max_length =200)
+    check_time = models.CharField(max_length =200, null=True)
     po_box_unit_number = models.CharField("PO Box/Unit Number", max_length =50, blank=True)
     suite = models.CharField(max_length =50, blank=True)
     label = models.CharField(max_length = 100, default="Added by Admin")

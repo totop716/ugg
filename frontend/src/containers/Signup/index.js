@@ -112,7 +112,7 @@ class Signup extends Component {
     this.setState({error});
     if(this.state.error.name == '' && this.state.error.address == ''){
       signupUserAPI(this.state.firstname, this.state.lastname, this.state.address, this.state.city, this.state.txtState, this.state.zipcode, this.state.emailaddress, phoneNo,this.state.po_box_unit_number, this.state.suite).then(res => {
-        this.props.navigation.navigate('Login');
+        this.props.navigation.navigate('Login', {exit: 1});
       })
     }
   }
