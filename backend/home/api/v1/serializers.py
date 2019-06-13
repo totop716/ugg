@@ -178,6 +178,7 @@ class TabletSerializer(serializers.ModelSerializer):
             state=validated_data.get('state'),
             zipcode=validated_data.get('zipcode'),
             sweep_ids=validated_data.get('sweep_ids'),
+            tablet_id_code=validated_data.get('tablet_id_code'),
             active_sweep=validated_data.get('active_sweep'))
         tablet.save()
         return tablet
@@ -197,6 +198,8 @@ class TabletSerializer(serializers.ModelSerializer):
             instance.sweep_ids = validated_data.get('sweep_ids')
         if validated_data.get('active_sweep') != None:
             instance.active_sweep = validated_data.get('active_sweep')
+        if validated_data.get('tablet_id_code') != None:
+            instance.tablet_id_code = validated_data.get('tablet_id_code')
         instance.save()
         return instance
 

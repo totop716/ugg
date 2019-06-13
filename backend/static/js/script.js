@@ -118,7 +118,7 @@
                             url: '/settings/?device_code='+tablet_pass,
                             type: 'POST',
                             success: function() {
-                                window.location.reload()
+                                window.location = '/admin';
                             }
                         });
                     }else{
@@ -126,7 +126,7 @@
                             url: '/settings/?device_code='+tablet_pass,
                             type: 'PUT',
                             success: function() {
-                                window.location.reload()
+                                window.location = '/admin';
                             }
                         });
                     }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Image,
   TouchableOpacity,
-  View,
+  View, KeyboardAvoidingView
 } from 'react-native';
 import {
   Button,
@@ -120,7 +120,7 @@ class Signup extends Component {
   render() {
     return (
       <StyleProvider style={getTheme(material)}>
-        <Container style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
           <Image source={require('../../assets/images/SummerShoppingBg.png')} style={styles.backgroundImage} />
           <Content contentContainerStyle={styles.content}>
             {this.state.registeredVisible && <View style={styles.thankyouBox}>
@@ -240,17 +240,11 @@ class Signup extends Component {
               <Button
                 style={styles.button}
                 onPress={this.userRegister}
-                hasText
-                block
-                large
-                dark
-                rounded
               >
-                <Text style={styles.signupText}>SUBMIT</Text>
-              </Button>
+              <Text style={styles.loginText}>SUBMIT</Text></Button>
             </View>
           </Content>
-        </Container>
+        </KeyboardAvoidingView>
       </StyleProvider>
     );
   }

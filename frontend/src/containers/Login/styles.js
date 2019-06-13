@@ -57,13 +57,13 @@ const styles = StyleSheet.create({
   closeIcon: {
     position: 'absolute',
     top: 5,
-    right: 5,
+    right: 10,
+    fontSize: 35
   },
   passwordBox: {
     paddingTop: 40,
     paddingHorizontal: 20,
     paddingBottom: 10,
-    height: 'auto'
   },
   errorText: {
     color: '#f00',
@@ -73,10 +73,10 @@ const styles = StyleSheet.create({
   },
   inputMenuPass:{
     width: '100%',
-    borderTopWidth: 1,
-    borderLeftWidth: 0.5,
+    borderTopWidth: 2,
+    borderLeftWidth: 1,
     borderBottomWidth: 1,
-    borderRightWidth: 1.5,
+    borderRightWidth: 1,
     borderColor: '#666',
     textAlign: 'center',
     fontSize: 25,
@@ -92,7 +92,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     right: 20,
-    color: '#333'
+    color: '#333',
+    fontSize: 40
   },
   menuContainer: {
     position: 'absolute',
@@ -193,10 +194,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputTabletID: {
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 0.5,
+    borderWidth: 1,
     borderColor: '#333',
     width: '100%'
   },

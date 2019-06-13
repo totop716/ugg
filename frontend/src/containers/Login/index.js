@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Icon } from 'react-native-material-ui'
 import {
   Image,
   TouchableOpacity,
-  View,
+  View, KeyboardAvoidingView
 } from 'react-native';
 import {
   Container,
@@ -14,10 +13,13 @@ import {
   Input,
   Text,
   Textarea,
+  Icon
 } from 'native-base';
 import {
   TextInputMask
 } from 'react-native-masked-text'
+
+import Constants from 'expo-constants';
 
 import styles from './styles';
 import Utils from '../../utils'
@@ -43,7 +45,7 @@ class Login extends Component {
     sweepstakeData: null,
     sweepbackground: require('../../assets/images/SummerShoppingBg.png'),
     sweeplogo: require('../../assets/images/Summer_Shopping.png'),
-    sweepdisclaimer: "Disclaimer Text"
+    sweepdisclaimer: "Disclaimer Text",
     };
 
   componentWillReceiveProps(props){
@@ -51,7 +53,27 @@ class Login extends Component {
       this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', userData: null});
     }
   }
+
   componentDidMount() {
+    // console.log("Constatnts:", Constants);
+    getTabletAPI(Constants.deviceId).then((res1)=>{
+      console.log(res1.tablet);
+      this.setState({tabletData: res1.tablet})
+      this.setState({tabletID: res1.tablet.name});
+      if(this.state.tabletData.active_sweep != null && this.state.tabletData.active_sweep != ''){
+        getSweepstakeAPI(this.state.tabletData.active_sweep).then((res2)=>{
+          this.setState({sweepstakeData: res2.sweepstake});
+          this.setState({sweepbackground: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}})
+          this.setState({sweeplogo: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.logo}})
+          this.setState({sweepdisclaimer: this.state.sweepstakeData.disclaimer})
+        })
+      }
+    }).catch((error)=>{
+      if(error){
+        this.setState({tabletData: {name: ''}})
+        this.setState({tabletID: ''});
+      }
+    })
   }
 
   // navigate to home after a successful login
@@ -81,58 +103,24 @@ class Login extends Component {
     }else{
       getUserAPI(this.state.phoneNumber).then((res) => {
         this.setState({userData: res.user});
-        getTabletAPI(this.state.userData.id).then((res1)=>{
-          console.log(res1.tablet);
-          this.setState({tabletData: res1.tablet})
-          this.setState({tabletID: res1.tablet.name});
-          getSweepstakeAPI(this.state.tabletData.active_sweep).then((res2)=>{
-            this.setState({sweepstakeData: res2.sweepstake});
-            this.setState({sweepbackground: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}})
-            this.setState({sweeplogo: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.logo}})
-            this.setState({sweepdisclaimer: this.state.sweepstakeData.disclaimer})
+        const currenttime = new Date().getTime();
+        const checkedtime = new Date(this.state.userData.check_time).getTime();
+        if(this.state.userData.check_time == "" || currenttime - checkedtime > 24 * 3600 * 1000){
+          this.setState({thankyouBoxVisible: true});
+          const currentDate = new Date();
+          const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
+          updateCheckTime(this.state.phoneNumber, check_time).then((res2) => {
+            console.log(res2);
           })
-          const currenttime = new Date().getTime();
-          const checkedtime = new Date(this.state.userData.check_time).getTime();
-          if(this.state.userData.check_time == "" || currenttime - checkedtime > 24 * 3600 * 1000){
-            this.setState({thankyouBoxVisible: true});
-            const currentDate = new Date();
-            const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
-            updateCheckTime(this.state.phoneNumber, check_time).then((res2) => {
-              console.log(res2);
-            })
-            setTimeout(() => {
-              this.setState({thankyouBoxVisible: false});
-            }, 3000);
-          }else{
-            this.setState({comebackBoxVisible: true});
-          }
           setTimeout(() => {
-            this.setState({phoneNumberFormat: ""});
-          }, 3000)  
-        }).catch((error)=>{
-          if(error){
-            this.setState({tabletData: {name: ''}})
-            this.setState({tabletID: ''});
-            const currenttime = new Date().getTime();
-            const checkedtime = new Date(this.state.userData.check_time).getTime();
-            if(this.state.userData.check_time == "" || currenttime - checkedtime > 24 * 3600 * 1000){
-              this.setState({thankyouBoxVisible: true});
-              const currentDate = new Date();
-              const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
-              updateCheckTime(this.state.phoneNumber, check_time).then((res2) => {
-                console.log(res2);
-              })
-              setTimeout(() => {
-                this.setState({thankyouBoxVisible: false});
-              }, 3000);
-            }else{
-              this.setState({comebackBoxVisible: true});
-            }
-            setTimeout(() => {
-              this.setState({phoneNumberFormat: ""});
-            }, 3000)
-          }
-        })
+            this.setState({thankyouBoxVisible: false});
+          }, 3000);
+        }else{
+          this.setState({comebackBoxVisible: true});
+        }
+        setTimeout(() => {
+          this.setState({phoneNumberFormat: ""});
+        }, 3000) 
       }).catch((error)=>{
         if(error)
           this.goToSignup();
@@ -184,7 +172,7 @@ class Login extends Component {
     if(this.state.tabletID == ""){
       this.state.tabletidError = "Please input tablet ID";
     }else{
-      updateTabletID(this.state.tabletData, this.state.tabletID, this.state.userData.id).then((res1) => {
+      updateTabletID(this.state.tabletData, this.state.tabletID, this.state.userData == null ? null: this.state.userData.id).then((res1) => {
         console.log(res1);
         this.setState({showTabletForm: false});
       })
@@ -195,29 +183,63 @@ class Login extends Component {
     this.props.navigation.navigate('Signup', {phoneNumber: this.state.phoneNumber});
   }
 
+  handleKeyboardDidShow = (event) => {
+    const { height: windowHeight } = Dimensions.get('window');
+    const keyboardHeight = event.endCoordinates.height;
+    const currentlyFocusedField = TextInputState.currentlyFocusedField();
+    UIManager.measure(currentlyFocusedField, (originX, originY, width, height, pageX, pageY) => {
+      const fieldHeight = height;
+      const fieldTop = pageY;
+      const gap = (windowHeight - keyboardHeight) - (fieldTop + fieldHeight);
+      if (gap >= 0) {
+        return;
+      }
+      Animated.timing(
+        this.state.shift,
+        {
+          toValue: gap,
+          duration: 1000,
+          useNativeDriver: true,
+        }
+      ).start();
+    });
+  }
+ 
+  handleKeyboardDidHide = () => {
+    Animated.timing(
+      this.state.shift,
+      {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true,
+      }
+    ).start();
+  }
+
   render() {
     return (
-      <Container style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
         {this.state.sweepstakeData == null &&
           <Image source={this.state.sweepbackground} style={styles.backgroundImage} />
         }
         {this.state.phoneNoAlert && <View style={styles.thankyouBox}>
-          <TouchableOpacity style={styles.closeIcon} onPress={this.hidePhoneNoAlert}><Icon name="close" /></TouchableOpacity>
+          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePhoneNoAlert}/>
           <Text style={styles.thankyouText}>You need to input Phone NO</Text>
         </View>
         }
         {this.state.thankyouBoxVisible && <View style={styles.thankyouBox}>
-          <TouchableOpacity style={styles.closeIcon} onPress={this.hideThankyouBox}><Icon name="close" /></TouchableOpacity>
+          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideThankyouBox} />
           <Text style={styles.thankyouText}>Thank you “{this.state.userData.first_name}“ for checking in “{this.state.tabletData.name }“</Text>
         </View>
         }
         {this.state.comebackBoxVisible && <View style={styles.thankyouBox}>
+          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidecomeebackBox} />
           <TouchableOpacity style={styles.closeIcon} onPress={this.hidecomeebackBox}><Icon name="close" /></TouchableOpacity>
           <Text style={styles.thankyouText}>You have already checked in to “{this.state.tabletData.name }” for Today.</Text><Text style={styles.thankyouText}>Come back tomorrow.</Text>
         </View>
         }
         {this.state.showPasswordBox && <View style={styles.thankyouBox}>
-            <TouchableOpacity style={styles.closeIcon} onPress={this.hidePasswordBox}><Icon name="close"/></TouchableOpacity>
+            <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePasswordBox} /> 
             <Input
               style={styles.inputMenuPass}
               placeholder="Enter Password"
@@ -239,8 +261,8 @@ class Login extends Component {
             </Button>
           </View>
         }
-        {this.state.showTabletForm && <View style={[styles.thankyouBox, styles.tabletBox]}>
-          <TouchableOpacity style={styles.closeIcon} onPress={this.hideTabletForm}><Icon name="close" /></TouchableOpacity>
+        {this.state.showTabletForm && <View style={styles.thankyouBox}>
+          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideTabletForm} /> 
           <Input
             style={styles.inputTabletID}
             placeholder="Tablet ID"
@@ -262,7 +284,7 @@ class Login extends Component {
         </View>
         }
         <Content contentContainerStyle={styles.content}>
-          {!this.state.showMenu && <TouchableOpacity style={styles.menuIcon} onPress={this.showPasswordBox}><Icon name="menu" size={40} /></TouchableOpacity>
+          {!this.state.showMenu && <Icon ios='ios-menu' android="md-menu" style={styles.menuIcon} onPress={this.showPasswordBox} />
           }
           {this.state.showMenu && <View style={styles.menuContainer}>
             <TouchableOpacity onPress={this.exitFunction} style={styles.menuItem}>
@@ -329,7 +351,7 @@ class Login extends Component {
             </View>
           </View>
         </Content>
-      </Container>
+      </KeyboardAvoidingView>
     );
   }
 }

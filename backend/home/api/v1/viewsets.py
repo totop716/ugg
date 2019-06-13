@@ -29,11 +29,11 @@ class LoginViewSet(ViewSet):
 
 class TabletViewSet(APIView):
     def get(self, request, pk=None):
-        if pk:
-            user = get_object_or_404(Tablet.objects.all(), user_id_id=pk)
+        data = request.query_params
+        if data.get('key'):
+            user = get_object_or_404(Tablet.objects.all(), tablet_id_code=data.get('key'))
             serializer = TabletSerializer(user)
             return Response({"tablet": serializer.data})
-        data = request.query_params
         tablets = Tablet.objects.all()
         serializer = TabletSerializer(tablets, many=True)
         return Response({"tablets": serializer.data})
@@ -41,7 +41,7 @@ class TabletViewSet(APIView):
     def post(self, request):
         data = request.query_params
         tablet = Tablet.objects.create(name = data.get('name'),
-            user_id_id = data.get('user_id_id'))
+            user_id_id = data.get('user_id_id'), tablet_id_code=data.get('tablet_id_code'))
         tablet.save()
 
         return Response({"success": "Tablet '{}' created successfully".format(data)})

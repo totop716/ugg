@@ -1,7 +1,7 @@
 import Utils from '../utils';
 import APIClient from '../utils/api';
 import APIConstants from '../utils/api/constants';
-
+import Constants from 'expo-constants';
 
 const loginAPI = (username, password) => {
   const path = '/';
@@ -38,8 +38,8 @@ const getUserAPI = (phoneNo) => {
 }
 
 const getTabletAPI = (id) => {
-  const path = 'tablets/'+id;
-  const url = `${Utils.serverUrl}${path}/`;
+  const path = 'tablets/?key='+id;
+  const url = `${Utils.serverUrl}${path}`;
   const users = new APIClient(url, APIConstants.HTTPMethod.GET);
   return users.sendRequest();
 }
@@ -77,7 +77,9 @@ const updateCheckTime = (phone, check_time) => {
 const updateTabletID = (tabletData, tablet_id, user_id) => {
   if(tabletData.name == ""){
     const path = 'tablets';
-    const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+`&user_id_id=`+user_id;
+    const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+'&tablet_id_code='+Constants.deviceId;
+    if(user_id != null)
+      url += `&user_id_id=`+user_id;
     users = new APIClient(url, APIConstants.HTTPMethod.POST);  
   }else{
     const path = 'tablets/'+tabletData.id;

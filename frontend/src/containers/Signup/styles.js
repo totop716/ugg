@@ -35,18 +35,23 @@ const styles = StyleSheet.create({
   cancelBox: {
     position: 'absolute',
     width: '80%',
+    paddingTop: 30,
+    paddingHorizontal: 30,
+    paddingBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     top: '50%',
-    transform: [{translateY: -75}],
-    backgroundColor: '#ddd',
-    borderColor: '#333',
-    borderWidth: 1,
-    borderBottomWidth: 2,
+    transform: [{translateY: -50}],
+    backgroundColor: '#fff',
     zIndex: 999,
-    paddingTop: 20,
-    height: 150
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
   },
   errorMsg: {
     color: '#f00',
@@ -71,6 +76,7 @@ const styles = StyleSheet.create({
   },
   cancelBut: {
     marginHorizontal: 10,
+    width: '40%'
   },
   textCancel: {
     fontSize: 25
@@ -92,7 +98,7 @@ const styles = StyleSheet.create({
   input: {
     color: '#000',
     fontSize: 20,
-    backgroundColor: '#d7d7d7',
+    backgroundColor: '#fff',
     paddingLeft: 10
   },
   listItem: {
@@ -100,7 +106,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   checkbox: {
-    fontSize: 40
+    fontSize: 35
   },
   checkboxText: {
     fontSize: 30,
@@ -112,12 +118,16 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(2),
-    backgroundColor: '#41823f',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10
   },
-  signupText: {
+  loginText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 23,
     fontWeight: '600',
+    textAlign: 'center'
   },
   loginContainer: {
     flexDirection: 'row',
@@ -128,16 +138,12 @@ const styles = StyleSheet.create({
     color: '#bec0ce',
     fontSize: 16,
   },
-  loginText: {
-    color: 'white',
-    fontSize: 16,
-  },
   topBar: {
     padding: 15,
-    backgroundColor: '#555',
     height: 70,
     justifyContent: 'center',
-    marginBottom: 30
+    marginBottom: 30,
+    backgroundColor: '#007aff'
   },
   topBarText: {
     color: '#fff',
@@ -147,7 +153,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 20,
-    fontSize: 50,
+    fontSize: 30,
     color: '#fff'
   }
 });
