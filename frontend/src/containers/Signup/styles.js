@@ -6,7 +6,7 @@ import {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative'
+    position: 'relative',
   },
   backgroundImage: {
     position: 'absolute'
@@ -84,34 +84,41 @@ const styles = StyleSheet.create({
   form: {
     justifyContent: 'flex-end',
   },
-  item: {
-    marginVertical: PixelRatio.getPixelSizeForLayoutSize(3),
-    backgroundColor: '#d7d7d7',
-    borderColor: '#121d56',
-    marginBottom: 10,
-  },
   nameContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
   },
-  input: {
+  inputbox: {
     color: '#000',
+    width: '45%',
+    borderWidth: 1,
+    borderColor: '#000',
     fontSize: 20,
     backgroundColor: '#fff',
     paddingLeft: 10
   },
+  firstinputbox: {
+    marginRight: 10,
+  },
+  formItem: {
+    justifyContent: 'space-between'
+  },
   listItem: {
     flexDirection: 'row',
-    marginTop: 10
+    marginTop: 10,
   },
   checkbox: {
-    fontSize: 35
+    fontSize: 25
   },
   checkboxText: {
-    fontSize: 30,
+    fontSize: 25,
     color: '#333',
     marginLeft: 20
+  },
+  checkContainer: {
+    marginTop: 10,
+    marginLeft: -10
   },
   buttonContainer: {
     marginTop: PixelRatio.getPixelSizeForLayoutSize(15),
@@ -140,20 +147,19 @@ const styles = StyleSheet.create({
   },
   topBar: {
     padding: 15,
-    height: 70,
     justifyContent: 'center',
-    marginBottom: 30,
-    backgroundColor: '#007aff'
+    marginBottom: 10,
+    backgroundColor: '#3F51B5'
   },
   topBarText: {
     color: '#fff',
-    fontSize: 28
+    fontSize: 25
   },
   closeIcon: {
     position: 'absolute',
-    top: 0,
+    top: 3,
     right: 20,
-    fontSize: 30,
+    fontSize: 35,
     color: '#fff'
   }
 });

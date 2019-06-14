@@ -91,14 +91,14 @@ const styles = StyleSheet.create({
   menuIcon: {
     position: 'absolute',
     top: 40,
-    right: 20,
+    right: 25,
     color: '#333',
     fontSize: 40
   },
   menuContainer: {
     position: 'absolute',
     top: 40,
-    right: 20,
+    right: 25,
     borderLeftWidth: 1,
     borderBottomWidth: 1,
     borderColor: '#333',
@@ -154,12 +154,11 @@ const styles = StyleSheet.create({
   disclaimerContain: {
     width: '100%',
     height: 180,
-    padding: 10,
     borderColor: '#000',
     marginTop: 10
   },
   disclaimerText: {  
-    fontSize: 20,
+    fontSize: 25,
     color: '#000',
     width: 300
   },
@@ -203,6 +202,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 10,
     transform: [{translateY: -80}]
+  },
+  countdown: {
+    marginTop: 10,
+    marginBottom: 10,
+    fontSize: 25,
+    textAlign: 'left',
+    width: '100%'
   }
 });
 

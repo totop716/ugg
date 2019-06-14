@@ -97,11 +97,11 @@ export default {
   CheckboxBorderWidth: 2,
   CheckboxPaddingLeft: 4,
   CheckboxPaddingBottom: 5,
-  CheckboxIconSize: 40,
+  CheckboxIconSize: 30,
   CheckboxIconMarginTop: -2,
-  CheckboxFontSize: 40,
-  checkboxBgColor: "#039BE5",
-  checkboxSize: 40,
+  CheckboxFontSize: 25,
+  checkboxBgColor: "#3F51B5",
+  checkboxSize: 30,
   checkboxTickColor: "#fff",
 
   // Color

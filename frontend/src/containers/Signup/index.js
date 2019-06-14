@@ -23,6 +23,7 @@ import material from '../../../native-base-theme/variables/material';
 import styles from './styles';
 
 import { signupUserAPI } from '../../services/Authentication';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class Signup extends Component {
   state = {
@@ -38,7 +39,7 @@ class Signup extends Component {
     checkEmail: true,
     checkSMS: true,
     cancelBox: false,
-    error: {name: '', address: '', city: '', zipcode: ''}
+    error: {name: '', address: '', txtstate: '' }
   };
 
   // navigate to login screen after a successful signup
@@ -87,32 +88,30 @@ class Signup extends Component {
       error.name = '';
     }
 
-    if(this.state.address == ''){
+    if(this.state.city == '' && this.state.address != ''){
+      error.address = 'You need to input city';
+    }else if(this.state.city != '' && this.state.address == ''){
       error.address = 'You need to input address';
+    }else if(this.state.city == '' && this.state.address == ''){
+      error.address = 'You need to input city and address';
     }else{
       error.address = '';
     }
 
-    if(this.state.city == '' && this.state.txtState != ''){
-      error.city = 'You need to input city';
-    }else if(this.state.city != '' && this.state.txtState == ''){
-      error.city = 'You need to input state';
-    }else if(this.state.city == '' && this.state.txtState == ''){
-      error.city = 'You need to input city and state';
+    if(this.state.zipcode == '' && this.state.txtState != ''){
+      error.txtstate = 'You need to input zipcode';
+    }else if(this.state.zipcode != '' && this.state.txtState == ''){
+      error.txtstate = 'You need to input state';
+    }else if(this.state.zipcode == '' && this.state.txtState == ''){
+      error.txtstate = 'You need to input state and zipcode';
     }else{
-      error.city = '';
+      error.txtstate = '';
     }
 
-    if(this.state.zipcode == ''){
-      error.zipcode = 'You need to input zip code';
-    }else{
-      error.zipcode = '';
-    }
-    
     this.setState({error});
     if(this.state.error.name == '' && this.state.error.address == ''){
       signupUserAPI(this.state.firstname, this.state.lastname, this.state.address, this.state.city, this.state.txtState, this.state.zipcode, this.state.emailaddress, phoneNo,this.state.po_box_unit_number, this.state.suite).then(res => {
-        this.props.navigation.navigate('Login', {exit: 1});
+        this.props.navigation.navigate('Login', {exit: 2});
       })
     }
   }
@@ -121,110 +120,108 @@ class Signup extends Component {
     return (
       <StyleProvider style={getTheme(material)}>
         <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
-          <Image source={require('../../assets/images/SummerShoppingBg.png')} style={styles.backgroundImage} />
-          <Content contentContainerStyle={styles.content}>
-            {this.state.registeredVisible && <View style={styles.thankyouBox}>
-              <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideRegisteredBox}/>
-              <Text style={styles.thankyouText}>You are successfully registered</Text>
+        <Image source={require('../../assets/images/SummerShoppingBg.png')} style={styles.backgroundImage} />
+        <Content contentContainerStyle={styles.content}>
+          {this.state.registeredVisible && <View style={styles.thankyouBox}>
+            <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideRegisteredBox}/>
+            <Text style={styles.thankyouText}>You are successfully registered</Text>
+          </View>
+          }
+          {this.state.cancelBox && <View style={styles.cancelBox}>
+            <Text style={styles.thankyouText}>Are you sure you want to cancel?</Text>
+            <View style={styles.buttonsContainer}>
+              <Button
+                  style={[styles.button, styles.cancelBut]}
+                  onPress={this.cancelRegister}
+                >
+                <Text style={styles.textCancel}>Yes</Text>
+              </Button>
+              <Button
+                  style={[styles.button, styles.cancelBut]}
+                  onPress={this.closeCancelBox}
+                  block
+                >
+                <Text style={styles.textCancel}>No</Text>
+              </Button>
             </View>
-            }
-            {this.state.cancelBox && <View style={styles.cancelBox}>
-              <Text style={styles.thankyouText}>Are you sure you want to cancel?</Text>
-              <View style={styles.buttonsContainer}>
-                <Button
-                    style={[styles.button, styles.cancelBut]}
-                    onPress={this.cancelRegister}
-                  >
-                  <Text style={styles.textCancel}>Yes</Text>
-                </Button>
-                <Button
-                    style={[styles.button, styles.cancelBut]}
-                    onPress={this.closeCancelBox}
-                    block
-                  >
-                  <Text style={styles.textCancel}>No</Text>
-                </Button>
-              </View>
+          </View>
+          }
+          <View style={styles.topBar}>
+            <Text style={styles.topBarText}>Thank you for registering Universal Gaming Group</Text>
+            <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.showCancelBox}/>
+          </View>
+          {/* Form */}
+          <Form style={styles.form}>
+            <View style={[styles.listItem, styles.formItem]}>
+              <Input
+                style={[styles.inputbox, styles.firstinputbox]}
+                placeholder="First Name *"
+                placeholderTextColor="#919191"
+                autoCapitalize="none"
+                onChangeText={firstname => this.setState({ firstname })}
+              />
+              <Input
+                style={styles.inputbox}
+                placeholder="Last Name *"
+                placeholderTextColor="#919191"
+                autoCapitalize="none"
+                onChangeText={lastname => this.setState({ lastname })}
+              />
             </View>
-            }
-            <View style={styles.topBar}>
-              <Text style={styles.topBarText}>Thank you for registering Universal Gaming Group</Text>
-              <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.showCancelBox}/>
+            {this.state.error.name != '' && <Text style={styles.errorMsg}>{this.state.error.name}</Text>}
+            <View style={[styles.listItem, styles.formItem]}>
+              <Input
+                style={[styles.inputbox, styles.firstinputbox]}
+                placeholder="Address *"
+                placeholderTextColor="#919191"
+                onChangeText={address => this.setState({ address })}
+              />
+              <Input
+                style={styles.inputbox}
+                placeholder="City *"
+                placeholderTextColor="#919191"
+                onChangeText={city => this.setState({ city })}
+              />
             </View>
-            {/* Form */}
-            <Form style={styles.form}>
-              <View style={styles.listItem}>
-                <Input
-                  style={styles.input}
-                  placeholder="First Name *"
-                  placeholderTextColor="#919191"
-                  autoCapitalize="none"
-                  onChangeText={firstname => this.setState({ firstname })}
-                />
-                <Input
-                  style={styles.input}
-                  placeholder="Last Name *"
-                  placeholderTextColor="#919191"
-                  autoCapitalize="none"
-                  onChangeText={lastname => this.setState({ lastname })}
-                />
-              </View>
-              {this.state.error.name != '' && <Text style={styles.errorMsg}>{this.state.error.name}</Text>}
-              <View style={styles.listItem}>
-                <Input
-                  style={styles.input}
-                  placeholder="Address *"
-                  placeholderTextColor="#919191"
-                  onChangeText={address => this.setState({ address })}
-                />
-              </View>
-              {this.state.error.address != '' && <Text style={styles.errorMsg}>{this.state.error.address}</Text>}
-              <View style={styles.listItem}>
-                <Input
-                  style={styles.input}
-                  placeholder="PO Box(Unit Number)"
-                  placeholderTextColor="#919191"
-                  onChangeText={po_box_unit_number => this.setState({ po_box_unit_number })}
-                />
-                <Input
-                  style={styles.input}
-                  placeholder="Suite"
-                  placeholderTextColor="#919191"
-                  onChangeText={suite => this.setState({ suite })}
-                />
-              </View>
-              <View style={styles.listItem}>
-                <Input
-                  style={styles.input}
-                  placeholder="City *"
-                  placeholderTextColor="#919191"
-                  onChangeText={city => this.setState({ city })}
-                />
-                <Input
-                  style={styles.input}
-                  placeholder="State *"
-                  placeholderTextColor="#919191"
-                  onChangeText={txtState => this.setState({ txtState })}
-                />
-              </View>
-              {this.state.error.city != '' && <Text style={styles.errorMsg}>{this.state.error.city}</Text>}
-              <View style={styles.listItem}>
-                <Input
-                  style={styles.input}
-                  placeholder="Zip Code *"
-                  placeholderTextColor="#919191"
-                  onChangeText={zipcode => this.setState({ zipcode })}
-                />
-              </View>
-              {this.state.error.zipcode != '' && <Text style={styles.errorMsg}>{this.state.error.zipcode}</Text>}
-              <View style={styles.listItem}>
-                <Input
-                  style={styles.input}
-                  placeholder="Email Address"
-                  placeholderTextColor="#919191"
-                  onChangeText={emailaddress => this.setState({ emailaddress })}
-                />
-              </View>
+            {this.state.error.address != '' && <Text style={styles.errorMsg}>{this.state.error.address}</Text>}
+            <View style={[styles.listItem, styles.formItem]}>
+              <Input
+                style={[styles.inputbox, styles.firstinputbox]}
+                placeholder="State *"
+                placeholderTextColor="#919191"
+                onChangeText={txtState => this.setState({ txtState })}
+              />
+              <Input
+                style={styles.inputbox}
+                placeholder="Zip Code *"
+                placeholderTextColor="#919191"
+                onChangeText={zipcode => this.setState({ zipcode })}
+              />
+            </View>
+            {this.state.error.txtstate != '' && <Text style={styles.errorMsg}>{this.state.error.txtstate}</Text>}
+            <View style={[styles.listItem, styles.formItem]}>
+              <Input
+                style={[styles.inputbox, styles.firstinputbox]}
+                placeholder="PO Box(Unit Number)"
+                placeholderTextColor="#919191"
+                onChangeText={po_box_unit_number => this.setState({ po_box_unit_number })}
+              />
+              <Input
+                style={styles.inputbox}
+                placeholder="Suite"
+                placeholderTextColor="#919191"
+                onChangeText={suite => this.setState({ suite })}
+              />
+            </View>
+            <View style={styles.listItem}>
+              <Input
+                style={styles.inputbox}
+                placeholder="Email Address"
+                placeholderTextColor="#919191"
+                onChangeText={emailaddress => this.setState({ emailaddress })}
+              />
+            </View>
+            <View style={styles.checkContainer}>
               <View style={styles.listItem}>
                 <CheckBox checked={this.state.checkEmail} onPress={this.setCheckEmail} />
                 <Text style={styles.checkboxText}>Receiving emails, newsletters, and promotions</Text>
@@ -233,18 +230,19 @@ class Signup extends Component {
                 <CheckBox checked={this.state.checkSMS} onPress={this.setCheckSMS} />
                 <Text style={styles.checkboxText}>Receiving SMS text message notifications</Text>
               </View>
-            </Form>
-
-            <View style={styles.buttonContainer}>
-              {/* Login Button */}
-              <Button
-                style={styles.button}
-                onPress={this.userRegister}
-              >
-              <Text style={styles.loginText}>SUBMIT</Text></Button>
             </View>
-          </Content>
-        </KeyboardAvoidingView>
+          </Form>
+
+          <View style={styles.buttonContainer}>
+            {/* Login Button */}
+            <Button
+              style={styles.button}
+              onPress={this.userRegister}
+            >
+            <Text style={styles.loginText}>SUBMIT</Text></Button>
+          </View>
+        </Content>
+      </KeyboardAvoidingView>
       </StyleProvider>
     );
   }
