@@ -50,6 +50,7 @@ class Login extends Component {
     sweepdisclaimer: "Disclaimer Text",
     sweepadded: false,
     sweepcountdown: false,
+    begin_date: '',
     };
 
   componentWillReceiveProps(props){
@@ -77,16 +78,16 @@ class Login extends Component {
       if(this.state.tabletData.sweep_ids != null && this.state.tabletData.sweep_ids != ''){
         sweep_array = this.state.tabletData.sweep_ids.substring(0, this.state.tabletData.sweep_ids.length - 1).split(",");
         for(let i = 0; i < sweep_array.length; i++){
-          getSweepstakeAPI(sweep_array[i]).then((res2)=>{
-            let begin_date;
-            if(i == 0)
-              begin_date = res2.sweepstake.startdate;
-            else if(begin_date > res2.startdate)
-              begin_date = res2.sweepstake.startdate;
-
+          getSweepstakeAPI(sweep_array[i]).then((res3)=>{
+            if(i == 0){
+              this.setState({begin_date:res3.sweepstake.startdate});
+            }
+            else if(this.state.begin_date > res3.sweepstake.startdate){
+              this.setState({begin_date:res3.sweepstake.startdate});
+            }
             if(i == sweep_array.length - 1){
               const currentdate = new Date().getTime();
-              const begindatetime = new Date(begin_date).getTime();
+              const begindatetime = new Date(this.state.begin_date).getTime();
               if(currentdate < begindatetime){
                 this.setState({sweepcountdown: true});
                 this.setState({countdown: begindatetime - currentdate});
@@ -107,7 +108,6 @@ class Login extends Component {
 
   sweepcountdown = () => {
     this.setState({countdown: this.state.countdown - 1000})
-    console.log(this.state.countdown)
     if(this.state.countdown <= 0){
       clearInterval(this.interval);
       this.setState({sweepcountdown: false})
@@ -144,13 +144,17 @@ class Login extends Component {
         this.setState({userData: res.user});
         const currenttime = new Date();
         const checkedtime = new Date(this.state.userData.check_time);
-        if(this.state.userData.check_time == "" || this.state.userData.check_time == null || (currenttime.getFullYear() > checkedtime.getFullYear() || currenttime.getMonth() > checkedtime.getMonth() || currenttime.getDate() > checkedtime.getDate())){
+        if(this.state.userData.check_time == "" || this.state.userData.check_time == null || (currenttime.getUTCFullYear() > checkedtime.getUTCFullYear() || currenttime.getUTCMonth() > checkedtime.getMonth() || currenttime.getUTCDate() > checkedtime.getDate())){
+          console.log(checkedtime);
           this.setState({thankyouBoxVisible: true});
           const currentDate = new Date();
           // const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
           const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate();
           updateCheckTime(this.state.phoneNumber, check_time).then((res2) => {
             console.log(res2);
+          })
+          updateTabletID(this.state.tabletData, this.state.tabletID, this.state.userData == null ? null: this.state.userData.id).then((res1) => {
+            console.log(res1);
           })
           setTimeout(() => {
             this.setState({thankyouBoxVisible: false});
@@ -366,7 +370,7 @@ class Login extends Component {
               primary
             ><Text style={styles.loginText}>SUBMIT</Text></Button>}
             {this.state.sweepcountdown && <Text style={styles.countdown}>
-              { Math.floor(this.state.countdown/86400000) > 0 && Math.floor(this.state.countdown/86400000)+' Days ' }{Math.floor((this.state.countdown%86400000)/3600000) >= 10 ? Math.floor((this.state.countdown%86400000)/3600000) : '0' + Math.floor((this.state.countdown%86400000)/3600000) }:{Math.floor((this.state.countdown%3600000)/60000) >=10 ? Math.floor((this.state.countdown%3600000)/60000) : '0'+ Math.floor((this.state.countdown%3600000)/60000)}:{Math.floor((this.state.countdown%60000)/1000) >=10 ? Math.floor((this.state.countdown%60000)/1000): '0'+Math.floor((this.state.countdown%60000)/1000) } Remaining
+              { Math.floor(this.state.countdown/86400000) > 1 ? Math.floor(this.state.countdown/86400000)+' Days ' : Math.floor(this.state.countdown/86400000) > 0 ? '1 Day ' : '' }{Math.floor((this.state.countdown%86400000)/3600000) >= 10 ? Math.floor((this.state.countdown%86400000)/3600000) : '0' + Math.floor((this.state.countdown%86400000)/3600000) }:{Math.floor((this.state.countdown%3600000)/60000) >=10 ? Math.floor((this.state.countdown%3600000)/60000) : '0'+ Math.floor((this.state.countdown%3600000)/60000)}:{Math.floor((this.state.countdown%60000)/1000) >=10 ? Math.floor((this.state.countdown%60000)/1000): '0'+Math.floor((this.state.countdown%60000)/1000) } Remaining
             </Text>}
             <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>{this.state.sweepdisclaimer}</Text></View>
           </Form>

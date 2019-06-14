@@ -49,10 +49,9 @@ class TabletViewSet(APIView):
     def put(self, request, pk):
         saved_tablet = get_object_or_404(Tablet.objects.all(), id=pk)
         data = request.query_params
-        serializer = TabletSerializer(instance=saved_tablet, data=data, partial=True)
-
-        if serializer.is_valid(raise_exception=True):
-            saved_tablet = serializer.save()
+        saved_tablet.name = data.get('name')
+        saved_tablet.user_id_id = data.get('user_id_id')
+        saved_tablet.save()
         return Response({"success": "Tablet '{}' updated successfully".format(data)})
 
 
