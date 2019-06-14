@@ -44,8 +44,9 @@ def gettablets_fromsweepid(id, key):
   tabletsData = []
   for tablet in tablets:
     if tablet.id not in winner_ids:
-      user = MyUser.objects.filter(Q(id=tablet.user_id_id))
-      tablet.user = user[0]
+      if tablet.user_id_id != None:
+        user = MyUser.objects.filter(Q(id=tablet.user_id_id))
+        tablet.user = user[0]
       tablet_ids.append(tablet.id)
       tabletsData.append(tablet)
   return {'data': tabletsData, 'ids': tablet_ids}
