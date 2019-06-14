@@ -68,7 +68,7 @@ def getsweepwinners(id):
 
 @register.simple_tag
 def get_sweepstakedata(id):
-  sweepstake = Sweepstakes.objects.filter(id = id)
+  sweepstake = Sweepstakes.objects.filter(Q(id = id))
   return sweepstake[0]
 
 @register.simple_tag
