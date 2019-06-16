@@ -13,7 +13,7 @@ from import_export import resources
 class SweepUserResource(resources.ModelResource):
     class Meta:
         model = SweepUser
-        fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email', 'password')
+        fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
@@ -21,7 +21,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = SweepUser
-        fields = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email', 'password')
+        fields = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
 
     def save(self, commit=True):
         # Save the provided password in hashed format
@@ -41,7 +41,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = SweepUser
-        fields = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email', 'password')
+        fields = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
 
 class SweepUsersAdmin(admin.ModelAdmin):
     form = UserChangeForm
@@ -49,7 +49,7 @@ class SweepUsersAdmin(admin.ModelAdmin):
 
     resource_class = SweepUserResource
 
-    fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email', 'password')
+    fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
     list_display = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email', 'label')
     search_fields = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
 
@@ -62,8 +62,33 @@ class SweepstakesAdmin(admin.ModelAdmin):
 
 admin.site.register(Sweepstakes, SweepstakesAdmin)
 
+class TabletChangeForm(forms.ModelForm):
+    """A form for updating users. Includes all the fields on
+    the user, but replaces the password field with admin's
+    password hash display field.
+    """
+    # password = ReadOnlyPasswordHashField()
+    class Meta:
+        model = Tablet
+        fields = ('name','address','city','state','zipcode','password', 'confirm_password')
+
+    password = forms.CharField(widget=forms.PasswordInput, required=False)
+    confirm_password=forms.CharField(widget=forms.PasswordInput(), required=False)
+
+    def clean(self):
+        cleaned_data = super(TabletChangeForm, self).clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password != confirm_password:
+            raise forms.ValidationError(
+                "password and confirm_password does not match"
+            )
+
 class TabletAdmin(admin.ModelAdmin):
-    fields =  ('name','address','city','state','zipcode','user_id')
+    form = TabletChangeForm
+
+    fields =  ('name','address','city','state','zipcode','password', 'confirm_password')
     list_display = ('name','address','city','state','zipcode')
     search_fields = ('name','address','city','state','zipcode')
 

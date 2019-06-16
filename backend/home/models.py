@@ -162,6 +162,8 @@ class Tablet(models.Model):
     sweep_ids = models.CharField(max_length = 100)
     active_sweep = models.CharField(max_length = 10)
     tablet_id_code = models.CharField(max_length = 100)
+    password = models.CharField('Password', max_length = 100)
+    confirm_password = models.CharField('Confirm Password', max_length = 100)
 
     class Meta:
         verbose_name_plural = 'Tablets'

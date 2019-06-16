@@ -49,8 +49,16 @@ class TabletViewSet(APIView):
     def put(self, request, pk):
         saved_tablet = get_object_or_404(Tablet.objects.all(), id=pk)
         data = request.query_params
-        saved_tablet.name = data.get('name')
+        if data.get('name') != None:
+            saved_tablet.name = data.get('name')
         saved_tablet.user_id_id = data.get('user_id_id')
+        if data.get('sweep_ids') != None:
+            saved_tablet.sweep_ids = data.get('sweep_ids')
+        if data.get('active_sweep') != None:
+            saved_tablet.active_sweep = data.get('active_sweep')
+        if data.get('password') != None:
+            saved_tablet.password = data.get('password')
+            saved_tablet.confirm_password = data.get('password')
         saved_tablet.save()
         return Response({"success": "Tablet '{}' updated successfully".format(data)})
 
