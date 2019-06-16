@@ -37,8 +37,8 @@ const getUserAPI = (phoneNo) => {
   return users.sendRequest();
 }
 
-const getTabletAPI = (id) => {
-  const path = 'tablets/?key='+id;
+const getTabletAPI = (id, password) => {
+  const path = 'tablets/?tablet_id='+id+'&password='+password;
   const url = `${Utils.serverUrl}${path}`;
   const users = new APIClient(url, APIConstants.HTTPMethod.GET);
   return users.sendRequest();
@@ -73,16 +73,18 @@ const updateCheckTime = (phone, check_time) => {
   return users.sendRequest();
 }
 
-const updateTabletID = (tabletData, tablet_id, user_id) => {
-  if(tabletData.name == ""){
+const updateTabletID = (tabletData, tablet_id, tablet_password, user_id) => {
+  if(tabletData == null){
     const path = 'tablets';
-    const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+'&tablet_id_code='+Constants.deviceId;
+    const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+'&password='+tablet_password+'&confirm_password='+tablet_password+'&tablet_id_code='+Constants.device_id;
     if(user_id != null)
       url += `&user_id_id=`+user_id;
     users = new APIClient(url, APIConstants.HTTPMethod.POST);  
   }else{
     const path = 'tablets/'+tabletData.id;
-    const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+`&user_id_id=`+user_id;
+    const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+'&password='+tablet_password+'&confirm_password='+tablet_password;
+    if(user_id != null)
+      url += `&user_id_id=`+user_id;
     users = new APIClient(url, APIConstants.HTTPMethod.PUT);
   }
   return users.sendRequest();

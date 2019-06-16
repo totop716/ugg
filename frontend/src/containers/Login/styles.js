@@ -88,6 +88,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: PixelRatio.getPixelSizeForLayoutSize(12),
   },
+  warningContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  warningText: {
+    fontSize: 35,
+    textAlign: 'center',
+    color: '#333',
+    alignSelf: 'center'
+  },
   menuIcon: {
     position: 'absolute',
     top: 40,
@@ -195,7 +205,8 @@ const styles = StyleSheet.create({
   inputTabletID: {
     borderWidth: 1,
     borderColor: '#333',
-    width: '100%'
+    width: '100%',
+    marginBottom: 10,
   },
   tabletBox: {
     height: 'auto',
