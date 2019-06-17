@@ -34,7 +34,7 @@ class TabletViewSet(APIView):
             if data.get('password'):
                 tablet = Tablet.objects.filter(Q(name=data.get('tablet_id')) & Q(password = data.get('password')))
             else:
-                tablet = Tablet.objects.filter(Q(name=data.get('tablet_id')))
+                tablet = Tablet.objects.filter(Q(name=data.get('tablet_id')) & Q(password = ''))
             serializer = TabletSerializer(tablet, many=True)
             return Response({"tablet": serializer.data})
         tablets = Tablet.objects.all()
@@ -54,7 +54,8 @@ class TabletViewSet(APIView):
         data = request.query_params
         if data.get('name') != None:
             saved_tablet.name = data.get('name')
-        saved_tablet.user_id_id = data.get('user_id_id')
+        if data.get('user_id_id') != None:
+            saved_tablet.user_id_id = data.get('user_id_id')
         if data.get('sweep_ids') != None:
             saved_tablet.sweep_ids = data.get('sweep_ids')
         if data.get('active_sweep') != None:

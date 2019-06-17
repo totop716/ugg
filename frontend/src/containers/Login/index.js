@@ -41,7 +41,7 @@ class Login extends Component {
     phoneNumber: "", 
     phoneNumberFormat: "",
     tabletID: "",
-    tablet_pass: "",
+    tablet_Pass: "",
     tablet_password: "",
     tablet_confirmpassword: "",
     tabletIDLogin: "",
@@ -63,11 +63,12 @@ class Login extends Component {
 
   componentWillReceiveProps(props){
     if (props.navigation.getParam('exit') == 1){
-      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', userData: null});
+      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', userData: null, tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
     }else if(props.navigation.getParam('exit') == 2){
-      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', userData: null});
+      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', userData: null, tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
       this.setState({signupBoxVisible: true})      
     }
+    console.log(this.state.tabletData, ' ', this.state.sweepstakeData);
   }
 
   componentDidMount() {
@@ -120,7 +121,7 @@ class Login extends Component {
           updateCheckTime(this.state.phoneNumber, check_time).then((res2) => {
             console.log(res2);
           })
-          updateTabletID(this.state.tabletData, this.state.tabletID, this.state.userData == null ? null: this.state.userData.id).then((res1) => {
+          updateTabletID(this.state.tabletData, this.state.tabletID, null, this.state.userData == null ? null: this.state.userData.id).then((res1) => {
             console.log(res1);
           })
           setTimeout(() => {
@@ -196,11 +197,15 @@ class Login extends Component {
   }
 
   passwordTabletSubmit = () => {
-    getTabletAPI(this.state.tabletID, this.state.tablet_pass).then((res) => {
-      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, showTabletPasswordBox: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', tablet_password: '', tablet_confirmpassword: '', tabletData: null, sweepstakeData: null, userData: null, sweepbackground: require('../../assets/images/SummerShoppingBg.png'),
-      sweeplogo: require('../../assets/images/Summer_Shopping.png'), sweepdisclaimer: "Disclaimer Text"});
+    getTabletAPI(this.state.tabletID, this.state.tablet_Pass).then((res) => {
+      console.log(res);
+      if(res.tablet.length > 0){
+        this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, showTabletPasswordBox: false, tablet_PassError: "", thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', tablet_password: '', tablet_confirmpassword: '', tabletData: null, sweepstakeData: null, userData: null, sweepbackground: require('../../assets/images/SummerShoppingBg.png'),
+        sweeplogo: require('../../assets/images/Summer_Shopping.png'), sweepdisclaimer: "Disclaimer Text"});  
+      }else{
+        this.setState({tablet_PassError: "Password is not correct"});
+      }
     }).catch(error => {
-      this.setState({tablet_PassError: "Password is not correct"});
     })
   }
 
@@ -225,43 +230,40 @@ class Login extends Component {
 
   submitTabletLogin = () => {
     getTabletAPI(this.state.tabletIDLogin, this.state.tabletpasswordlogin).then((res1)=>{
-      console.log(res1);
       this.setState({tabletData: res1.tablet[0]})
       this.setState({tabletID: res1.tablet[0].name});
       this.setState({showTabletLoginForm: false});
       this.setState({tabletIDLogin: ''});
       this.setState({tabletpasswordlogin: ''});
       this.setState({tabletLoginError: ''});
+      this.setState({showMenu: false});
       if(this.state.tabletData.active_sweep != null && this.state.tabletData.active_sweep != ''){
         getSweepstakeAPI(this.state.tabletData.active_sweep).then((res2)=>{
           this.setState({sweepstakeData: res2.sweepstake});
           this.setState({sweepbackground: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}})
           this.setState({sweeplogo: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.logo}})
           this.setState({sweepdisclaimer: this.state.sweepstakeData.disclaimer})
+          this.setState({begin_date:res2.sweepstake.startdate});
+          setTimeout(this.setSweepadded, 1000);
         })
-      }
-      if(this.state.tabletData.sweep_ids != null && this.state.tabletData.sweep_ids != ''){
-        sweep_array = this.state.tabletData.sweep_ids.substring(0, this.state.tabletData.sweep_ids.length - 1).split(",");
-        for(let i = 0; i < sweep_array.length; i++){
-          getSweepstakeAPI(sweep_array[i]).then((res3)=>{
-            if(i == 0){
-              this.setState({begin_date:res3.sweepstake.startdate});
-            }
-            else if(this.state.begin_date > res3.sweepstake.startdate){
-              this.setState({begin_date:res3.sweepstake.startdate});
-            }
-            if(i == sweep_array.length - 1){
-              const currentdate = new Date().getTime();
-              const begindatetime = new Date(this.state.begin_date).getTime();
-              if(currentdate < begindatetime){
-                this.setState({sweepcountdown: true});
-                this.setState({countdown: begindatetime - currentdate});
-                this.interval = setInterval(this.sweepcountdown, 1000);
-              }else{
-                this.setState({sweepadded: true});
+      }else{
+        if(this.state.tabletData.sweep_ids != null && this.state.tabletData.sweep_ids != ''){
+          sweep_array = this.state.tabletData.sweep_ids.substring(0, this.state.tabletData.sweep_ids.length - 1).split(",");          
+          for(let i = 0; i < sweep_array.length; i++){
+            getSweepstakeAPI(sweep_array[i]).then((res3)=>{
+              if(i == 0){
+                this.setState({begin_date:res3.sweepstake.startdate});
+                this.setState({sweepstakeData: res3.sweepstake});
               }
-            }
-          })  
+              else if(this.state.begin_date > res3.sweepstake.startdate){
+                this.setState({begin_date:res3.sweepstake.startdate});
+                this.setState({sweepstakeData: res3.sweepstake});
+              }
+              if(i == sweep_array.length - 1){
+                setTimeout(this.setSweepadded, 1000);
+              }
+            })  
+          }
         }
       }
     }).catch((error)=>{
@@ -271,16 +273,33 @@ class Login extends Component {
     })
   }
 
+  setSweepadded = () => {
+    this.setState({sweepbackground: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}})
+    this.setState({sweeplogo: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.logo}})
+    console.log('Sweep Array', this.state.sweeplogo);
+    this.setState({sweepdisclaimer: this.state.sweepstakeData.disclaimer})
+    console.log("SweepData ", this.state.sweepbackground);
+    const currentdate = new Date().getTime();
+    const begindatetime = new Date(this.state.begin_date).getTime();
+    console.log(currentdate, ' ', begindatetime)
+    if(currentdate < begindatetime){
+      this.setState({sweepcountdown: true});
+      this.setState({countdown: begindatetime - currentdate});
+      this.interval = setInterval(this.sweepcountdown, 1000);
+      this.setState({sweepadded: false});
+    }else{
+      this.setState({sweepadded: true});
+    }
+  }
+
   goToSignup = () => {
-    this.props.navigation.navigate('Signup', {phoneNumber: this.state.phoneNumber});
+    this.props.navigation.navigate('Signup', {phoneNumber: this.state.phoneNumber, tabletData: this.state.tabletData, sweepstakeData: this.state.sweepstakeData, tabletID: this.state.tabletID});
   }
 
   render() {
     return (
         <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
-        {this.state.sweepstakeData == null &&
-          <Image source={this.state.sweepbackground} style={styles.backgroundImage} />
-        }
+        <Image source={this.state.sweepbackground} style={styles.backgroundImage} />
         {this.state.phoneNoAlert && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePhoneNoAlert}/>
           <Text style={styles.thankyouText}>You need to input Phone NO</Text>
@@ -299,7 +318,7 @@ class Login extends Component {
         {this.state.comebackBoxVisible && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidecomeebackBox} />
           <TouchableOpacity style={styles.closeIcon} onPress={this.hidecomeebackBox}><Icon name="close" /></TouchableOpacity>
-          <Text style={styles.thankyouText}>You have already checked in to “{this.state.tabletData == null ? '' : this.state.tabletData.name }” for Today.</Text><Text style={styles.thankyouText}>Come back tomorrow.</Text>
+          <Text style={styles.thankyouText}>You have already checked in to “{this.state.tabletData == null ? '' : this.state.tabletData.name }” for Today. Come back tomorrow.</Text>
         </View>
         }
         {this.state.showPasswordBox && <View style={styles.thankyouBox}>
@@ -434,13 +453,13 @@ class Login extends Component {
             </TouchableOpacity>
           </View>
           }
-          {this.state.tabletID == "" &&
+          {this.state.tabletData == null &&
             <View style={styles.warningContainer}><Text style={styles.warningText}>Please assign tablet ID and Sweepstake to continue</Text></View>
           }
-          {this.state.tabletID != "" && this.state.sweepstakeData == null &&
+          {this.state.tabletData != null && this.state.sweepstakeData == null &&
             <View style={styles.warningContainer}><Text style={styles.warningText}>Please assign a sweepstake for {this.state.tabletID}</Text></View>
           }
-          {this.state.tabletID != "" && this.state.sweepstakeData != null &&
+          {this.state.tabletData != null && this.state.sweepstakeData != null &&
             <View style={styles.content}>
             {/* Logo */}
             <View style={styles.logoContainer}>
@@ -452,7 +471,7 @@ class Login extends Component {
 
             {/* Form */}
             <Form style={styles.form}>
-              <TextInputMask
+            {this.state.sweepadded && <TextInputMask
                 value={this.state.phoneNumberFormat}
                 onChangeText={(phoneNumberFormat) => {
                     let phoneNumber = phoneNumberFormat.toString().replace(/\D+/g, '');
@@ -471,7 +490,7 @@ class Login extends Component {
                 style={styles.inputPhoneNo}
                 placeholder="+1 (000) 000 - 0000"
                 placeholderTextColor="#a1a1a1"
-              />
+            /> }
               {this.state.sweepadded && <Button
                 onPress={this.showThankyouBox}
                 fontSize='20'
@@ -479,7 +498,7 @@ class Login extends Component {
                 primary
               ><Text style={styles.loginText}>SUBMIT</Text></Button>}
               {this.state.sweepcountdown && <Text style={styles.countdown}>
-                { Math.floor(this.state.countdown/86400000) > 1 ? Math.floor(this.state.countdown/86400000)+' Days ' : Math.floor(this.state.countdown/86400000) > 0 ? '1 Day ' : '' }{Math.floor((this.state.countdown%86400000)/3600000) >= 10 ? Math.floor((this.state.countdown%86400000)/3600000) : '0' + Math.floor((this.state.countdown%86400000)/3600000) }:{Math.floor((this.state.countdown%3600000)/60000) >=10 ? Math.floor((this.state.countdown%3600000)/60000) : '0'+ Math.floor((this.state.countdown%3600000)/60000)}:{Math.floor((this.state.countdown%60000)/1000) >=10 ? Math.floor((this.state.countdown%60000)/1000): '0'+Math.floor((this.state.countdown%60000)/1000) } Remaining
+                { Math.floor(this.state.countdown/86400000) > 1 ? Math.floor(this.state.countdown/86400000)+' Days ' : Math.floor(this.state.countdown/86400000) > 0 ? '1 Day ' : '' }{Math.floor((this.state.countdown%86400000)/3600000) >= 10 ? Math.floor((this.state.countdown%86400000)/3600000) : '0' + Math.floor((this.state.countdown%86400000)/3600000) }:{Math.floor((this.state.countdown%3600000)/60000) >=10 ? Math.floor((this.state.countdown%3600000)/60000) : '0'+ Math.floor((this.state.countdown%3600000)/60000)}:{Math.floor((this.state.countdown%60000)/1000) >=10 ? Math.floor((this.state.countdown%60000)/1000): '0'+Math.floor((this.state.countdown%60000)/1000) } Remaining to start
               </Text>}
               <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>{this.state.sweepdisclaimer}</Text></View>
             </Form>

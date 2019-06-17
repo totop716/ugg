@@ -15,6 +15,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
+    width: '100%',
+    height: '100%'
   },
   thankyouBox: {
     position: 'absolute',
@@ -103,7 +105,8 @@ const styles = StyleSheet.create({
     top: 40,
     right: 25,
     color: '#333',
-    fontSize: 40
+    fontSize: 40,
+    zIndex: 999999
   },
   menuContainer: {
     position: 'absolute',
@@ -112,6 +115,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderBottomWidth: 1,
     borderColor: '#333',
+    zIndex: 999999
   },
   menuItem: {
     width: 150,
@@ -137,6 +141,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '100%',
+    height: '100%',
     resizeMode: 'contain',
   },
   form: {

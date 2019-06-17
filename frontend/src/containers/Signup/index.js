@@ -70,7 +70,7 @@ class Signup extends Component {
   }
 
   cancelRegister = () => {
-    this.props.navigation.navigate('Login', {exit: 1});
+    this.props.navigation.navigate('Login', {exit: 1, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID')});
   }
 
   userRegister = () => {
@@ -111,7 +111,7 @@ class Signup extends Component {
     this.setState({error});
     if(this.state.error.name == '' && this.state.error.address == ''){
       signupUserAPI(this.state.firstname, this.state.lastname, this.state.address, this.state.city, this.state.txtState, this.state.zipcode, this.state.emailaddress, phoneNo,this.state.po_box_unit_number, this.state.suite).then(res => {
-        this.props.navigation.navigate('Login', {exit: 2});
+        this.props.navigation.navigate('Login', {exit: 2, tabletData: navigation.getParam('tabletData'), sweepstakeData: navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID')});
       })
     }
   }

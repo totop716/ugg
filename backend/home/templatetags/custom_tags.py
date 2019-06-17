@@ -7,8 +7,7 @@ from django.db.models import Q
 import dateutil.parser
 register = template.Library()
 
-from customauth.models import MyUser
-from home.models import Sweepstakes, Tablet, SweepWinner
+from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser
 
 @register.simple_tag
 def gettablets(id):
@@ -45,7 +44,7 @@ def gettablets_fromsweepid(id, key):
   for tablet in tablets:
     if tablet.id not in winner_ids:
       if tablet.user_id_id != None:
-        user = MyUser.objects.filter(Q(id=tablet.user_id_id))
+        user = SweepUser.objects.filter(Q(id=tablet.user_id_id))
         tablet.user = user[0]
       tablet_ids.append(tablet.id)
       tabletsData.append(tablet)
@@ -58,7 +57,7 @@ def getsweepwinners(id):
   for winner in winners:
     tablet = Tablet.objects.filter(Q(id=winner.tablet_id_id))
     winner.name = tablet[0].name
-    user = MyUser.objects.filter(Q(id=tablet[0].user_id_id))
+    user = SweepUser.objects.filter(Q(id=tablet[0].user_id_id))
     winner.user = user[0]
     if winner.user.check_time != '':
       winner.checktime = dateutil.parser.parse(winner.user.check_time)

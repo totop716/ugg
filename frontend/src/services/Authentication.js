@@ -74,19 +74,23 @@ const updateCheckTime = (phone, check_time) => {
 }
 
 const updateTabletID = (tabletData, tablet_id, tablet_password, user_id) => {
+  let users; let url;
   if(tabletData == null){
     const path = 'tablets';
-    const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+'&password='+tablet_password+'&confirm_password='+tablet_password+'&tablet_id_code='+Constants.device_id;
+    url = `${Utils.serverUrl}${path}/?name=`+tablet_id+'&password='+tablet_password+'&confirm_password='+tablet_password+'&tablet_id_code='+Constants.device_id;
     if(user_id != null)
       url += `&user_id_id=`+user_id;
     users = new APIClient(url, APIConstants.HTTPMethod.POST);  
   }else{
     const path = 'tablets/'+tabletData.id;
-    const url = `${Utils.serverUrl}${path}/?name=`+tablet_id+'&password='+tablet_password+'&confirm_password='+tablet_password;
+    url = `${Utils.serverUrl}${path}/?name=`+tablet_id;
+    if(tablet_password != null)
+      url += '&password='+tablet_password+'&confirm_password='+tablet_password;
     if(user_id != null)
       url += `&user_id_id=`+user_id;
     users = new APIClient(url, APIConstants.HTTPMethod.PUT);
   }
+  console.log("URL", url);
   return users.sendRequest();
 }
 
