@@ -69,7 +69,7 @@
                 });
                 console.log({sweep_ids});
                 $.ajax({
-                    url: '/tablets/'+$("#tabletID").val()+"/?sweep_ids="+sweep_ids+"&active_sweep=''",
+                    url: '/tablets/'+$("#tabletID").val()+"/?sweep_ids="+sweep_ids+"&active_sweep=",
                     type: 'PUT',
                     success: function() {
                         window.location.href='/admin/home/tablet/';
