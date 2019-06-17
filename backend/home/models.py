@@ -132,8 +132,8 @@ class SweepUser(models.Model):
 
 class Sweepstakes(models.Model):
     name = models.CharField(max_length=100)
-    startdate = models.DateTimeField()
-    enddate = models.DateTimeField()
+    startdate = models.DateTimeField(help_text="Time is in UTC")
+    enddate = models.DateTimeField(help_text="Time is in UTC")
     logo = models.ImageField()
     background = models.ImageField()
     disclaimer = models.TextField()
