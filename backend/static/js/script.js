@@ -51,7 +51,7 @@
                             sweep_ids = sweep_ids.replace(currentSweep, '');
                     }
                     $.ajax({
-                        url: '/tablets/'+$(this).parent().find('.tablet_id').val()+"/?sweep_ids="+sweep_ids+"&active_sweep=''",
+                        url: '/tablets/'+$(this).parent().find('.tablet_id').val()+"/?sweep_ids="+sweep_ids+"&active_sweep=",
                         type: 'PUT',
                         success: function() {
                             if(index == tabletCount - 1){
