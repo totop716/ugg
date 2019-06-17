@@ -51,7 +51,7 @@
                             sweep_ids = sweep_ids.replace(currentSweep, '');
                     }
                     $.ajax({
-                        url: '/tablets/'+$(this).parent().find('.tablet_id').val()+"/?sweep_ids="+sweep_ids,
+                        url: '/tablets/'+$(this).parent().find('.tablet_id').val()+"/?sweep_ids="+sweep_ids+"&active_sweep=''",
                         type: 'PUT',
                         success: function() {
                             if(index == tabletCount - 1){
@@ -69,7 +69,7 @@
                 });
                 console.log({sweep_ids});
                 $.ajax({
-                    url: '/tablets/'+$("#tabletID").val()+"/?sweep_ids="+sweep_ids,
+                    url: '/tablets/'+$("#tabletID").val()+"/?sweep_ids="+sweep_ids+"&active_sweep=''",
                     type: 'PUT',
                     success: function() {
                         window.location.href='/admin/home/tablet/';
