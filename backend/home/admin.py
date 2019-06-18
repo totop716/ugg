@@ -43,7 +43,7 @@ class UserChangeForm(forms.ModelForm):
         model = SweepUser
         fields = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
 
-class SweepUsersAdmin(admin.ModelAdmin):
+class SweepUsersAdmin(ImportMixin, admin.ModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
