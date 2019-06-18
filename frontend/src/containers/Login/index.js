@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Image,
   TouchableOpacity,
-  View, KeyboardAvoidingView
+  View, KeyboardAvoidingView, Linking
 } from 'react-native';
 import {
   Container,
@@ -63,9 +63,9 @@ class Login extends Component {
 
   componentWillReceiveProps(props){
     if (props.navigation.getParam('exit') == 1){
-      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', userData: null, tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
+      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: props.navigation.getParam('tabletData').name, userData: null, tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
     }else if(props.navigation.getParam('exit') == 2){
-      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', userData: null, tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
+      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: props.navigation.getParam('tabletData').name, userData: null, tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
       this.setState({signupBoxVisible: true})      
     }
     console.log(this.state.tabletData, ' ', this.state.sweepstakeData);
@@ -505,7 +505,12 @@ class Login extends Component {
               {this.state.sweepcountdown && <Text style={styles.countdown}>
                 { Math.floor(this.state.countdown/86400000) > 1 ? Math.floor(this.state.countdown/86400000)+' Days ' : Math.floor(this.state.countdown/86400000) > 0 ? '1 Day ' : '' }{Math.floor((this.state.countdown%86400000)/3600000) >= 10 ? Math.floor((this.state.countdown%86400000)/3600000) : '0' + Math.floor((this.state.countdown%86400000)/3600000) }:{Math.floor((this.state.countdown%3600000)/60000) >=10 ? Math.floor((this.state.countdown%3600000)/60000) : '0'+ Math.floor((this.state.countdown%3600000)/60000)}:{Math.floor((this.state.countdown%60000)/1000) >=10 ? Math.floor((this.state.countdown%60000)/1000): '0'+Math.floor((this.state.countdown%60000)/1000) } Remaining to start
               </Text>}
-              <View style={styles.disclaimerContain}><Text style={styles.disclaimerText}>{this.state.sweepdisclaimer}</Text></View>
+              <View style={styles.disclaimerContain}>
+                <Text style={styles.disclaimerText}>
+                  {/* {this.state.sweepdisclaimer} */}
+                  <Text style={{fontWeight:'bold', fontSize: 13}}>NO PURCHASE NECESSARY.  MUST BE 21 YEARS OF AGE OR OLDER TO ENTER.</Text>  Purchase will not increase chances of winning.  Winners must have a valid U.S. address to receive prize.  Age verification required.  Odds of winning are contingent upon the number of entries received.  To enter, Participants complete an entry form located on kiosks placed in 97 Participating Locations.  Participants are limited to one (1) entry per day, beginning June 27, 2019 until the closing of the promotion, which is 9:59 AM on September 5, 2019.  Sponsored by Eureka Entertainment, LLC, 240 W. Laura Drive, Addison, IL 60101.  Full rules, schedules of drawings and retail values of prizes may be viewed at <Text style={{color: 'blue', fontSize: 13}} onPress={() => Linking.openURL('https://www.ugaminggroup.com/summer-shopping-spree')}>https://www.ugaminggroup.com/summer-shopping-spree</Text>. 
+                </Text>
+              </View>
             </Form>
             <View style={styles.buttonContainer}>
               {/* Login Button */}

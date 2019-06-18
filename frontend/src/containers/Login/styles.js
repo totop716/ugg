@@ -168,12 +168,11 @@ const styles = StyleSheet.create({
   },
   disclaimerContain: {
     width: '100%',
-    height: 180,
     borderColor: '#000',
     marginTop: 10
   },
   disclaimerText: {  
-    fontSize: 20,
+    fontSize: 13,
     color: '#000',
     width: 300
   },
