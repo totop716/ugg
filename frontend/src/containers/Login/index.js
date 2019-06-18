@@ -507,8 +507,7 @@ class Login extends Component {
               </Text>}
               <View style={styles.disclaimerContain}>
                 <Text style={styles.disclaimerText}>
-                  {/* {this.state.sweepdisclaimer} */}
-                  <Text style={{fontWeight:'bold', fontSize: 13}}>NO PURCHASE NECESSARY.  MUST BE 21 YEARS OF AGE OR OLDER TO ENTER.</Text>  Purchase will not increase chances of winning.  Winners must have a valid U.S. address to receive prize.  Age verification required.  Odds of winning are contingent upon the number of entries received.  To enter, Participants complete an entry form located on kiosks placed in 97 Participating Locations.  Participants are limited to one (1) entry per day, beginning June 27, 2019 until the closing of the promotion, which is 9:59 AM on September 5, 2019.  Sponsored by Eureka Entertainment, LLC, 240 W. Laura Drive, Addison, IL 60101.  Full rules, schedules of drawings and retail values of prizes may be viewed at <Text style={{color: 'blue', fontSize: 13}} onPress={() => Linking.openURL('https://www.ugaminggroup.com/summer-shopping-spree')}>https://www.ugaminggroup.com/summer-shopping-spree</Text>. 
+                  {this.state.sweepdisclaimer}
                 </Text>
               </View>
             </Form>
