@@ -6,7 +6,7 @@ from django import forms
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 
-from .models import Entry, Lottery, SweepUser, Sweepstakes, SweepUser, Tablet
+from .models import Entry, Lottery, SweepUser, Sweepstakes, Tablet
 from import_export.admin import ImportExportModelAdmin, ImportMixin
 from import_export import resources
 

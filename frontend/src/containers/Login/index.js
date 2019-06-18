@@ -23,7 +23,7 @@ import Constants from 'expo-constants';
 
 import styles from './styles';
 import Utils from '../../utils'
-import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI } from '../../services/Authentication';
+import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime } from '../../services/Authentication';
 import { ScrollView } from 'react-native-gesture-handler';
 
 class Login extends Component {
@@ -111,28 +111,33 @@ class Login extends Component {
       getUserAPI(this.state.phoneNumber).then((res) => {
         this.setState({userData: res.user});
         const currenttime = new Date();
-        const checkedtime = new Date(this.state.userData.check_time);
-        if(this.state.userData.check_time == "" || this.state.userData.check_time == null || (currenttime.getUTCFullYear() > checkedtime.getUTCFullYear() || currenttime.getUTCMonth() > checkedtime.getMonth() || currenttime.getUTCDate() > checkedtime.getDate())){
-          console.log(checkedtime);
-          this.setState({thankyouBoxVisible: true});
-          const currentDate = new Date();
-          // const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
-          const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate();
-          updateCheckTime(this.state.phoneNumber, check_time).then((res2) => {
-            console.log(res2);
-          })
-          updateTabletID(this.state.tabletData, this.state.tabletID, null, this.state.userData == null ? null: this.state.userData.id).then((res1) => {
-            console.log(res1);
-          })
+        getCheckInTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
+          console.log("CheckINTIme", res1.checkin);
+          const checkedtime = new Date(res1.checkin.check_time);
+          if(res1.checkin.check_time == "" || res1.checkin.check_time == null || (currenttime.getUTCFullYear() > checkedtime.getUTCFullYear() || currenttime.getUTCMonth() > checkedtime.getMonth() || currenttime.getUTCDate() > checkedtime.getDate())){
+            this.setState({thankyouBoxVisible: true});
+            const currentDate = new Date();
+            const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
+            // const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate();
+            let methodType;
+            if(res1.checkin.check_time == "" || res1.checkin.check_time == null)
+              methodType = 1;
+            else
+              methodType = 2;
+            console.log(this.state.sweepstakeData);
+            updateCheckTime(methodType, this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
+              console.log(res2);
+            })
+            setTimeout(() => {
+              this.setState({thankyouBoxVisible: false});
+            }, 3000);
+          }else{
+            this.setState({comebackBoxVisible: true});
+          }
           setTimeout(() => {
-            this.setState({thankyouBoxVisible: false});
-          }, 3000);
-        }else{
-          this.setState({comebackBoxVisible: true});
-        }
-        setTimeout(() => {
-          this.setState({phoneNumberFormat: ""});
-        }, 3000) 
+            this.setState({phoneNumberFormat: ""});
+          }, 3000)  
+        });
       }).catch((error)=>{
         if(error)
           this.goToSignup();

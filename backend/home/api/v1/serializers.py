@@ -1,6 +1,6 @@
 from customauth.models import MyUser
 from rest_framework import serializers
-from home.models import CustomText, HomePage, Sweepstakes, Tablet, SweepWinner, SweepUser, Settings
+from home.models import CustomText, HomePage, Sweepstakes, Tablet, SweepWinner, SweepUser, Settings, SweepCheckIn
 from rest_framework.decorators import api_view
 import base64
 
@@ -142,6 +142,32 @@ class HomePageSerializer(serializers.ModelSerializer):
         model = HomePage
         fields = '__all__'
 
+class SweepCheckInSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SweepCheckIn
+        fields = '__all__'
+
+    def create(self, validated_data):
+        tablet = SweepCheckIn.objects.create(
+            user_id=validated_data.get('user_id_id'),
+            sweep_id=validated_data.get('sweep_id_id'),
+            tablet_id=validated_data.get('tablet_id_id'),
+            check_time=validated_data.get('check_time'))
+        tablet.save()
+        return tablet
+
+    def update(self, instance, validated_data):
+        if validated_data.get('user_id_id') != None:
+            instance.user_id_id = validated_data.get('user_id_id')
+        if validated_data.get('sweep_id_id') != None:
+            instance.sweep_id_id = validated_data.get('sweep_id_id')
+        if validated_data.get('tablet_id_id') != None:
+            instance.tablet_id_id = validated_data.get('tablet_id_id')
+        if validated_data.get('check_time') != None:
+            instance.check_time = validated_data.get('check_time')
+        instance.save()
+        return instance
+
 class SweepstakesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sweepstakes
@@ -215,7 +241,8 @@ class SweepwinnerSerializer(serializers.ModelSerializer):
         tablet = SweepWinner.objects.create(
             windate=validated_data.get('windate'),
             sweep_id_id=validated_data.get('sweep_id_id'),
-            tablet_id_id=validated_data.get('tablet_id_id'))
+            tablet_id_id=validated_data.get('tablet_id_id'),
+            checkIn_id_id=validated_data.get('checkIn_id_id'))
         tablet.save()
         return tablet
 

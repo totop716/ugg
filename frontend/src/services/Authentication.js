@@ -37,6 +37,26 @@ const getUserAPI = (phoneNo) => {
   return users.sendRequest();
 }
 
+const getCheckInTime = (user_id, tablet_id, sweep_id) => {
+  const path = 'sweepcheckin/?user_id='+user_id+'&tablet_id='+tablet_id+'&sweep_id='+sweep_id;
+  const url = `${Utils.serverUrl}${path}`;
+  const users = new APIClient(url, APIConstants.HTTPMethod.GET);
+  console.log(url);
+  return users.sendRequest();
+}
+
+const updateCheckTime = (methodType, user_id, tablet_id, sweep_id, check_time) => {
+  const path = 'sweepcheckin/?user_id='+user_id+'&tablet_id='+tablet_id+'&sweep_id='+sweep_id+'&check_time='+check_time;
+  const url = `${Utils.serverUrl}${path}`;
+  let users;
+  if(methodType == 1)
+    users = new APIClient(url, APIConstants.HTTPMethod.POST);
+  if(methodType == 2)
+    users = new APIClient(url, APIConstants.HTTPMethod.PUT);
+  console.log("URL", url);
+  return users.sendRequest();
+}
+
 const getTabletAPI = (id, password) => {
   const path = 'tablets/?tablet_id='+id+'&password='+password;
   const url = `${Utils.serverUrl}${path}`;
@@ -66,13 +86,6 @@ const signupUserAPI = (first_name, last_name, address, city, state, zipcode, ema
   return users.sendRequest({first_name, last_name, address, city, state, zipcode, email, phone, po_box_unit_number, suite, label: 'Manual Signup', password: ''});
 }
 
-const updateCheckTime = (phone, check_time) => {
-  const path = 'sweepusers/'+phone;
-  const url = `${Utils.serverUrl}${path}/?check_time=`+check_time;
-  const users = new APIClient(url, APIConstants.HTTPMethod.PUT);
-  return users.sendRequest();
-}
-
 const updateTabletID = (tabletData, tablet_id, tablet_password, user_id) => {
   let users; let url;
   if(tabletData == null){
@@ -94,4 +107,4 @@ const updateTabletID = (tabletData, tablet_id, tablet_password, user_id) => {
   return users.sendRequest();
 }
 
-export { loginAPI, signupAPI, getUserAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI };
+export { loginAPI, signupAPI, getUserAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime };

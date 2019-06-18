@@ -10,11 +10,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 
-from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer, TabletSerializer, SweepwinnerSerializer, SweepUserSerializer, SettingsSerializer
+from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer, TabletSerializer, SweepwinnerSerializer, SweepUserSerializer, SettingsSerializer, SweepCheckInSerializer
 from home.models import CustomText, HomePage
 from django.db.models import Q
 from customauth.models import MyUser
-from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser, Settings
+from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser, Settings, SweepCheckIn
 import datetime
 
 class SignupViewSet(ModelViewSet):
@@ -95,6 +95,28 @@ class SettingsViewSet(APIView):
             saved_setting = serializer.save()
         return Response({"success": "Setting '{}' updated successfully".format(data)})
 
+class SweepCheckInViewSet(APIView):
+    def get(self, request, pk=None):
+        data = request.query_params
+        checkin = SweepCheckIn.objects.filter(Q(user_id_id=data.get('user_id')) & Q(tablet_id_id=data.get('tablet_id')) & Q(sweep_id_id=data.get('sweep_id'))).order_by('-check_time').first()
+        serializer = SweepCheckInSerializer(checkin)
+        return Response({"checkin": serializer.data})
+
+    def post(self, request):
+        data = request.query_params
+        checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=data.get('check_time'))
+        checkin.save()
+
+        return Response({"success": "CheckIn '{}' created successfully".format(data)})
+
+    def put(self, request, pk=None):
+        data = request.query_params
+        checkin = SweepCheckIn.objects.filter(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id')).first()
+        checkin.check_time = data.get('check_time')
+        checkin.save()
+
+        return Response({"success": "CheckIn '{}' updated successfully".format(data)})
+
 
 class SweepstakeViewSet(APIView):
     def get(self, request, pk=None):
@@ -110,13 +132,14 @@ class SweepwinnerViewSet(APIView):
     def post(self, request, pk=None):
         data = request.query_params
         sweep=Sweepstakes.objects.filter(id=data.get('sweep_id'))
-        wintablet=Tablet.objects.filter(id=data.get('winner_id'))
+        wintablet=SweepCheckIn.objects.filter(id=data.get('winner_id'))
+        tablet=Tablet.objects.filter(id=wintablet[0].tablet_id_id)
         winItem = SweepWinner.objects.create(
             windate=datetime.datetime.now(),
             sweep_id_id=data.get('sweep_id'),
-            tablet_id_id=data.get('winner_id'))
+            checkIn_id_id=data.get('winner_id'))
         winItem.save()
-        return Response({"success": "'{}' won in '{}'".format(wintablet[0].name, sweep[0].name)})
+        return Response({"success": "'{}' won in '{}'".format(tablet[0].name, sweep[0].name)})
 
 class MyUserViewSet(APIView):
     def get(self, request, pk=None):

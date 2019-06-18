@@ -178,10 +178,29 @@ class Tablet(models.Model):
     def field(self):
         return 'name'
 
+class SweepCheckIn(models.Model):
+    user_id = models.ForeignKey(SweepUser, on_delete=models.CASCADE, null=True)
+    sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE, null=True)
+    tablet_id = models.ForeignKey(Tablet, on_delete=models.CASCADE, null=True)
+    check_time = models.CharField(max_length =200)
+
+    class Meta:
+        verbose_name_plural = 'SweepCheckIn'
+    
+    def __str__(self):
+        return self.check_time
+
+    @property
+    def api(self):
+        return f'/api/v1/sweepcheckin/{self.id}/'
+    @property
+    def field(self):
+        return 'check_time'
+
 class SweepWinner(models.Model):
     windate = models.CharField(max_length=100)
-    sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE)
-    tablet_id = models.ForeignKey(Tablet, on_delete=models.CASCADE)
+    sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE, null=True)
+    checkIn_id = models.ForeignKey(SweepCheckIn, on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name_plural = 'SweepstakesWinner'

@@ -3,11 +3,11 @@ import datetime
 import pytz
 import dateutil.parser
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Max, F, Count
 import dateutil.parser
 register = template.Library()
 
-from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser
+from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser, SweepCheckIn
 
 @register.simple_tag
 def gettablets(id):
@@ -28,26 +28,24 @@ def gettablets(id):
 
 @register.simple_tag
 def gettablets_fromsweepid(id, key):
-  filter_str = id+','
-  if key:
-    tablets = Tablet.objects.filter(Q(sweep_ids__contains = filter_str) & Q(name__contains = key))
-  else:
-    tablets = Tablet.objects.filter(Q(sweep_ids__contains = filter_str))
-
+  tablets = SweepCheckIn.objects.filter(Q(sweep_id_id = id))
   winners = SweepWinner.objects.filter(Q(sweep_id_id=id) & Q(windate__gt=datetime.datetime.now()-datetime.timedelta(days=1)))
   winner_ids = []
   for winner in winners:
-    winner_ids.append(winner.tablet_id_id)
+    winner_ids.append(winner.checkIn_id_id)
   
   tablet_ids = []
   tabletsData = []
   for tablet in tablets:
     if tablet.id not in winner_ids:
-      if tablet.user_id_id != None:
+      tablet_info = Tablet.objects.filter(Q(id=tablet.tablet_id_id))
+      if key in tablet_info[0].name:
         user = SweepUser.objects.filter(Q(id=tablet.user_id_id))
+        tablet.check_time = dateutil.parser.parse(tablet.check_time)
         tablet.user = user[0]
-      tablet_ids.append(tablet.id)
-      tabletsData.append(tablet)
+        tablet.tablet_info = tablet_info[0]
+        tablet_ids.append(tablet.id)
+        tabletsData.append(tablet)
   return {'data': tabletsData, 'ids': tablet_ids}
 
 @register.simple_tag
@@ -55,12 +53,13 @@ def getsweepwinners(id):
   winners = SweepWinner.objects.filter(Q(sweep_id_id=id))
   
   for winner in winners:
-    tablet = Tablet.objects.filter(Q(id=winner.tablet_id_id))
+    checkin = SweepCheckIn.objects.filter(Q(id=winner.checkIn_id_id))
+    tablet = Tablet.objects.filter(Q(id=checkin[0].tablet_id_id))
     winner.name = tablet[0].name
-    user = SweepUser.objects.filter(Q(id=tablet[0].user_id_id))
+    user = SweepUser.objects.filter(Q(id=checkin[0].user_id_id))
     winner.user = user[0]
-    if winner.user.check_time != '':
-      winner.checktime = dateutil.parser.parse(winner.user.check_time)
+    if checkin[0].check_time != '':
+      winner.checktime = dateutil.parser.parse(checkin[0].check_time)
     else:
       winner.checktime = ''
     winner.wintime = dateutil.parser.parse(winner.windate)
