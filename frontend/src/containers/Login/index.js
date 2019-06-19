@@ -317,13 +317,13 @@ class Login extends Component {
         }
         {this.state.thankyouBoxVisible && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideThankyouBox} />
-          <Text style={styles.thankyouText}>Thank you “{this.state.userData.first_name}“ for checking in “{this.state.tabletData == null ? '' : this.state.tabletData.name }“</Text>
+          <Text style={styles.thankyouText}>Thank you {this.state.userData.first_name} for checking in {this.state.tabletData == null ? '' : this.state.tabletData.name }</Text>
         </View>
         }
         {this.state.comebackBoxVisible && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidecomeebackBox} />
           <TouchableOpacity style={styles.closeIcon} onPress={this.hidecomeebackBox}><Icon name="close" /></TouchableOpacity>
-          <Text style={styles.thankyouText}>You have already checked in to “{this.state.tabletData == null ? '' : this.state.tabletData.name }” for Today. Come back tomorrow.</Text>
+          <Text style={styles.thankyouText}>You have already checked in to {this.state.tabletData == null ? '' : this.state.tabletData.name } for Today. Come back tomorrow.</Text>
         </View>
         }
         {this.state.showPasswordBox && <View style={styles.thankyouBox}>

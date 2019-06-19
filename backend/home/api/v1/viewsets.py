@@ -134,12 +134,13 @@ class SweepwinnerViewSet(APIView):
         sweep=Sweepstakes.objects.filter(id=data.get('sweep_id'))
         wintablet=SweepCheckIn.objects.filter(id=data.get('winner_id'))
         tablet=Tablet.objects.filter(id=wintablet[0].tablet_id_id)
+        user=SweepUser.objects.filter(id=wintablet[0].user_id_id)
         winItem = SweepWinner.objects.create(
             windate=datetime.datetime.now(),
             sweep_id_id=data.get('sweep_id'),
             checkIn_id_id=data.get('winner_id'))
         winItem.save()
-        return Response({"success": "'{}' won in '{}'".format(tablet[0].name, sweep[0].name)})
+        return Response({"success": "{} from {} won in {}".format(user[0].first_name, tablet[0].name, sweep[0].name)})
 
 class MyUserViewSet(APIView):
     def get(self, request, pk=None):
