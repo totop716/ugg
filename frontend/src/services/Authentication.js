@@ -45,14 +45,11 @@ const getCheckInTime = (user_id, tablet_id, sweep_id) => {
   return users.sendRequest();
 }
 
-const updateCheckTime = (methodType, user_id, tablet_id, sweep_id, check_time) => {
+const updateCheckTime = (user_id, tablet_id, sweep_id, check_time) => {
   const path = 'sweepcheckin/?user_id='+user_id+'&tablet_id='+tablet_id+'&sweep_id='+sweep_id+'&check_time='+check_time;
   const url = `${Utils.serverUrl}${path}`;
   let users;
-  if(methodType == 1)
-    users = new APIClient(url, APIConstants.HTTPMethod.POST);
-  if(methodType == 2)
-    users = new APIClient(url, APIConstants.HTTPMethod.PUT);
+  users = new APIClient(url, APIConstants.HTTPMethod.POST);
   console.log("URL", url);
   return users.sendRequest();
 }

@@ -119,13 +119,8 @@ class Login extends Component {
             const currentDate = new Date();
             const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
             // const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate();
-            let methodType;
-            if(res1.checkin.check_time == "" || res1.checkin.check_time == null)
-              methodType = 1;
-            else
-              methodType = 2;
             console.log(this.state.sweepstakeData);
-            updateCheckTime(methodType, this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
+            updateCheckTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
               console.log(res2);
             })
             setTimeout(() => {
