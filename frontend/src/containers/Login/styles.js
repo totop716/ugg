@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   disclaimerText: {  
-    fontSize: 13,
     color: '#000',
     width: 300
   },

@@ -56,7 +56,7 @@ class SweepUsersAdmin(ImportMixin, admin.ModelAdmin):
 admin.site.register(SweepUser, SweepUsersAdmin)
 
 class SweepstakesAdmin(admin.ModelAdmin):
-    fields =  ('name','startdate','enddate','logo','background','disclaimer','current')
+    fields =  ('name','startdate','enddate','logo','background','disclaimer','fontsize','current')
     list_display = ('name','startdate','enddate','logo','background','disclaimer','current')
     search_fields = ('name','startdate','enddate','logo','background','disclaimer','current')
 

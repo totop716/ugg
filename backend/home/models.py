@@ -137,6 +137,7 @@ class Sweepstakes(models.Model):
     logo = models.ImageField()
     background = models.ImageField()
     disclaimer = models.TextField()
+    fontsize = models.IntegerField(max_length=10)
     current = models.BooleanField()
 
     class Meta:

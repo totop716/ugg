@@ -501,7 +501,7 @@ class Login extends Component {
                 { Math.floor(this.state.countdown/86400000) > 1 ? Math.floor(this.state.countdown/86400000)+' Days ' : Math.floor(this.state.countdown/86400000) > 0 ? '1 Day ' : '' }{Math.floor((this.state.countdown%86400000)/3600000) >= 10 ? Math.floor((this.state.countdown%86400000)/3600000) : '0' + Math.floor((this.state.countdown%86400000)/3600000) }:{Math.floor((this.state.countdown%3600000)/60000) >=10 ? Math.floor((this.state.countdown%3600000)/60000) : '0'+ Math.floor((this.state.countdown%3600000)/60000)}:{Math.floor((this.state.countdown%60000)/1000) >=10 ? Math.floor((this.state.countdown%60000)/1000): '0'+Math.floor((this.state.countdown%60000)/1000) } Remaining to start
               </Text>}
               <View style={styles.disclaimerContain}>
-                <Text style={styles.disclaimerText}>
+                <Text style={[styles.disclaimerText,{fontSize:this.state.sweepstakeData.fontsize}]}>
                   {this.state.sweepdisclaimer}
                 </Text>
               </View>
