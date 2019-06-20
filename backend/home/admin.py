@@ -49,8 +49,8 @@ class SweepUsersAdmin(ImportMixin, admin.ModelAdmin):
 
     resource_class = SweepUserResource
 
-    fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
-    list_display = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email', 'label')
+    fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email', 'checkSMS', 'checkEmail')
+    list_display = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email', 'label', 'checkSMS', 'checkEmail')
     search_fields = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
 
 admin.site.register(SweepUser, SweepUsersAdmin)

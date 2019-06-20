@@ -71,7 +71,7 @@ class MyUserSerializer(serializers.ModelSerializer):
 class SweepUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = SweepUser
-        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'po_box_unit_number', 'suite', 'label', 'password')
+        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'po_box_unit_number', 'suite', 'label', 'password','checkSMS','checkEmail')
         extra_kwargs = {
             'first_name' : {
                 'required': True
@@ -101,7 +101,9 @@ class SweepUserSerializer(serializers.ModelSerializer):
             password=validated_data.get('password'),
             po_box_unit_number=validated_data.get('po_box_unit_number'),
             suite=validated_data.get('suite'),
-            label= validated_data.get('label')
+            label= validated_data.get('label'),
+            checkEmail=validated_data.get('checkEmail'),
+            checkSMS=validated_data.get('checkSMS')
         )
         user.save()
         return user
@@ -129,6 +131,10 @@ class SweepUserSerializer(serializers.ModelSerializer):
             instance.suite = validated_data.get('suite')
         if validated_data.get('password') != None:
             instance.setPassword(validated_data.get('password'))
+        if validated_data.get('checkEmail') != None:
+            instance.suite = validated_data.get('checkEmail')
+        if validated_data.get('checkSMS') != None:
+            instance.suite = validated_data.get('checkSMS')
         instance.save()
         return instance
 

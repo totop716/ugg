@@ -116,6 +116,8 @@ class SweepUser(models.Model):
     suite = models.CharField(max_length =50, blank=True)
     label = models.CharField(max_length = 100, default="Added by Admin")
     password = models.CharField(max_length = 100, blank=True)
+    checkSMS = models.BooleanField('SMS')
+    checkEmail = models.BooleanField('Email')
 
     class Meta:
         verbose_name_plural = 'Users'
@@ -137,7 +139,7 @@ class Sweepstakes(models.Model):
     logo = models.ImageField()
     background = models.ImageField()
     disclaimer = models.TextField()
-    fontsize = models.IntegerField(max_length=10)
+    fontsize = models.IntegerField()
     current = models.BooleanField()
 
     class Meta:
