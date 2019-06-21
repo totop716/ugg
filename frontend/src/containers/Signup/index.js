@@ -22,7 +22,7 @@ import material from '../../../native-base-theme/variables/material';
 
 import styles from './styles';
 
-import { signupUserAPI } from '../../services/Authentication';
+import { signupUserAPI, updateCheckTime } from '../../services/Authentication';
 import { ScrollView } from 'react-native-gesture-handler';
 
 class Signup extends Component {
@@ -112,7 +112,13 @@ class Signup extends Component {
     console.log(this.state.checkEmail);
     if(this.state.error.name == '' && this.state.error.address == ''){
       signupUserAPI(this.state.firstname, this.state.lastname, this.state.address, this.state.city, this.state.txtState, this.state.zipcode, this.state.emailaddress, phoneNo,this.state.po_box_unit_number, this.state.suite, this.state.checkEmail, this.state.checkSMS).then(res => {
-        this.props.navigation.navigate('Login', {exit: 2, tabletData: navigation.getParam('tabletData'), sweepstakeData: navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID')});
+        const d = new Date();
+        const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+        const currenttime = new Date(utc - (3600000*5));
+        const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
+        updateCheckTime(res.id, navigation.getParam('tabletData').id, navigation.getParam('sweepstakeData').id, check_time).then((res2) => {
+          this.props.navigation.navigate('Login', {exit: 2, tabletData: navigation.getParam('tabletData'), sweepstakeData: navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID')});
+        })
       })
     }
   }
