@@ -101,7 +101,6 @@ class SweepUser(models.Model):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
-        unique=True,
         blank=True
     )
     address = models.CharField(max_length =200)

@@ -110,14 +110,15 @@ class Login extends Component {
     }else{
       getUserAPI(this.state.phoneNumber).then((res) => {
         this.setState({userData: res.user});
-        const currenttime = new Date();
+        const d = new Date();
+        const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+        const currenttime = new Date(utc - (3600000*5));
         getCheckInTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
           console.log("CheckINTIme", res1.checkin);
           const checkedtime = new Date(res1.checkin.check_time);
-          if(res1.checkin.check_time == "" || res1.checkin.check_time == null || (currenttime.getUTCFullYear() > checkedtime.getUTCFullYear() || currenttime.getUTCMonth() > checkedtime.getMonth() || currenttime.getUTCDate() > checkedtime.getDate())){
+          if(res1.checkin.check_time == "" || res1.checkin.check_time == null || (currenttime.getFullYear() > checkedtime.getFullYear() || currenttime.getMonth() > checkedtime.getMonth() || currenttime.getDate() > checkedtime.getDate())){
             this.setState({thankyouBoxVisible: true});
-            const currentDate = new Date();
-            const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate() + " " + currentDate.getUTCHours() + ":" + currentDate.getUTCMinutes() + ":" + currentDate.getUTCSeconds();
+            const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
             // const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate();
             console.log(this.state.sweepstakeData);
             updateCheckTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
