@@ -110,12 +110,11 @@ class Login extends Component {
     }else{
       getUserAPI(this.state.phoneNumber).then((res) => {
         this.setState({userData: res.user});
-        const d = new Date();
-        const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-        const currenttime = new Date(utc - (3600000*5));
+        const currenttime = new Date();
         getCheckInTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
-          console.log("CheckINTIme", res1.checkin);
           const checkedtime = new Date(res1.checkin.check_time);
+          console.log("CheckedTime", checkedtime.getFullYear() + '-' + (checkedtime.getMonth() + 1) + '-' + checkedtime.getDate());
+          console.log("CheckIn", currenttime.getFullYear() + '-' + (currenttime.getMonth() + 1) + '-' + currenttime.getDate());
           if(res1.checkin.check_time == "" || res1.checkin.check_time == null || (currenttime.getFullYear() > checkedtime.getFullYear() || currenttime.getMonth() > checkedtime.getMonth() || currenttime.getDate() > checkedtime.getDate())){
             this.setState({thankyouBoxVisible: true});
             const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
