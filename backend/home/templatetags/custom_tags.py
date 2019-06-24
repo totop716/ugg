@@ -98,6 +98,9 @@ def getselectedsweep(id):
   sweep_ids = tablet[0].sweep_ids[:-1].split(",")
   return sweep_ids
 
-@register.filter
-def getdata_by_index(l, i):
+@register.simple_tag
+def getdata_by_index(l, i, p):
+  if p:
+    return l[i+int(p)*20]
+  else:
     return l[i]
