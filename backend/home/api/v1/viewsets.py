@@ -37,6 +37,10 @@ class TabletViewSet(APIView):
                 tablet = Tablet.objects.filter(Q(name=data.get('tablet_id')) & Q(password = ''))
             serializer = TabletSerializer(tablet, many=True)
             return Response({"tablet": serializer.data})
+        elif data.get('tablet_id_code'):
+            tablet = Tablet.objects.filter(Q(tablet_id_code=data.get('tablet_id_code')) & Q(login_status = True))
+            serializer = TabletSerializer(tablet, many=True)
+            return Response({"tablet": serializer.data})
         tablets = Tablet.objects.all()
         serializer = TabletSerializer(tablets, many=True)
         return Response({"tablets": serializer.data})
@@ -44,7 +48,7 @@ class TabletViewSet(APIView):
     def post(self, request):
         data = request.query_params
         tablet = Tablet.objects.create(name = data.get('name'),
-            user_id_id = data.get('user_id_id'), tablet_id_code=data.get('tablet_id_code'), password=data.get('password'), confirm_password=data.get('password'))
+            user_id_id = data.get('user_id_id'), tablet_id_code=data.get('tablet_id_code'), password=data.get('password'), confirm_password=data.get('password'), login_status=1)
         tablet.save()
 
         return Response({"success": "Tablet '{}' created successfully".format(data)})
@@ -60,6 +64,12 @@ class TabletViewSet(APIView):
             saved_tablet.sweep_ids = data.get('sweep_ids')
         if data.get('active_sweep') != None:
             saved_tablet.active_sweep = data.get('active_sweep')
+        if data.get('login_status') == '1':
+            saved_tablet.login_status = True
+        elif data.get('login_status') == '0':
+            saved_tablet.login_status = False
+        if data.get('tablet_id_code') != None:
+            saved_tablet.tablet_id_code = data.get('tablet_id_code')
         if data.get('password') != None:
             saved_tablet.password = data.get('password')
             saved_tablet.confirm_password = data.get('password')

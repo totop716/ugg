@@ -23,7 +23,7 @@ import Constants from 'expo-constants';
 
 import styles from './styles';
 import Utils from '../../utils'
-import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime } from '../../services/Authentication';
+import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime, updateTabletKey, updateTabletStatus, getTabletfromKey } from '../../services/Authentication';
 import { ScrollView } from 'react-native-gesture-handler';
 
 class Login extends Component {
@@ -72,6 +72,46 @@ class Login extends Component {
   }
 
   componentDidMount() {
+    getTabletfromKey(Constants.deviceId).then(res => {
+      if(res.tablet.length >= 1){
+        this.setState({tabletData: res.tablet[0]});
+        this.setState({tabletID: res.tablet[0].name});
+        this.setState({showTabletLoginForm: false});
+        this.setState({tabletIDLogin: ''});
+        this.setState({tabletpasswordlogin: ''});
+        this.setState({tabletLoginError: ''});
+        this.setState({showMenu: false});
+        if(this.state.tabletData.active_sweep != null && this.state.tabletData.active_sweep != ''){
+          getSweepstakeAPI(this.state.tabletData.active_sweep).then((res2)=>{
+            this.setState({sweepstakeData: res2.sweepstake});
+            this.setState({sweepbackground: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}})
+            this.setState({sweeplogo: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.logo}})
+            this.setState({sweepdisclaimer: this.state.sweepstakeData.disclaimer})
+            this.setState({begin_date:res2.sweepstake.startdate});
+            setTimeout(this.setSweepadded, 1000);
+          })
+        }else{
+          if(this.state.tabletData.sweep_ids != null && this.state.tabletData.sweep_ids != ''){
+            sweep_array = this.state.tabletData.sweep_ids.substring(0, this.state.tabletData.sweep_ids.length - 1).split(",");          
+            for(let i = 0; i < sweep_array.length; i++){
+              getSweepstakeAPI(sweep_array[i]).then((res3)=>{
+                if(i == 0){
+                  this.setState({begin_date:res3.sweepstake.startdate});
+                  this.setState({sweepstakeData: res3.sweepstake});
+                }
+                else if(this.state.begin_date > res3.sweepstake.startdate){
+                  this.setState({begin_date:res3.sweepstake.startdate});
+                  this.setState({sweepstakeData: res3.sweepstake});
+                }
+                if(i == sweep_array.length - 1){
+                  setTimeout(this.setSweepadded, 1000);
+                }
+              })  
+            }
+          }
+        } 
+      }
+    })
   }
 
   sweepcountdown = () => {
@@ -201,8 +241,10 @@ class Login extends Component {
     getTabletAPI(this.state.tabletID, this.state.tablet_Pass).then((res) => {
       console.log(res);
       if(res.tablet.length > 0){
-        this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, showTabletPasswordBox: false, tablet_PassError: "", thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', tablet_password: '', tablet_confirmpassword: '', tabletData: null, sweepstakeData: null, userData: null, sweepbackground: require('../../assets/images/SummerShoppingBg.png'),
-        sweeplogo: require('../../assets/images/Summer_Shopping.png'), sweepdisclaimer: "Disclaimer Text"});  
+        updateTabletStatus(this.state.tabletData.id, 0).then(res => {
+          this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, showTabletPasswordBox: false, tablet_PassError: "", thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: '', tablet_password: '', tablet_confirmpassword: '', tabletData: null, sweepstakeData: null, userData: null, sweepbackground: require('../../assets/images/SummerShoppingBg.png'),
+          sweeplogo: require('../../assets/images/Summer_Shopping.png'), sweepdisclaimer: "Disclaimer Text"});  
+        });
       }else{
         this.setState({tablet_PassError: "Password is not correct"});
       }
@@ -238,35 +280,38 @@ class Login extends Component {
       this.setState({tabletpasswordlogin: ''});
       this.setState({tabletLoginError: ''});
       this.setState({showMenu: false});
-      if(this.state.tabletData.active_sweep != null && this.state.tabletData.active_sweep != ''){
-        getSweepstakeAPI(this.state.tabletData.active_sweep).then((res2)=>{
-          this.setState({sweepstakeData: res2.sweepstake});
-          this.setState({sweepbackground: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}})
-          this.setState({sweeplogo: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.logo}})
-          this.setState({sweepdisclaimer: this.state.sweepstakeData.disclaimer})
-          this.setState({begin_date:res2.sweepstake.startdate});
-          setTimeout(this.setSweepadded, 1000);
-        })
-      }else{
-        if(this.state.tabletData.sweep_ids != null && this.state.tabletData.sweep_ids != ''){
-          sweep_array = this.state.tabletData.sweep_ids.substring(0, this.state.tabletData.sweep_ids.length - 1).split(",");          
-          for(let i = 0; i < sweep_array.length; i++){
-            getSweepstakeAPI(sweep_array[i]).then((res3)=>{
-              if(i == 0){
-                this.setState({begin_date:res3.sweepstake.startdate});
-                this.setState({sweepstakeData: res3.sweepstake});
-              }
-              else if(this.state.begin_date > res3.sweepstake.startdate){
-                this.setState({begin_date:res3.sweepstake.startdate});
-                this.setState({sweepstakeData: res3.sweepstake});
-              }
-              if(i == sweep_array.length - 1){
-                setTimeout(this.setSweepadded, 1000);
-              }
-            })  
+      updateTabletStatus(this.state.tabletData.id, 1).then((res2)=>{
+        console.log("LOGINSTATUS ", res2);
+        if(this.state.tabletData.active_sweep != null && this.state.tabletData.active_sweep != ''){
+          getSweepstakeAPI(this.state.tabletData.active_sweep).then((res2)=>{
+            this.setState({sweepstakeData: res2.sweepstake});
+            this.setState({sweepbackground: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}})
+            this.setState({sweeplogo: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.logo}})
+            this.setState({sweepdisclaimer: this.state.sweepstakeData.disclaimer})
+            this.setState({begin_date:res2.sweepstake.startdate});
+            setTimeout(this.setSweepadded, 1000);
+          })
+        }else{
+          if(this.state.tabletData.sweep_ids != null && this.state.tabletData.sweep_ids != ''){
+            sweep_array = this.state.tabletData.sweep_ids.substring(0, this.state.tabletData.sweep_ids.length - 1).split(",");          
+            for(let i = 0; i < sweep_array.length; i++){
+              getSweepstakeAPI(sweep_array[i]).then((res3)=>{
+                if(i == 0){
+                  this.setState({begin_date:res3.sweepstake.startdate});
+                  this.setState({sweepstakeData: res3.sweepstake});
+                }
+                else if(this.state.begin_date > res3.sweepstake.startdate){
+                  this.setState({begin_date:res3.sweepstake.startdate});
+                  this.setState({sweepstakeData: res3.sweepstake});
+                }
+                if(i == sweep_array.length - 1){
+                  setTimeout(this.setSweepadded, 1000);
+                }
+              })  
+            }
           }
-        }
-      }
+        }  
+      })
     }).catch((error)=>{
       if(error){
         this.setState({tabletLoginError: "Tablet ID or Password is not correct"})
@@ -297,6 +342,24 @@ class Login extends Component {
     this.props.navigation.navigate('Signup', {phoneNumber: this.state.phoneNumber, tabletData: this.state.tabletData, sweepstakeData: this.state.sweepstakeData, tabletID: this.state.tabletID});
   }
 
+  updateDeviceID = () => {
+    if(this.state.tabletData == null){
+      this.setState({showAssignTabletBox: true});
+    }else{
+      updateTabletKey(this.state.tabletData.id).then(res => {
+        this.setState({showTabletKeyUpdateBox: true});
+      });
+    }
+  }
+
+  hideAssignTabletBox = () => {
+    this.setState({showAssignTabletBox: false});
+  }
+
+  hideTabletKeyUpdateBox = () => {
+    this.setState({showTabletKeyUpdateBox: false});
+  }
+
   render() {
     return (
         <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
@@ -309,6 +372,16 @@ class Login extends Component {
         {this.state.signupBoxVisible && <View style={styles.thankyouBox}>
           <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideSignupBox}/>
           <Text style={styles.thankyouText}>Thank you for signing up with Universal Gaming Group</Text>
+        </View>
+        }
+        {this.state.showAssignTabletBox && <View style={styles.thankyouBox}>
+          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideAssignTabletBox}/>
+          <Text style={styles.thankyouText}>Please assign tablet at first.</Text>
+        </View>
+        }
+        {this.state.showTabletKeyUpdateBox && <View style={styles.thankyouBox}>
+          <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideTabletKeyUpdateBox}/>
+          <Text style={styles.thankyouText}>Tablet key updated successfully.</Text>
         </View>
         }
         {this.state.thankyouBoxVisible && <View style={styles.thankyouBox}>
@@ -448,6 +521,9 @@ class Login extends Component {
             </TouchableOpacity>
             <TouchableOpacity onPress={this.showTabletLoginForm} style={styles.menuItem}>
               <Text style={styles.menuItemText}>Tablet Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.updateDeviceID} style={styles.menuItem}>
+              <Text style={styles.menuItemText}>Update Tablet Key</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={this.showTabletForm} style={styles.menuItem}>
               <Text style={styles.menuItemText}>Settings</Text>

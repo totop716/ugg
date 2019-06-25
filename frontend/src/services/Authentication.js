@@ -61,6 +61,13 @@ const getTabletAPI = (id, password) => {
   return users.sendRequest();
 }
 
+const getTabletfromKey = (device_key) => {
+  const path = 'tablets/?tablet_id_code='+device_key;
+  const url = `${Utils.serverUrl}${path}`;
+  const users = new APIClient(url, APIConstants.HTTPMethod.GET);
+  return users.sendRequest();
+}
+
 const getSweepstakeAPI = (id) => {
   const path = 'sweepstakes/'+id;
   const url = `${Utils.serverUrl}${path}/`;
@@ -104,4 +111,20 @@ const updateTabletID = (tabletData, tablet_id, tablet_password, user_id) => {
   return users.sendRequest();
 }
 
-export { loginAPI, signupAPI, getUserAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime };
+const updateTabletKey = (tablet_id) => {
+  const path = 'tablets/'+tablet_id;
+  url = `${Utils.serverUrl}${path}/?tablet_id_code=`+Constants.deviceId;
+  users = new APIClient(url, APIConstants.HTTPMethod.PUT);
+  console.log("URL", url);
+  return users.sendRequest();
+}
+
+const updateTabletStatus = (tablet_id, login) => {
+  const path = 'tablets/'+tablet_id;
+  url = `${Utils.serverUrl}${path}/?login_status=`+login;
+  users = new APIClient(url, APIConstants.HTTPMethod.PUT);
+  console.log("URL", url);
+  return users.sendRequest();
+}
+
+export { loginAPI, signupAPI, getUserAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime, updateTabletKey, updateTabletStatus, getTabletfromKey };
