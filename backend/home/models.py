@@ -166,7 +166,7 @@ class Tablet(models.Model):
     tablet_id_code = models.CharField(max_length = 100)
     password = models.CharField('Password', max_length = 100)
     confirm_password = models.CharField('Confirm Password', max_length = 100)
-    login_status = models.BooleanField()
+    login_status = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'Tablets'
