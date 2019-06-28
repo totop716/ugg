@@ -13,7 +13,7 @@ from import_export import resources
 class SweepUserResource(resources.ModelResource):
     class Meta:
         model = SweepUser
-        fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
+        fields =  ('id','first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required

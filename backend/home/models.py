@@ -111,12 +111,12 @@ class SweepUser(models.Model):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     check_time = models.CharField(max_length =200, null=True)
-    po_box_unit_number = models.CharField("PO Box/Unit Number", max_length =50, blank=True)
-    suite = models.CharField(max_length =50, blank=True)
+    po_box_unit_number = models.CharField("PO Box/Unit Number", max_length =50, default='', blank=True)
+    suite = models.CharField(max_length =50, default='', blank=True)
     label = models.CharField(max_length = 100, default="Added by Admin")
-    password = models.CharField(max_length = 100, blank=True)
-    checkSMS = models.BooleanField('SMS')
-    checkEmail = models.BooleanField('Email')
+    password = models.CharField(max_length = 100, default='', blank=True)
+    checkSMS = models.BooleanField('SMS', default=False)
+    checkEmail = models.BooleanField('Email', default=False)
 
     class Meta:
         verbose_name_plural = 'Users'
