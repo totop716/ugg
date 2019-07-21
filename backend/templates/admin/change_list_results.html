@@ -47,11 +47,8 @@
                     <td>
                         {% getsweepstakes request.GET.q request.GET.current as sweepstakes_list %}
                         {% getdata_by_index sweepstakes_list forloop.counter0 request.GET.p as sweepdata %}
-                        {% if sweepdata.current == 1 %}
                         <a href="/admin/sweepstake?id={{ sweepdata.id }}" class="btn btn-info">Go to Detail</a>
-                        {% else %}
                         <a href="/admin/sweepwinners?id={{ sweepdata.id }}" class="btn btn-info">Show Winners</a>
-                        {% endif %}
                     </td>
                     {% endif %}
                     {% if cl.opts.verbose_name == 'tablet' %}
