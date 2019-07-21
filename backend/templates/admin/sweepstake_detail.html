@@ -41,8 +41,7 @@
       <input type="button" class="btn btn-info" id="generatewinner" value="Generate Winner" />
       <a class="btn btn-info" id="showwinners" href="/admin/sweepwinners?id={{request.GET.id}}">Winners</a>
     </div>
-    {% gettablets_fromsweepid request.GET.id request.GET.key as tablets %}
-    {% gettablets_subdata tablets request.GET.pagenumber as tables_subdata %}
+    {% gettablets_fromsweepid request.GET.id request.GET.key request.GET.pagenumber as tablets %}
     <table id="result_list" class="table table-striped table-bordered table-hover table-condensed">
       <thead>
       <tr>
@@ -64,7 +63,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for tablet in tables_subdata.data %}
+        {% for tablet in tablets.data %}
           <tr>
             <td>
               {{ tablet.user.first_name }}
@@ -88,7 +87,7 @@
         <input type="hidden" id="tabletIDS" value="{{ tables_subdata.ids|join:',' }}" />
       </tbody>
     </table>
-    {% getcheckincount_fromarray tablets as pagecount %}
+    {% getcheckincount_fromarray request.GET.id request.GET.key as pagecount %}
     <div class="pagination-block">
       <div class="pagination">
         <ul>

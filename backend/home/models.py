@@ -169,14 +169,14 @@ class Tablet(models.Model):
     login_status = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name_plural = 'Tablets'
+        verbose_name_plural = 'tablet'
     
     def __str__(self):
         return self.name
 
     @property
     def api(self):
-        return f'/api/v1/sweepstakes/{self.id}/'
+        return f'/api/v1/tablet/{self.id}/'
     @property
     def field(self):
         return 'name'
