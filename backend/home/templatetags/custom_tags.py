@@ -1,6 +1,7 @@
 from django import template
 import datetime
 import pytz
+import math
 import dateutil.parser
 from django.utils import timezone
 from django.db.models import Q, Max, F, Count
@@ -46,7 +47,22 @@ def gettablets_fromsweepid(id, key):
         tablet.tablet_info = tablet_info[0]
         tablet_ids.append(tablet.id)
         tabletsData.append(tablet)
-  return {'data': tabletsData, 'ids': tablet_ids}
+  return tabletsData
+
+@register.simple_tag
+def gettablets_subdata(tablets, pagenumber):
+  tablet_ids = []
+  for tablet in tablets:
+    tablet_ids.append(tablet.id)
+  return {'data': tablets[int(pagenumber)*100:(int(pagenumber)+1)*100], 'ids': tablet_ids[int(pagenumber)*100:(int(pagenumber)+1)*100]}
+
+@register.simple_tag
+def getcheckincount_fromarray(data):
+  if len(data)%2 == 0:
+    pagecount = list(range(0, math.floor(len(data)/100)))
+  else:
+    pagecount = list(range(0, math.floor(len(data)/100)+1))
+  return pagecount
 
 @register.simple_tag
 def getsweepwinners(id):

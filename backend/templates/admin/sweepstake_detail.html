@@ -42,6 +42,7 @@
       <a class="btn btn-info" id="showwinners" href="/admin/sweepwinners?id={{request.GET.id}}">Winners</a>
     </div>
     {% gettablets_fromsweepid request.GET.id request.GET.key as tablets %}
+    {% gettablets_subdata tablets request.GET.pagenumber as tables_subdata %}
     <table id="result_list" class="table table-striped table-bordered table-hover table-condensed">
       <thead>
       <tr>
@@ -63,7 +64,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for tablet in tablets.data %}
+        {% for tablet in tables_subdata.data %}
           <tr>
             <td>
               {{ tablet.user.first_name }}
@@ -84,8 +85,30 @@
         {% endfor %}
         <div id="winnerpopup">aaaaa</div>
         <input type="hidden" id="sweepID" value="{{ request.GET.id }}" />
-        <input type="hidden" id="tabletIDS" value="{{ tablets.ids|join:',' }}" />
+        <input type="hidden" id="tabletIDS" value="{{ tables_subdata.ids|join:',' }}" />
       </tbody>
     </table>
+    {% getcheckincount_fromarray tablets as pagecount %}
+    <div class="pagination-block">
+      <div class="pagination">
+        <ul>
+          {% for page in pagecount %}
+            {% if request.GET.key %}
+              {% if request.GET.pagenumber|add:0 == page or request.GET.pagenumber == None and page == 0 %}
+                <li class="active"><a href="?id={{request.GET.id}}&key={{request.GET.key}}&pagenumber={{page}}">{{page|add:1}}</a></li>
+              {% else %}
+                <li><a href="?id={{request.GET.id}}&key={{request.GET.key}}&pagenumber={{page}}">{{page|add:1}}</a></li>
+              {% endif %}
+            {% else %}
+              {% if request.GET.pagenumber|add:0 == page or request.GET.pagenumber == None and page == 0 %}
+                <li class="active"><a href="?id={{request.GET.id}}&pagenumber={{page}}">{{page|add:1}}</a></li>
+              {% else %}
+                <li><a href="?id={{request.GET.id}}&pagenumber={{page}}">{{page|add:1}}</a></li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
   </div>
 {% endblock %}
