@@ -52,9 +52,12 @@ def gettablets_fromsweepid(id, key):
 @register.simple_tag
 def gettablets_subdata(tablets, pagenumber):
   tablet_ids = []
-  for tablet in tablets:
+  page_number = 0
+  if pagenumber:
+    page_number = pagenumber
+  for tablet in tablets[int(page_number)*100:(int(page_number)+1)*100]:
     tablet_ids.append(tablet.id)
-  return {'data': tablets[int(pagenumber)*100:(int(pagenumber)+1)*100], 'ids': tablet_ids[int(pagenumber)*100:(int(pagenumber)+1)*100]}
+  return {'data': tablets[int(page_number)*100:(int(page_number)+1)*100], 'ids': tablet_ids}
 
 @register.simple_tag
 def getcheckincount_fromarray(data):
