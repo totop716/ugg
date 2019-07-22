@@ -30,15 +30,18 @@ def gettablets(id):
 @register.simple_tag
 def gettablets_fromsweepid(id, key, pagenumber):
   checkin_tablet = SweepCheckIn.objects.select_related('tablet_id')
-  checkin_winner = SweepWinner.objects.select_related('checkIn_id_id')
+  checkin_winner = SweepWinner.objects.select_related('checkIn_id')
   winners = SweepWinner.objects.filter(Q(sweep_id_id=id) & Q(windate__gt=datetime.datetime.now()-datetime.timedelta(days=1)))
   winner_ids = []
   for winner in winners:
-    winner_ids.append(winner.checkIn_id_id)
+    winner_ids.append(winner.checkIn_id)
   page_number = 0
-  if pagenumber:
-    page_number = pagenumber
-  tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).exclude(id__in=winner_ids)[int(page_number)*100:(int(page_number)+1)*100]
+  if pagenumber != '':
+    page_number = int(pagenumber)
+  if len(winner_ids) > 0:
+    tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).exclude(id__in=winner_ids).order_by('check_time')[page_number*100:(page_number+1)*100]
+  else:
+    tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).order_by('check_time')[page_number*100:(page_number+1)*100]
   
   tablet_ids = []
   tabletsData = []
@@ -53,19 +56,51 @@ def gettablets_fromsweepid(id, key, pagenumber):
   return {'data':tabletsData, 'ids':tablet_ids}
 
 @register.simple_tag
-def getcheckincount_fromarray(id, key):
+def getcheckincount_fromarray(id, key, pagenumber):
   checkin_tablet = SweepCheckIn.objects.select_related('tablet_id')
-  checkin_winner = SweepWinner.objects.select_related('checkIn_id_id')
+  checkin_winner = SweepWinner.objects.select_related('checkIn_id')
   winners = SweepWinner.objects.filter(Q(sweep_id_id=id) & Q(windate__gt=datetime.datetime.now()-datetime.timedelta(days=1)))
   winner_ids = []
   for winner in winners:
-    winner_ids.append(winner.checkIn_id_id)
-  tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).exclude(id__in=winner_ids)
+    winner_ids.append(winner.checkIn_id)
+  if len(winner_ids) > 0:
+    tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).exclude(id__in=winner_ids)
+  else:
+    tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key))
+
   if len(tablets)%100 == 0:
     pagecount = list(range(0, math.floor(len(tablets)/100)))
   else:
     pagecount = list(range(0, math.floor(len(tablets)/100)+1))
-  return pagecount
+  
+  pagecount1 = []
+  counter = 0
+  page_number = 0
+  if pagenumber != '':
+    page_number = int(pagenumber)
+  for page in pagecount:
+    if page > page_number - 3 and page < page_number + 3 or page > len(pagecount) - 2 or page < 2:
+      counter = 0
+      pagecount1.append(page)
+    else:
+      counter = counter + 1
+      if counter == 1:
+        pagecount1.append("sis")
+  return {'pagecount': pagecount1, 'totalcount': len(tablets)}
+
+@register.simple_tag
+def getcheckinindexes(tabletscount, page):
+  pagenumber = 0
+  if page != '':
+    pagenumber = int(page)
+
+  if pagenumber*100+100 > tabletscount:
+    page_max = tabletscount
+  else:
+    page_max = pagenumber*100+100
+
+  checkinIndexes = [pagenumber*100+1, page_max]
+  return checkinIndexes
 
 @register.simple_tag
 def getsweepwinners(id):

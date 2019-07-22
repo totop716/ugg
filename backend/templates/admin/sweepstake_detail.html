@@ -87,26 +87,36 @@
         <input type="hidden" id="tabletIDS" value="{{ tables_subdata.ids|join:',' }}" />
       </tbody>
     </table>
-    {% getcheckincount_fromarray request.GET.id request.GET.key as pagecount %}
+    {% getcheckincount_fromarray request.GET.id request.GET.key request.GET.pagenumber as pagecountdata %}
+    {% getcheckinindexes pagecountdata.totalcount request.GET.pagenumber as checkinIndexes %}
     <div class="pagination-block">
+      {% if pagecountdata.totalcount > 100 %}
       <div class="pagination">
         <ul>
-          {% for page in pagecount %}
-            {% if request.GET.key %}
-              {% if request.GET.pagenumber|add:0 == page or request.GET.pagenumber == None and page == 0 %}
-                <li class="active"><a href="?id={{request.GET.id}}&key={{request.GET.key}}&pagenumber={{page}}">{{page|add:1}}</a></li>
+          {% for page in pagecountdata.pagecount %}
+            {% if page != 'sis' %}
+              {% if request.GET.key %}
+                {% if request.GET.pagenumber|add:0 == page or request.GET.pagenumber == None and page == 0 %}
+                  <li class="active"><a href="?id={{request.GET.id}}&key={{request.GET.key}}&pagenumber={{page}}">{{page|add:1}}</a></li>
+                {% else %}
+                  <li><a href="?id={{request.GET.id}}&key={{request.GET.key}}&pagenumber={{page}}">{{page|add:1}}</a></li>
+                {% endif %}
               {% else %}
-                <li><a href="?id={{request.GET.id}}&key={{request.GET.key}}&pagenumber={{page}}">{{page|add:1}}</a></li>
+                {% if request.GET.pagenumber|add:0 == page or request.GET.pagenumber == None and page == 0 %}
+                  <li class="active"><a href="?id={{request.GET.id}}&pagenumber={{page}}">{{page|add:1}}</a></li>
+                {% else %}
+                  <li><a href="?id={{request.GET.id}}&pagenumber={{page}}">{{page|add:1}}</a></li>
+                {% endif %}
               {% endif %}
             {% else %}
-              {% if request.GET.pagenumber|add:0 == page or request.GET.pagenumber == None and page == 0 %}
-                <li class="active"><a href="?id={{request.GET.id}}&pagenumber={{page}}">{{page|add:1}}</a></li>
-              {% else %}
-                <li><a href="?id={{request.GET.id}}&pagenumber={{page}}">{{page|add:1}}</a></li>
-              {% endif %}
+              <li class="disabled"><a href="#">...</a></li>
             {% endif %}
           {% endfor %}
         </ul>
+      </div>
+      {% endif %}
+      <div class="pagination-info muted">
+        {{ checkinIndexes.0 }} - {{ checkinIndexes.1 }} / {{ pagecountdata.totalcount }} CheckIns
       </div>
     </div>
   </div>
