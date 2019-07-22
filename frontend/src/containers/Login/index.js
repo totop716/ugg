@@ -154,14 +154,17 @@ class Login extends Component {
         const currenttime = new Date();
         getCheckInTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
           // const checkedtime = new Date(res1.checkin.check_time.replace(" ", "T"));
-          const checkedtime_array = res1.checkin.check_time.split(" ");
-          const checkedtime = checkedtime_array[0].split("-");
+          let checkedtime = '';
+          if(res1.checkin.check_time != null){
+            const checkedtime_array = res1.checkin.check_time.split("T");
+            checkedtime = checkedtime_array[0].split("-");  
+          }
           console.log("Check Date", checkedtime);
-          if(res1.checkin.check_time == "" || res1.checkin == null || currenttime.getFullYear() > parseInt(checkedtime[0]) || currenttime.getMonth() > parseInt(checkedtime[1]) - 1 || currenttime.getDate() > parseInt(checkedtime[2])){
+          if(res1.checkin.check_time == "" || res1.checkin.check_time == null || currenttime.getFullYear() > parseInt(checkedtime[0]) || currenttime.getMonth() > parseInt(checkedtime[1]) - 1 || currenttime.getDate() > parseInt(checkedtime[2])){
             this.setState({thankyouBoxVisible: true});
             const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
             // const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate();
-            console.log(this.state.sweepstakeData);
+            console.log('Sweepdata', this.state.sweepstakeData);
             updateCheckTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
               console.log(res2);
             })
