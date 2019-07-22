@@ -189,16 +189,13 @@ class SweepCheckIn(models.Model):
 
     class Meta:
         verbose_name_plural = 'SweepCheckIn'
-    
-    def __str__(self):
-        return self.check_time
 
     @property
     def api(self):
         return f'/api/v1/sweepcheckin/{self.id}/'
     @property
     def field(self):
-        return 'check_time'
+        return 'id'
 
 class SweepWinner(models.Model):
     windate = models.DateTimeField()
@@ -207,9 +204,6 @@ class SweepWinner(models.Model):
 
     class Meta:
         verbose_name_plural = 'SweepstakesWinner'
-    
-    def __str__(self):
-        return self.windate
 
     @property
     def api(self):
