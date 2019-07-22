@@ -48,7 +48,6 @@ def gettablets_fromsweepid(id, key, pagenumber):
   for tablet in tablets:
     user = SweepUser.objects.filter(Q(id=tablet.user_id_id))
     tablet_data = Tablet.objects.filter(Q(id=tablet.tablet_id_id))
-    tablet.check_time = dateutil.parser.parse(tablet.check_time)
     tablet.user = user[0]
     tablet.tablet_info = tablet_data[0]
     tablet_ids.append(tablet.id)
@@ -113,10 +112,10 @@ def getsweepwinners(id):
     user = SweepUser.objects.filter(Q(id=checkin[0].user_id_id))
     winner.user = user[0]
     if checkin[0].check_time != '':
-      winner.checktime = dateutil.parser.parse(checkin[0].check_time)
+      winner.checktime = checkin[0].check_time
     else:
       winner.checktime = ''
-    winner.wintime = dateutil.parser.parse(winner.windate)
+    winner.wintime = winner.windate
   return {'data': winners }
 
 @register.simple_tag

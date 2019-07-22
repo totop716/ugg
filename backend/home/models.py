@@ -185,7 +185,7 @@ class SweepCheckIn(models.Model):
     user_id = models.ForeignKey(SweepUser, on_delete=models.CASCADE, null=True)
     sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE, null=True)
     tablet_id = models.ForeignKey(Tablet, on_delete=models.CASCADE, null=True)
-    check_time = models.CharField(max_length =200)
+    check_time = models.DateTimeField()
 
     class Meta:
         verbose_name_plural = 'SweepCheckIn'
@@ -201,7 +201,7 @@ class SweepCheckIn(models.Model):
         return 'check_time'
 
 class SweepWinner(models.Model):
-    windate = models.CharField(max_length=100)
+    windate = models.DateTimeField()
     sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE, null=True)
     checkIn_id = models.ForeignKey(SweepCheckIn, on_delete=models.CASCADE, null=True)
 
