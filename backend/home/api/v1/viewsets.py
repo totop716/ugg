@@ -10,6 +10,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 
+from django.core import serializers
+from django.http import HttpResponse
+
 from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer, TabletSerializer, SweepwinnerSerializer, SweepUserSerializer, SettingsSerializer, SweepCheckInSerializer
 from home.models import CustomText, HomePage
 from django.db.models import Q
@@ -178,6 +181,36 @@ class MyUserViewSet(APIView):
         user.delete()
         return Response({"message": "User with phone `{}` has been deleted.".format(pk)},status=204)
 
+class SweepDetailsCheckInViewSet(APIView):
+    def get(self, request, pk=None):
+        query_data = request.query_params
+        id = query_data.get('sweep_id')
+        key = query_data.get('sweep_key')
+        checkin_tablet = SweepCheckIn.objects.select_related('tablet_id')
+        checkin_winner = SweepWinner.objects.select_related('checkIn_id')
+        winners = SweepWinner.objects.filter(Q(sweep_id_id=id) & Q(windate__gt=datetime.datetime.now()-datetime.timedelta(days=1)))
+        winner_ids = []
+        for winner in winners:
+            winner_ids.append(winner.checkIn_id_id)
+        if len(winner_ids) > 0:
+            tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).exclude(id__in=winner_ids).order_by('check_time')
+        else:
+            tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).order_by('check_time')
+        
+        tablet_ids = []
+        tabletsData = []
+        for tablet in tablets:
+            user = SweepUser.objects.filter(Q(id=tablet.user_id_id))
+            tablet_data = Tablet.objects.filter(Q(id=tablet.tablet_id_id))
+            tablet.user = user[0]
+            tablet.tablet_info = tablet_data[0]
+            tablet_ids.append(tablet.id)
+            tabletsData.append(tablet)
+
+        response=serializers.serialize("json", tabletsData)
+
+        return HttpResponse(response, content_type="application/json")
+
 class SweepUserViewSet(APIView):
     def get(self, request, pk=None):
         if pk:
@@ -215,4 +248,3 @@ class HomePageViewSet(ModelViewSet):
     queryset = HomePage.objects.all()
     authentication_classes = (SessionAuthentication, TokenAuthentication)
     http_method_names = ['get', 'put', 'patch']
-

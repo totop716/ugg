@@ -34,7 +34,7 @@ def gettablets_fromsweepid(id, key, pagenumber):
   winners = SweepWinner.objects.filter(Q(sweep_id_id=id) & Q(windate__gt=datetime.datetime.now()-datetime.timedelta(days=1)))
   winner_ids = []
   for winner in winners:
-    winner_ids.append(winner.checkIn_id)
+    winner_ids.append(winner.checkIn_id_id)
   page_number = 0
   if pagenumber != '':
     page_number = int(pagenumber)
@@ -61,7 +61,7 @@ def getcheckincount_fromarray(id, key, pagenumber):
   winners = SweepWinner.objects.filter(Q(sweep_id_id=id) & Q(windate__gt=datetime.datetime.now()-datetime.timedelta(days=1)))
   winner_ids = []
   for winner in winners:
-    winner_ids.append(winner.checkIn_id)
+    winner_ids.append(winner.checkIn_id_id)
   if len(winner_ids) > 0:
     tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).exclude(id__in=winner_ids)
   else:
