@@ -42,6 +42,11 @@ def gettablets_fromsweepid(id, key, pagenumber):
     tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).exclude(id__in=winner_ids).order_by('check_time')[page_number*100:(page_number+1)*100]
   else:
     tablets = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).order_by('check_time')[page_number*100:(page_number+1)*100]
+
+  if len(winner_ids) > 0:
+    tablets1 = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).exclude(id__in=winner_ids).order_by('check_time')
+  else:
+    tablets1 = SweepCheckIn.objects.filter(Q(sweep_id_id=id) & Q(tablet_id__name__icontains= key)).order_by('check_time')
   
   tablet_ids = []
   tabletsData = []
@@ -50,8 +55,10 @@ def gettablets_fromsweepid(id, key, pagenumber):
     tablet_data = Tablet.objects.filter(Q(id=tablet.tablet_id_id))
     tablet.user = user[0]
     tablet.tablet_info = tablet_data[0]
-    tablet_ids.append(tablet.id)
     tabletsData.append(tablet)
+
+  for tablet in tablets1:
+    tablet_ids.append(tablet.id)
   return {'data':tabletsData, 'ids':tablet_ids}
 
 @register.simple_tag
