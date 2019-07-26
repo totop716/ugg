@@ -210,18 +210,42 @@
                 url: '/getsweepdetailslist/?sweep_id='+sweepID+"&sweep_key="+sweepKey,
                 type: 'GET',
                 success: function(res) {
-                    console.log(res.data);
                     var headers = {
                         firstname: 'First Name', // remove commas to avoid errors
                         lastname: "Last Name",
                         phoneno: "Phone",
                         tabletID: "Tablet ID",
-                        checkin: "Check In"
+                        checkin: "Check Time"
                     };
                     
                     var fileTitle = 'sweepstakecheckin';
-        
-                    exportCSVFile(headers, itemsFormatted, fileTitle);
+
+                    var itemsFormatted = [];
+                    $.each(res, function(i){
+                        itemsFormatted.push({firstname: '', lastname: '', phoneno: '', tabletID: '', checkin: ''});
+                        var date = new Date(res[i].fields.check_time);
+                        itemsFormatted[i].checkin = date.toString('yy-MM-dd H:i:s');
+                        $.ajax({
+                            url: '/sweepuser/'+ res[i].fields.user_id,
+                            type: 'GET',
+                            success: function(res1) {
+                                itemsFormatted[i].firstname = res1.user.first_name;
+                                itemsFormatted[i].lastname = res1.user.last_name;
+                                itemsFormatted[i].phoneno = res1.user.phone;
+
+                                $.ajax({
+                                    url: '/tablets/'+ res[i].fields.tablet_id,
+                                    type: 'GET',
+                                    success: function(res2) {
+                                        itemsFormatted[i].tabletID = res2.tablets[0].name;
+                                        if(i == res.length - 1){
+                                            exportCSVFile(headers, itemsFormatted, fileTitle);
+                                        }
+                                    }
+                                })
+                            }
+                        });
+                    });
                 }
             });
         })

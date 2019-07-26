@@ -211,6 +211,16 @@ class SweepDetailsCheckInViewSet(APIView):
 
         return HttpResponse(response, content_type="application/json")
 
+class SweepUserIDViewSet(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            user = get_object_or_404(SweepUser.objects.all(), pk=pk)
+            serializer = SweepUserSerializer(user)
+            return Response({"user": serializer.data})
+        users = SweepUser.objects.all()
+        serializer = SweepUserSerializer(users, many=True)
+        return Response({"users": serializer.data})
+
 class SweepUserViewSet(APIView):
     def get(self, request, pk=None):
         if pk:
