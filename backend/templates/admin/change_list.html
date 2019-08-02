@@ -73,6 +73,9 @@
                   <a href="?current=1" class="btn btn-info" id="currentSweep">Current</a>
                   <a href="?current=0" class="btn btn-info" id="currentEnded">Previous(Ended)</a>
                 {% endif %}
+                {% if cl.opts.verbose_name == 'sweep user' %}
+                  <input type="button" class="btn btn-info" id="downloadsweepusers" value="Download" />
+                {% endif %}
                 {% if has_add_permission %}
                   <a href="{% url cl.opts|admin_urlname:'add' %}{% if is_popup %}?_popup=1{% endif %}" class="btn btn-success">
                     <i class="icon-plus-sign icon-white"></i>&nbsp;

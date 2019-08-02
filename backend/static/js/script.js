@@ -249,5 +249,41 @@
                 }
             });
         })
+
+        $("#downloadsweepusers").click(function(){
+            var sweepID = $("#sweepID").val();
+            var sweepKey = $("#sweepKey").val();
+
+            $.ajax({
+                url: '/sweepusers/',
+                type: 'GET',
+                success: function(res) {
+                    var headers = {
+                        first_name: 'First Name', // remove commas to avoid errors
+                        last_name: "Last Name",
+                        phone: "Phone",
+                        email: "Email Address",
+                        address: "Address",
+                        city: "City",
+                        state: "State",
+                        zipcode: "Zip Code",
+                        po_box_unit_number: "PO Box(Unit Number)",
+                        suite: "Suite",
+                        checkSMS: "SMS",
+                        checkEmail: "Email"
+                    };
+                    console.log(res);
+                    
+                    var fileTitle = 'Users';
+
+                    var itemsFormatted = [];
+                    for(var i = 0; i < res.users.length; i++){
+                        itemsFormatted.push({first_name: res.users[i].first_name, last_name: res.users[i].last_name, phone: res.users[i].phone, email: res.users[i].email, address: res.users[i].address, city: res.users[i].city, state: res.users[i].state, zipcode: res.users[i].zipcode, po_box_unit_number: res.users[i].po_box_unit_number, suite: res.users[i].suite, checkSMS: res.users[i].checkSMS, checkEmail: res.users[i].checkEmail });
+                    }
+                    console.log(itemsFormatted);
+                    exportCSVFile(headers, itemsFormatted, fileTitle);
+                }
+            });
+        })
     })
 }(Suit.$));
