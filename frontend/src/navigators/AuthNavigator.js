@@ -3,7 +3,7 @@ import { createStackNavigator } from 'react-navigation';
 import Login from '../containers/Login';
 import Signup from '../containers/Signup';
 import ForgotPassword from '../containers/ForgotPassword';
-
+import TabletLogin from '../containers/TabletLogin';
 
 const AuthNavigator = createStackNavigator({
   Login: {
@@ -24,6 +24,12 @@ const AuthNavigator = createStackNavigator({
       header: null,
     },
   },
+  TabletLogin: {
+    screen: TabletLogin,
+    navigationOptions: {
+      header: null
+    }
+  }
 });
 
 export default AuthNavigator;

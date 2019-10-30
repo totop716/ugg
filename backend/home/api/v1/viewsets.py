@@ -13,9 +13,10 @@ from rest_framework.generics import get_object_or_404
 from django.core import serializers
 from django.http import HttpResponse
 
-from home.api.v1.serializers import CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer, TabletSerializer, SweepwinnerSerializer, SweepUserSerializer, SettingsSerializer, SweepCheckInSerializer
+from home.api.v1.serializers import UserSerializer, CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer, TabletSerializer, SweepwinnerSerializer, SweepUserSerializer, SettingsSerializer, SweepCheckInSerializer
 from home.models import CustomText, HomePage
 from django.db.models import Q
+from django.contrib.auth.models import User
 from customauth.models import MyUser
 from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser, Settings, SweepCheckIn
 import datetime
@@ -27,8 +28,26 @@ class SignupViewSet(ModelViewSet):
 class LoginViewSet(ViewSet):
     serializer_class = AuthTokenSerializer
 
+    def login(self, request):
+        return Response({"username": request.get('username')})
+
     def create(self, request):
         return ObtainAuthToken().post(request)
+
+class UserLoginViewSet(APIView):
+    def post(self, request): 
+        data = request.query_params
+        username = data.get('username')
+        password = data.get('password')
+        user = User.objects.filter(Q(username=username))
+        if(len(user) > 0):
+            if user[0].check_password(password):
+                serializer = UserSerializer(user, many=True)
+                return Response({"user": serializer.data})
+            else:
+                return Response({"error": "Password is not correct!"})
+        else:
+            return Response({"error": "The user with current username does not exist!"})
 
 class TabletViewSet(APIView):
     def get(self, request, pk=None):

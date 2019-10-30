@@ -21,23 +21,22 @@ import {FontAwesome} from '@expo/vector-icons';
 import styles from './styles';
 import Utils from '../../utils'
 import { ScrollView } from 'react-native-gesture-handler';
-import { loginAPI } from '../../services/Authentication';
+import { getTabletAPI } from '../../services/Authentication';
 
-class Login extends Component {
+class TabletLogin extends Component {
   state = {
-    username: '',
+    tabletID: '',
     password: '',
     error: '',
     background: require('../../assets/images/LoginBackground.png'),
     };
 
   submitTabletLogin = () => {
-    loginAPI(this.state.username, this.state.password).then(res=>{
-      if(res.user){
-        this.props.navigation.navigate('TabletLogin', {user: res.user});
-      }
-      if(res.error){
-        this.setState({error: res.error});
+    getTabletAPI(this.state.tabletID, this.state.password).then(res=>{
+      if(res.tablet.length > 0){
+        this.props.navigation.navigate("SweepStake", {tablet: res.tablet[0]});
+      }else{
+        this.setState({error: "Please input correct Tablet ID and Password"});
       }
     }).catch(err => {
       console.log(err);
@@ -56,11 +55,11 @@ class Login extends Component {
               </View>
               <Input
                 style={styles.inputTabletID}
-                placeholder="Username"
+                placeholder="Tablet ID"
                 placeholderTextColor="#fff"
                 autoCapitalize="none"
-                value={this.state.username}
-                onChangeText={username => this.setState({ username })}
+                value={this.state.tabletID}
+                onChangeText={tabletID => this.setState({ tabletID })}
               />
             </View>
             <View style={styles.inputfield_container}>
@@ -94,4 +93,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default TabletLogin;

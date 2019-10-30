@@ -1,8 +1,14 @@
 from customauth.models import MyUser
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from home.models import CustomText, HomePage, Sweepstakes, Tablet, SweepWinner, SweepUser, Settings, SweepCheckIn
 from rest_framework.decorators import api_view
 import base64
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'password']
 
 class MyUserSerializer(serializers.ModelSerializer):
     class Meta:

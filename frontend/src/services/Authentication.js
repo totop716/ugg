@@ -4,16 +4,11 @@ import APIConstants from '../utils/api/constants';
 import Constants from 'expo-constants';
 
 const loginAPI = (username, password) => {
-  const path = '/';
+  const path = 'login/?username='+username+'&password='+password;
   const url = `${Utils.serverUrl}${path}`;
-  const params = {
-    username,
-    password,
-  };
 
   const client = new APIClient(url, APIConstants.HTTPMethod.POST);
-
-  return client.sendRequest(params);
+  return client.sendRequest();
 };
 
 const signupAPI = (username, password, confirmPassword) => {
