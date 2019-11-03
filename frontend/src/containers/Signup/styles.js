@@ -9,7 +9,9 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   backgroundImage: {
-    position: 'absolute'
+    position: 'absolute',
+    width: '100%',
+    height: '100%'
   },
   content: {
     flex: 1,
@@ -90,16 +92,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputbox: {
-    color: '#000',
-    width: '45%',
-    borderWidth: 1,
-    borderColor: '#000',
+    color: '#3d3d3d',
     fontSize: 20,
-    backgroundColor: '#fff',
+    flexBasis: '49%',
+    flexGrow: 0,
+    backgroundColor: '#e6e6e6',
     paddingLeft: 10
-  },
-  firstinputbox: {
-    marginRight: 10,
   },
   formItem: {
     justifyContent: 'space-between'
@@ -113,7 +111,7 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     fontSize: 25,
-    color: '#333',
+    color: '#3d3d3d',
     marginLeft: 20
   },
   checkContainer: {
@@ -125,14 +123,17 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(2),
-    width: '100%',
+    width: 200,
+    height: 45,
+    alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10
+    backgroundColor: "#3b8041",
+    borderRadius: 25 
   },
   loginText: {
     color: 'white',
-    fontSize: 23,
+    fontSize: 25,
     fontWeight: '600',
     textAlign: 'center'
   },
@@ -147,21 +148,33 @@ const styles = StyleSheet.create({
   },
   topBar: {
     padding: 15,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 10,
-    backgroundColor: '#3F51B5'
+    backgroundColor: '#3b8041',
+    borderRadius: 5
   },
   topBarText: {
     color: '#fff',
-    fontSize: 25
+    fontSize: 30
   },
-  closeIcon: {
+  topbar: {
+    backgroundColor: "#eee",
+    width: '100%',
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    alignItems: 'center',
     position: 'absolute',
-    top: 3,
-    right: 20,
-    fontSize: 35,
-    color: '#fff'
-  }
+    top: 0,
+    left: 0,
+    zIndex: 9999
+  },
+  topbar_text: {
+    fontSize: 26,
+    color: "#3d3d3d"
+  },
 });
 
 

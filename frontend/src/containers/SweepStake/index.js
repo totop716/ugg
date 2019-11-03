@@ -19,8 +19,6 @@ import {
   TextInputMask
 } from 'react-native-masked-text'
 
-import Constants from 'expo-constants';
-
 import styles from './styles';
 import Utils from '../../utils'
 import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime, updateTabletKey, updateTabletStatus, getTabletfromKey } from '../../services/Authentication';
@@ -65,14 +63,17 @@ class SweepStake extends Component {
     if (props.navigation.getParam('exit') == 1){
       this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: props.navigation.getParam('tabletData').name, userData: null, tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
     }else if(props.navigation.getParam('exit') == 2){
-      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: props.navigation.getParam('tabletData').name, userData: null, tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
-      this.setState({signupBoxVisible: true})      
+      this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: props.navigation.getParam('tabletID'), userData: null, tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
+      this.setState({signupBoxVisible: true});
     }
     console.log(this.state.tabletData, ' ', this.state.sweepstakeData);
   }
 
   componentDidMount() {
-    const tabletData = this.props.navigation.getParam('tablet');
+    const tabletData = this.props.navigation.getParam('tabletData');
+    if(this.props.navigation.getParam('exit') == 2){
+      this.setState({signupBoxVisible: true});
+    }
     this.setState({tabletData});
     this.setState({tabletID: tabletData.name});
     this.setState({showTabletLoginForm: false});

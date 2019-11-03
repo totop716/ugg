@@ -77,12 +77,12 @@ const getSettingsAPI = () => {
   return users.sendRequest();
 }
 
-const signupUserAPI = (first_name, last_name, address, city, state, zipcode, email, phone, po_box_unit_number, suite, checkEmail, checkSMS) => {
+const signupUserAPI = (first_name, last_name, address, city, state, zipcode, email, phone, suite_po_box, checkEmail, checkSMS) => {
   const path = 'api/v1/signup/';
   const url = `${Utils.serverUrl}${path}`;
   const users = new APIClient(url, APIConstants.HTTPMethod.POST);
   const currentDate = new Date();
-  return users.sendRequest({first_name, last_name, address, city, state, zipcode, email, phone, po_box_unit_number, suite, label: 'Manual Signup', password: '', checkEmail, checkSMS});
+  return users.sendRequest({first_name, last_name, address, city, state, zipcode, email, phone, suite_po_box, label: 'Manual Signup', password: '', checkEmail, checkSMS});
 }
 
 const updateTabletID = (tabletData, tablet_id, tablet_password, user_id) => {

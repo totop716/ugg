@@ -103,16 +103,75 @@ class SweepUser(models.Model):
         max_length=255,
         blank=True
     )
+    USStates = (
+        ("AL", "Alabama" ),
+        ("AK", "Alaska"),
+        ("AS", "American Samoa"),
+        ("AZ", "Arizona"),
+        ("AR", "Arkansas"),
+        ("CA", "California"),
+        ("CO", "Colorado"),
+        ("CT", "Connecticut"),
+        ("DE", "Delaware"),
+        ("DC", "District Of Columbia"),
+        ("FM", "Federated States Of Micronesia"),
+        ("FL", "Florida"),
+        ("GA", "Georgia"),
+        ("GU", "Guam"),
+        ("HI", "Hawaii"),
+        ("ID", "Idaho"),
+        ("IL", "Illinois"),
+        ("IN", "Indiana"),
+        ("IA", "Iowa"),
+        ("KS", "Kansas"),
+        ("KY", "Kentucky"),
+        ("LA", "Louisiana"),
+        ("ME", "Maine"),
+        ("MH", "Marshall Islands"),
+        ("MD", "Maryland"),
+        ("MA", "Massachusetts"),
+        ("MI", "Michigan"),
+        ("MN", "Minnesota"),
+        ("MS", "Mississippi"),
+        ("MO", "Missouri"),
+        ("MT", "Montana"),
+        ("NE", "Nebraska"),
+        ("NV", "Nevada"),
+        ("NH", "New Hampshire"),
+        ("NJ", "New Jersey"),
+        ("NM", "New Mexico"),
+        ("NY", "New York"),
+        ("NC", "North Carolina"),
+        ("ND", "North Dakota"),
+        ("MP", "Northern Mariana Islands"),
+        ("OH", "Ohio"),
+        ("OK", "Oklahoma"),
+        ("OR", "Oregon"),
+        ("PW", "Palau"),
+        ("PA", "Pennsylvania"),
+        ("PR", "Puerto Rico"),
+        ("RI", "Rhode Island"),
+        ("SC", "South Carolina"),
+        ("SD", "South Dakota"),
+        ("TN", "Tennessee"),
+        ("TX", "Texas"),
+        ("UT", "Utah"),
+        ("VT", "Vermont"),
+        ("VI", "Virgin Islands"),
+        ("VA", "Virginia"),
+        ("WA", "Washington"),
+        ("WV", "West Virginia"),
+        ("WI", "Wisconsin"),
+        ("WY", "Wyoming"))
     address = models.CharField(max_length =200)
     city = models.CharField(max_length =50)
-    state = models.CharField(max_length =50)
-    zipcode = models.CharField(max_length =50)
+    state = models.CharField(max_length =50, choices=USStates, default="IL")
+    zipcode = models.CharField(max_length =5)
     phone = models.CharField(max_length =50, unique=True, help_text="Please input Phone No in this format ( ex: 12345667889 or 2345678890)")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     check_time = models.CharField(max_length =200, null=True)
-    po_box_unit_number = models.CharField("PO Box/Unit Number", max_length =50, default='', blank=True)
-    suite = models.CharField(max_length =50, default='', blank=True)
+    suite_po_box = models.CharField("Suite/PO Box", max_length =50, default='')
     label = models.CharField(max_length = 100, default="Added by Admin")
     password = models.CharField(max_length = 100, default='', blank=True)
     checkSMS = models.BooleanField('SMS', default=False)

@@ -77,7 +77,7 @@ class MyUserSerializer(serializers.ModelSerializer):
 class SweepUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = SweepUser
-        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'po_box_unit_number', 'suite', 'label', 'password','checkSMS','checkEmail')
+        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'suite_po_box', 'label', 'password','checkSMS','checkEmail')
         extra_kwargs = {
             'first_name' : {
                 'required': True
@@ -105,8 +105,7 @@ class SweepUserSerializer(serializers.ModelSerializer):
             state=validated_data.get('state'),
             zipcode=validated_data.get('zipcode'),
             password=validated_data.get('password'),
-            po_box_unit_number=validated_data.get('po_box_unit_number'),
-            suite=validated_data.get('suite'),
+            suite_po_box=validated_data.get('suite_po_box'),
             label= validated_data.get('label'),
             checkEmail=validated_data.get('checkEmail'),
             checkSMS=validated_data.get('checkSMS')
@@ -131,10 +130,8 @@ class SweepUserSerializer(serializers.ModelSerializer):
             instance.state = validated_data.get('state')
         if validated_data.get('zipcode') != None:
             instance.zipcode = validated_data.get('zipcode')
-        if validated_data.get('po_box_unit_number') != None:
-            instance.po_box_unit_number = validated_data.get('po_box_unit_number')
-        if validated_data.get('suite') != None:
-            instance.suite = validated_data.get('suite')
+        if validated_data.get('suite_po_box') != None:
+            instance.suite_po_box = validated_data.get('suite_po_box')
         if validated_data.get('password') != None:
             instance.setPassword(validated_data.get('password'))
         if validated_data.get('checkEmail') != None:

@@ -34,7 +34,7 @@ class TabletLogin extends Component {
   submitTabletLogin = () => {
     getTabletAPI(this.state.tabletID, this.state.password).then(res=>{
       if(res.tablet.length > 0){
-        this.props.navigation.navigate("SweepStake", {tablet: res.tablet[0]});
+        this.props.navigation.navigate("SweepStake", {tabletData: res.tablet[0]});
       }else{
         this.setState({error: "Please input correct Tablet ID and Password"});
       }

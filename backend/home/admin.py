@@ -13,7 +13,7 @@ from import_export import resources
 class SweepUserResource(resources.ModelResource):
     class Meta:
         model = SweepUser
-        fields =  ('id','first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
+        fields =  ('id','first_name','last_name','address','phone','suite_po_box','city','state','zipcode', 'email')
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
@@ -21,7 +21,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = SweepUser
-        fields = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
+        fields = ('first_name','last_name','address','phone','suite_po_box','city','state','zipcode', 'email')
 
     def save(self, commit=True):
         # Save the provided password in hashed format
@@ -41,7 +41,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = SweepUser
-        fields = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
+        fields = ('first_name','last_name','address','phone','suite_po_box','city','state','zipcode', 'email')
 
 class SweepUsersAdmin(ImportMixin, admin.ModelAdmin):
     form = UserChangeForm
@@ -49,9 +49,9 @@ class SweepUsersAdmin(ImportMixin, admin.ModelAdmin):
 
     resource_class = SweepUserResource
 
-    fields =  ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email', 'checkSMS', 'checkEmail')
-    list_display = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email', 'label', 'checkSMS', 'checkEmail')
-    search_fields = ('first_name','last_name','address','phone','po_box_unit_number','suite','city','state','zipcode', 'email')
+    fields =  ('first_name','last_name','address','phone','suite_po_box','city','state','zipcode', 'email', 'checkSMS', 'checkEmail')
+    list_display = ('first_name','last_name','address','phone','suite_po_box','city','state','zipcode', 'email', 'label', 'checkSMS', 'checkEmail')
+    search_fields = ('first_name','last_name','address','phone','suite_po_box','city','state','zipcode', 'email')
 
 admin.site.register(SweepUser, SweepUsersAdmin)
 
