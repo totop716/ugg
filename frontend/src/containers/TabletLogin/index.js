@@ -34,7 +34,7 @@ class TabletLogin extends Component {
   submitTabletLogin = () => {
     getTabletAPI(this.state.tabletID, this.state.password).then(res=>{
       if(res.tablet.length > 0){
-        this.props.navigation.navigate("SweepStake", {tabletData: res.tablet[0]});
+        this.props.navigation.navigate("SweepStake", {user: this.props.navigation.getParam('user'), tabletData: res.tablet[0]});
       }else{
         this.setState({error: "Please input correct Tablet ID and Password"});
       }
@@ -46,7 +46,7 @@ class TabletLogin extends Component {
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="always">
+        <View style={{ flexGrow: 1 }} keyboardShouldPersistTaps="always">
           <Image source={require('../../assets/images/LoginBackground.png')} style={styles.backgroundImage} />
           <View style={styles.formContainer}>
             <View style={styles.inputfield_container}>
@@ -87,7 +87,7 @@ class TabletLogin extends Component {
               <Text style={styles.loginText}>Login</Text>
             </Button>
           </View>
-        </ScrollView>
+        </View>
       </KeyboardAvoidingView>
     );
   }

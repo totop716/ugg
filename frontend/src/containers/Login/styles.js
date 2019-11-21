@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     top: '50%',
     transform: [{translateY: -50}],
     width: '80%',
+    maxWidth: 600,
     alignSelf: 'center'
   },
   button: {

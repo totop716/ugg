@@ -21,8 +21,12 @@ import {
 
 import styles from './styles';
 import Utils from '../../utils'
+import { loginAPI } from '../../services/Authentication';
 import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime, updateTabletKey, updateTabletStatus, getTabletfromKey } from '../../services/Authentication';
-import { ScrollView } from 'react-native-gesture-handler';
+
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
+
+import Modal from 'react-native-modal'
 
 class SweepStake extends Component {
   state = {
@@ -57,6 +61,10 @@ class SweepStake extends Component {
     sweepadded: false,
     sweepcountdown: false,
     begin_date: '',
+    admin_user: null,
+    admin_password: '',
+    logout_error: null,
+    phoneNumberError : null,
     };
 
   componentWillReceiveProps(props){
@@ -70,48 +78,54 @@ class SweepStake extends Component {
   }
 
   componentDidMount() {
+    const admin_user = this.props.navigation.getParam('user');
+    this.setState({admin_user: admin_user[0]});
     const tabletData = this.props.navigation.getParam('tabletData');
     if(this.props.navigation.getParam('exit') == 2){
       this.setState({signupBoxVisible: true});
     }
-    this.setState({tabletData});
-    this.setState({tabletID: tabletData.name});
-    this.setState({showTabletLoginForm: false});
-    this.setState({tabletIDLogin: ''});
-    this.setState({tabletpasswordlogin: ''});
-    this.setState({tabletLoginError: ''});
-    updateTabletStatus(tabletData.id, 1).then((res2)=>{
-      console.log("LOGINSTATUS ", res2);
-      if(this.state.tabletData.active_sweep != null && this.state.tabletData.active_sweep != ''){
-        getSweepstakeAPI(this.state.tabletData.active_sweep).then((res2)=>{
-          this.setState({sweepstakeData: res2.sweepstake});
-          this.setState({sweepbackground: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}})
-          this.setState({sweeplogo: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.logo}})
-          this.setState({sweepdisclaimer: this.state.sweepstakeData.disclaimer})
-          this.setState({begin_date:res2.sweepstake.startdate});
-          setTimeout(this.setSweepadded, 1000);
-        })
-      }else{
-        if(tabletData.sweep_ids != null && this.state.tabletData.sweep_ids != ''){
-          sweep_array = this.state.tabletData.sweep_ids.substring(0, this.state.tabletData.sweep_ids.length - 1).split(",");          
-          for(let i = 0; i < sweep_array.length; i++){
-            getSweepstakeAPI(sweep_array[i]).then((res3)=>{
-              if(i == 0){
-                this.setState({begin_date:res3.sweepstake.startdate});
-                this.setState({sweepstakeData: res3.sweepstake});
-              }
-              else if(this.state.begin_date > res3.sweepstake.startdate){
-                this.setState({begin_date:res3.sweepstake.startdate});
-                this.setState({sweepstakeData: res3.sweepstake});
-              }
-              if(i == sweep_array.length - 1){
-                setTimeout(this.setSweepadded, 1000);
-              }
-            })  
+    if(tabletData != null){
+      this.setState({tabletData});
+      this.setState({tabletID: tabletData.name});
+      this.setState({showTabletLoginForm: false});
+      this.setState({tabletIDLogin: ''});
+      this.setState({tabletpasswordlogin: ''});
+      this.setState({tabletLoginError: ''});
+      updateTabletStatus(tabletData.id, 1).then((res1)=>{
+        if(this.state.tabletData.active_sweep != null && this.state.tabletData.active_sweep != ''){
+          getSweepstakeAPI(this.state.tabletData.active_sweep).then((res2)=>{
+            console.log("LOGINSTATUS ", res2);
+            this.setState({sweepstakeData: res2.sweepstake});
+            this.setState({sweepbackground: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}})
+            this.setState({sweeplogo: { uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.logo}})
+            this.setState({sweepdisclaimer: this.state.sweepstakeData.disclaimer})
+            this.setState({begin_date:res2.sweepstake.startdate});
+            setTimeout(this.setSweepadded, 1000);
+          }).catch(error => {
+            console.log(error);
+          })
+        }else{
+          if(tabletData.sweep_ids != null && this.state.tabletData.sweep_ids != ''){
+            sweep_array = this.state.tabletData.sweep_ids.substring(0, this.state.tabletData.sweep_ids.length - 1).split(",");          
+            for(let i = 0; i < sweep_array.length; i++){
+              getSweepstakeAPI(sweep_array[i]).then((res3)=>{
+                if(i == 0){
+                  this.setState({begin_date:res3.sweepstake.startdate});
+                  this.setState({sweepstakeData: res3.sweepstake});
+                }
+                else if(this.state.begin_date > res3.sweepstake.startdate){
+                  this.setState({begin_date:res3.sweepstake.startdate});
+                  this.setState({sweepstakeData: res3.sweepstake});
+                }
+                if(i == sweep_array.length - 1){
+                  setTimeout(this.setSweepadded, 1000);
+                }
+              })  
+            }
           }
-        }
-      }  
-    })
+        }  
+      })
+    }
   }
 
   sweepcountdown = () => {
@@ -132,7 +146,7 @@ class SweepStake extends Component {
 
   // navigate to signup screen
   onSignupButtonPressed = () => {
-    this.props.navigation.navigate('Signup');
+    this.props.navigation.navigate('Signup', {user: this.props.navigation.getParam('user')});
   }
 
   // navigate to forgot password screen
@@ -145,8 +159,8 @@ class SweepStake extends Component {
   }
 
   showThankyouBox = () => {
-    if(this.state.phoneNumber == ""){
-      this.setState({phoneNoAlert: true})
+    if(this.state.phoneNumber.length < 10){
+      this.setState({phoneNumberError: "Enter 10 DIGITS TO CHECK IN"})
     }else{
       getUserAPI(this.state.phoneNumber).then((res) => {
         this.setState({userData: res.user});
@@ -298,7 +312,7 @@ class SweepStake extends Component {
   }
 
   goToSignup = () => {
-    this.props.navigation.navigate('Signup', {phoneNumber: this.state.phoneNumber, tabletData: this.state.tabletData, sweepstakeData: this.state.sweepstakeData, tabletID: this.state.tabletID});
+    this.props.navigation.navigate('Signup', {user: this.props.navigation.getParam('user'), phoneNumber: this.state.phoneNumber, tabletData: this.state.tabletData, sweepstakeData: this.state.sweepstakeData, tabletID: this.state.tabletID});
   }
 
   updateDeviceID = () => {
@@ -321,10 +335,68 @@ class SweepStake extends Component {
     this.setState({showTabletKeyUpdateBox: false});
   }
 
+  showLogoutBox = () => {
+    this.setState({logoutBox: true})
+  }
+
+  hideLogoutBox = () => {
+    this.setState({logoutBox: false})
+  }
+
+  logout = () => {
+    this.props.navigation.navigate('Login');    
+  }
+
+  submitTabletLogout = () => {
+    loginAPI(this.state.admin_user.username, this.state.admin_password).then(res=>{
+      console.log(res);
+      if(res.user){
+        this.props.navigation.navigate('Login');
+      }
+      if(res.error){
+        this.setState({logout_error: 'You need to input correct password!'});
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="always">
+         <View style={styles.topbar}>
+          <Text style={styles.topbar_text}>Tablet ID: {this.state.tabletData !== null && this.state.tabletData.name}</Text>
+          <AntDesign name="logout" size={32} color="#3d3d3d" onPress={this.showLogoutBox} />
+        </View>
+        <Modal isVisible={this.state.logoutBox} onBackdropPress={this.hideLogoutBox}>
+          <View style={styles.logoutModalContainer}>
+            <TouchableOpacity style={styles.logoutContainer} onPress={this.hideLogoutBox}>
+              <Icon ios='ios-close' android="md-close" style={styles.logoutButton} />
+            </TouchableOpacity>
+            <View style={styles.inputfield_container}>
+              <View style={styles.inputicon_container}>
+                <FontAwesome.Button name="lock" backgroundColor="#989898" color="#fff" size={35} borderRadius={50} iconStyle={{marginRight: 0, paddingHorizontal: 5}}></FontAwesome.Button>
+              </View>
+              <Input
+                style={styles.inputTabletID}
+                placeholder="Password"
+                placeholderTextColor="#989898"
+                autoCapitalize="none"
+                value={this.state.admin_password}
+                onChangeText={admin_password => this.setState({ admin_password })}
+                secureTextEntry
+              />
+            </View>
+            {this.state.logout_error !== null && <Text style={styles.logout_error}>{this.state.logout_error}</Text>}
+            <Button
+              style={styles.logoutbutton}
+              onPress={this.submitTabletLogout}
+            >
+              <Text style={styles.logoutText}>LOGOUT</Text>
+            </Button>
+          </View>
+        </Modal>
+        <View style={{ flexGrow: 1 }}>
           <Image source={this.state.sweepbackground} style={styles.backgroundImage} />
           {this.state.phoneNoAlert && <View style={styles.thankyouBox}>
             <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePhoneNoAlert}/>
@@ -474,7 +546,7 @@ class SweepStake extends Component {
             </Button>
           </View>
           }
-          <Content contentContainerStyle={styles.content}>
+          <View style={styles.content}>
             {this.state.tabletData != null && this.state.sweepstakeData != null &&
               <View style={styles.content}>
               {/* Logo */}
@@ -490,11 +562,12 @@ class SweepStake extends Component {
               {this.state.sweepadded && <TextInputMask
                   value={this.state.phoneNumberFormat}
                   onChangeText={(phoneNumberFormat) => {
-                      let phoneNumber = phoneNumberFormat.toString().replace(/\D+/g, '');
-                      this.setState({phoneNumberFormat: phoneNumberFormat, phoneNumber: phoneNumber})
+                    let phoneNumberf = phoneNumberFormat.startsWith("1") ? phoneNumberFormat : "1" + phoneNumberFormat;
+                    let phoneNumber = phoneNumberf.toString().replace(/\D+/g, '');
+                    this.setState({phoneNumberFormat: phoneNumberf, phoneNumber: phoneNumber})
                   }}
                   type={'cel-phone'}
-                  maxLength={this.state.phoneNumberFormat.toString().startsWith("1") ? 18 : 16}
+                  maxLength={18}
                   options={
                     this.state.phoneNumber.startsWith("1") ?
                     {
@@ -507,6 +580,7 @@ class SweepStake extends Component {
                   placeholder="+1 (000) 000 - 0000"
                   placeholderTextColor="#a1a1a1"
               /> }
+                {this.state.phoneNumberError !== null && <Text style={styles.phoneNoErrorText}>{this.state.phoneNumberError}</Text>}
                 {this.state.sweepadded && <Button
                   onPress={this.showThankyouBox}
                   fontSize='20'
@@ -541,8 +615,8 @@ class SweepStake extends Component {
               </View>
             </View>
             }
-          </Content>
-        </ScrollView>
+          </View>
+        </View>
       </KeyboardAvoidingView>
     );
   }

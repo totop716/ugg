@@ -7,6 +7,8 @@ const loginAPI = (username, password) => {
   const path = 'login/?username='+username+'&password='+password;
   const url = `${Utils.serverUrl}${path}`;
 
+  console.log(path);
+
   const client = new APIClient(url, APIConstants.HTTPMethod.POST);
   return client.sendRequest();
 };

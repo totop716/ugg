@@ -37,14 +37,13 @@ const styles = StyleSheet.create({
   cancelBox: {
     position: 'absolute',
     width: '80%',
+    borderRadius: 10,
     paddingTop: 30,
     paddingHorizontal: 30,
     paddingBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    top: '50%',
-    transform: [{translateY: -50}],
     backgroundColor: '#fff',
     zIndex: 999,
     shadowColor: "#000",
@@ -57,10 +56,15 @@ const styles = StyleSheet.create({
   },
   errorMsg: {
     color: '#f00',
+    width: '50%',
     fontSize: 20,
-    marginLeft: 10,
-    marginBottom: 10,
+    marginLeft: 5,
+    marginBottom: 5,
+    marginTop: -5
   },
+  noError: {
+    height: 0,
+  }, 
   thankyouText: {
     fontSize: 30,
     textAlign: 'center',
@@ -71,6 +75,55 @@ const styles = StyleSheet.create({
     top: 10,
     right: 20,
     color: '#000'
+  },
+  logoutModalContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 90,
+    paddingBottom: 30,
+    backgroundColor: '#fff',
+    borderRadius: 10
+  },
+  logoutContainer: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#3b8141',
+    borderRadius: 25,
+    position: 'absolute',
+    top: 20,
+    right: 20
+  },
+  logoutButton: {
+    color: '#fff',
+    fontSize: 50,
+  },
+  logout_error: {
+    color: '#f30',
+    fontSize: 25,
+    width: '100%',
+    textAlign: 'center',
+    marginBottom: 20
+  },
+  inputfield_container: {
+    backgroundColor: "#e6e6e6",
+    paddingVertical: 5,
+    marginBottom: 10,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 70,
+    position: 'relative'
+  },
+  inputicon_container: {
+    position: 'absolute',
+    left: 10
+  },
+  inputTabletID: {
+    height: 70,
+    fontSize: 40,
+    textAlign: 'center',
+    color: "#989898",
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -92,12 +145,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputbox: {
-    color: '#3d3d3d',
-    fontSize: 20,
     flexBasis: '49%',
     flexGrow: 0,
+    color: '#3d3d3d',
+    fontSize: 20,
+    borderRadius: 4,
     backgroundColor: '#e6e6e6',
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   formItem: {
     justifyContent: 'space-between'
@@ -124,17 +178,16 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(2),
     width: 200,
-    height: 45,
+    height: 60,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: "#3b8041",
-    borderRadius: 25 
+    borderRadius: 35 
   },
   loginText: {
     color: 'white',
-    fontSize: 25,
-    fontWeight: '600',
+    fontSize: 35,
     textAlign: 'center'
   },
   loginContainer: {
@@ -167,7 +220,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: 'center',
     position: 'absolute',
-    top: 0,
+    top: 20,
     left: 0,
     zIndex: 9999
   },

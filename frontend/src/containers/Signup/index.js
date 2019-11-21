@@ -17,12 +17,15 @@ import {
   StyleProvider
 } from 'native-base';
 
+import Modal from 'react-native-modal'
+import { loginAPI } from '../../services/Authentication';
+
 import getTheme from '../../../native-base-theme/components';
 import material from '../../../native-base-theme/variables/material';
 
 import styles from './styles';
 
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
 
 import { signupUserAPI, updateCheckTime } from '../../services/Authentication';
 import Utils from '../../utils'
@@ -40,16 +43,24 @@ class Signup extends Component {
     txtState: 'IL',
     zipcode: '',
     emailaddress: '',
+    admin_password: '',
     checkEmail: true,
     checkSMS: true,
     cancelBox: false,
     logoutBox: false,
-    error: {name: '', address: '', txtstate: '' }
+    admin_user: null,
+    logout_error: null,
+    error: {firstname: '', lastname: '', address: '',  city: '',  txtstate: '',  zipcode: '',po_box_unit_number: '' }
   };
 
   componentDidMount(){
+    const admin_user = this.props.navigation.getParam('user');
     const sweepData = this.props.navigation.getParam('sweepstakeData');
-    this.setState({sweepstakeData: sweepData})
+    this.setState({sweepstakeData: sweepData, admin_user: admin_user[0] })
+  }
+
+  componentWillReceiveProps(props){
+    console.log(props.navigation.getParam('user'));
   }
 
   // navigate to login screen after a successful signup
@@ -80,7 +91,6 @@ class Signup extends Component {
   }
 
   showLogoutBox = () => {
-    console.log('aaaaaaa');
     this.setState({logoutBox: true})
   }
 
@@ -93,7 +103,7 @@ class Signup extends Component {
   }
 
   cancelRegister = () => {
-    this.props.navigation.navigate('SweepStake', {tablet: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID')});
+    this.props.navigation.navigate('SweepStake', {tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID')});
   }
 
   userRegister = () => {
@@ -101,34 +111,42 @@ class Signup extends Component {
     const phoneNo = navigation.getParam('phoneNumber');
     let error = this.state.error;
 
-    if(this.state.firstname == '' && this.state.lastname != ''){
-      error.name = 'You need to input first name';
-    }else if(this.state.firstname != '' && this.state.lastname == ''){
-      error.name = 'You need to input last name';
-    }else if(this.state.firstname == '' && this.state.lastname == ''){
-      error.name = 'You need to input first name and last name';
+    if(this.state.firstname == ''){
+      error.firstname = 'You need to input first name';
     }else{
-      error.name = '';
+      error.firstname = '';
     }
 
-    if(this.state.city == '' && this.state.address != ''){
-      error.address = 'You need to input city';
-    }else if(this.state.city != '' && this.state.address == ''){
+    if(this.state.lastname == ''){
+      error.lastname = 'You need to input last name';
+    }else{
+      error.lastname = '';
+    }
+
+    if(this.state.address == ''){
       error.address = 'You need to input address';
-    }else if(this.state.city == '' && this.state.address == ''){
-      error.address = 'You need to input city and address';
     }else{
       error.address = '';
     }
 
-    if(this.state.zipcode == '' && this.state.txtState != ''){
-      error.txtstate = 'You need to input zipcode';
-    }else if(this.state.zipcode != '' && this.state.txtState == ''){
-      error.txtstate = 'You need to input state';
-    }else if(this.state.zipcode == '' && this.state.txtState == ''){
-      error.txtstate = 'You need to input state and zipcode';
+    if(this.state.city == ''){
+      error.city = 'You need to input city';
     }else{
-      error.txtstate = '';
+      error.city = '';
+    }
+
+    if(this.state.txtState == ''){
+      error.txtState = 'You need to input state';
+    }else{
+      error.txtState = '';
+    }
+
+    if(this.state.zipcode == ''){
+      error.zipcode = 'You need to input zipcode';
+    }else if(this.state.zipcode.length < 5){
+      error.zipcode = "zipcode should be at least 5 letters"
+    }else{
+      error.zipcode = '';
     }
 
     this.setState({error});
@@ -146,7 +164,22 @@ class Signup extends Component {
     }
   }
 
-  render() {
+  submitTabletLogout = () => {
+    console.log(this.state.admin_user.username, this.state.admin_password);
+    loginAPI(this.state.admin_user.username, this.state.admin_password).then(res=>{
+      console.log(res);
+      if(res.user){
+        this.props.navigation.navigate('Login');
+      }
+      if(res.error){
+        this.setState({logout_error: 'You need to input correct password!'});
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  render(){
     const usStates = [
       {
           "label": "Alabama",
@@ -393,24 +426,17 @@ class Signup extends Component {
         borderRadius: 4,
         width: '100%',
         color: '#3d3d3d',
-        paddingRight: 30, // to ensure the text is never behind the icon
       },
       inputAndroid: {
-        fontSize: 20,
-        backgroundColor: "#e6e6e6",
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        flexBasis: '48%',
-        flexGrow: 0,
-        borderRadius: 8,
+        width: '100%',
+        paddingLeft: 10,
         color: '#3d3d3d',
-        paddingRight: 30, // to ensure the text is never behind the icon
       },
     });
     const tabletData = this.props.navigation.getParam('tabletData');
     return (
       <StyleProvider style={getTheme(material)}>
-        <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
+        <View style={styles.container}>
         { this.state.sweepstakeData != null && 
         <Image source={{uri: Utils.serverUrl+'static/img/uploads/'+this.state.sweepstakeData.background}} style={styles.backgroundImage} />
         }
@@ -418,50 +444,60 @@ class Signup extends Component {
           <Text style={styles.topbar_text}>Tablet ID: {tabletData.name}</Text>
           <AntDesign name="logout" size={32} color="#3d3d3d" onPress={this.showLogoutBox} />
         </View>
-        <Content contentContainerStyle={styles.content}>
+        <View style={styles.content}>
           {this.state.registeredVisible && <View style={styles.thankyouBox}>
             <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideRegisteredBox}/>
             <Text style={styles.thankyouText}>You are successfully registered</Text>
           </View>
           }
-          {this.state.cancelBox && <View style={styles.cancelBox}>
+          <Modal isVisible={this.state.cancelBox} onBackdropPress={this.closeCancelBox}>
+            <View  style={styles.cancelBox}>
             <Text style={styles.thankyouText}>Are you sure you want to cancel?</Text>
-            <View style={styles.buttonsContainer}>
+              <View style={styles.buttonsContainer}>
+                <Button
+                    style={[styles.button, styles.cancelBut]}
+                    onPress={this.cancelRegister}
+                  >
+                  <Text style={styles.textCancel}>Yes</Text>
+                </Button>
+                <Button
+                    style={[styles.button, styles.cancelBut]}
+                    onPress={this.closeCancelBox}
+                    block
+                  >
+                  <Text style={styles.textCancel}>No</Text>
+                </Button>
+              </View>
+            </View>
+          </Modal>
+          <Modal isVisible={this.state.logoutBox} onBackdropPress={this.hideLogoutBox}>
+            <View style={styles.logoutModalContainer}>
+              <TouchableOpacity style={styles.logoutContainer} onPress={this.hideLogoutBox}>
+                <Icon ios='ios-close' android="md-close" style={styles.logoutButton} />
+              </TouchableOpacity>
+              <View style={styles.inputfield_container}>
+                <View style={styles.inputicon_container}>
+                  <FontAwesome.Button name="lock" backgroundColor="#989898" color="#fff" size={35} borderRadius={50} iconStyle={{marginRight: 0, paddingHorizontal: 5}}></FontAwesome.Button>
+                </View>
+                <Input
+                  style={styles.inputTabletID}
+                  placeholder="Password"
+                  placeholderTextColor="#989898"
+                  autoCapitalize="none"
+                  value={this.state.admin_password}
+                  onChangeText={admin_password => this.setState({ admin_password })}
+                  secureTextEntry
+                />
+              </View>
+              {this.state.logout_error !== null && <Text style={styles.logout_error}>{this.state.logout_error}</Text>}
               <Button
-                  style={[styles.button, styles.cancelBut]}
-                  onPress={this.cancelRegister}
-                >
-                <Text style={styles.textCancel}>Yes</Text>
-              </Button>
-              <Button
-                  style={[styles.button, styles.cancelBut]}
-                  onPress={this.closeCancelBox}
-                  block
-                >
-                <Text style={styles.textCancel}>No</Text>
+                style={styles.button}
+                onPress={this.submitTabletLogout}
+              >
+                <Text style={styles.loginText}>LOGOUT</Text>
               </Button>
             </View>
-          </View>
-          }
-          {this.state.logoutBox && <View style={styles.cancelBox}>
-            <Text style={styles.thankyouText}>Are you sure you want to logout?</Text>
-            <View style={styles.buttonsContainer}>
-              <Button
-                  style={[styles.button, styles.cancelBut]}
-                  onPress={this.logout}
-                >
-                <Text style={styles.textCancel}>Yes</Text>
-              </Button>
-              <Button
-                  style={[styles.button, styles.cancelBut]}
-                  onPress={this.hideLogoutBox}
-                  block
-                >
-                <Text style={styles.textCancel}>No</Text>
-              </Button>
-            </View>
-          </View>
-          }
+          </Modal>
           <View style={styles.topBar}>
             <Text style={styles.topBarText}>Thank You for Registering!</Text>
             <AntDesign name="closecircle" size={35} color="#fff" onPress={this.showCancelBox} />
@@ -470,7 +506,7 @@ class Signup extends Component {
           <Form style={styles.form}>
             <View style={[styles.listItem, styles.formItem]}>
               <Input
-                style={[styles.inputbox, styles.firstinputbox]}
+                style={styles.inputbox}
                 placeholder="First Name *"
                 placeholderTextColor="#3d3d3d"
                 autoCapitalize="none"
@@ -484,23 +520,34 @@ class Signup extends Component {
                 onChangeText={lastname => this.setState({ lastname })}
               />
             </View>
-            {this.state.error.name != '' && <Text style={styles.errorMsg}>{this.state.error.name}</Text>}
+            <View style={[styles.listItem, styles.formItem]}>
+              <Text style={[styles.errorMsg, this.state.error.firstname == "" && styles.noError]}>{this.state.error.firstname}</Text>
+              <Text style={[styles.errorMsg, this.state.error.lastname == "" && styles.noError]}>{this.state.error.lastname}</Text>
+            </View>
             <View style={[styles.listItem, styles.formItem]}>
               <Input
-                style={[styles.inputbox, styles.firstinputbox]}
+                style={styles.inputbox}
                 placeholder="Address *"
                 placeholderTextColor="#3d3d3d"
                 onChangeText={address => this.setState({ address })}
               />
               <Input
                 style={styles.inputbox}
+                placeholder="Suite/PO Box *"
+                placeholderTextColor="#3d3d3d"
+                onChangeText={po_box_unit_number => this.setState({ po_box_unit_number })}
+              />
+            </View>
+            <View style={[styles.listItem, styles.formItem]}>
+              <Text style={[styles.errorMsg, this.state.error.address == "" && styles.noError]}>{this.state.error.address}</Text>
+            </View>
+            <View style={[styles.listItem, styles.formItem]}>
+            <Input
+                style={styles.inputbox}
                 placeholder="City *"
                 placeholderTextColor="#3d3d3d"
                 onChangeText={city => this.setState({ city })}
               />
-            </View>
-            {this.state.error.address != '' && <Text style={styles.errorMsg}>{this.state.error.address}</Text>}
-            <View style={[styles.listItem, styles.formItem]}>
               <View style={styles.inputbox}>
                 <RNPickerSelect
                   placeholder={{
@@ -521,7 +568,7 @@ class Signup extends Component {
                     },
                     placeholder: {
                       color: '#3d3d3d',
-                      fontSize: 20,
+                      fontSize: 25,
                     },
                   }}
                   value={this.state.txtState}
@@ -550,21 +597,19 @@ class Signup extends Component {
                 placeholderTextColor="#3d3d3d"
                 onChangeText={txtState => this.setState({ txtState })}
               /> */}
+            </View>
+            <View style={[styles.listItem, styles.formItem]}>
+              <Text style={[styles.errorMsg, this.state.error.city == "" && styles.noError]}>{this.state.error.city}</Text>
+              <Text style={[styles.errorMsg, this.state.error.txtstate == "" && styles.noError]}>{this.state.error.txtstate}</Text>
+            </View>
+            <View style={[styles.listItem, styles.formItem]}>
               <Input
                 style={styles.inputbox}
                 maxLength={5}
                 placeholder="Zip Code *"
+                keyboardType="numeric"
                 placeholderTextColor="#3d3d3d"
                 onChangeText={zipcode => this.setState({ zipcode })}
-              />
-            </View>
-            {this.state.error.txtstate != '' && <Text style={styles.errorMsg}>{this.state.error.txtstate}</Text>}
-            <View style={[styles.listItem, styles.formItem]}>
-              <Input
-                style={[styles.inputbox, styles.firstinputbox]}
-                placeholder="Suite/PO Box"
-                placeholderTextColor="#3d3d3d"
-                onChangeText={po_box_unit_number => this.setState({ po_box_unit_number })}
               />
               <Input
                 style={styles.inputbox}
@@ -572,6 +617,9 @@ class Signup extends Component {
                 placeholderTextColor="#3d3d3d"
                 onChangeText={emailaddress => this.setState({ emailaddress })}
               />
+            </View>
+            <View style={[styles.listItem, styles.formItem]}>
+             <Text style={[styles.errorMsg, this.state.error.zipcode == "" && styles.noError]}>{this.state.error.zipcode}</Text>
             </View>
             <View style={styles.checkContainer}>
               <View style={styles.listItem}>
@@ -593,8 +641,8 @@ class Signup extends Component {
             >
             <Text style={styles.loginText}>SUBMIT</Text></Button>
           </View>
-        </Content>
-      </KeyboardAvoidingView>
+        </View>
+      </View>
       </StyleProvider>
     );
   }

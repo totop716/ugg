@@ -73,6 +73,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginTop: 5
   },
+  phoneNoErrorText: {
+    color: '#f00',
+    fontSize: 25,
+  },
   inputMenuPass:{
     width: '100%',
     borderTopWidth: 2,
@@ -162,9 +166,11 @@ const styles = StyleSheet.create({
     height: 50,
     fontSize: 25,
     color: '#000',
-    backgroundColor: '#d7d7d7',
+    backgroundColor: '#eeeeee',
     textAlign: 'center',
-    paddingLeft: 10
+    paddingLeft: 10,
+    marginBottom: 10,
+    borderRadius: 5
   },
   disclaimerContain: {
     width: '100%',
@@ -173,7 +179,7 @@ const styles = StyleSheet.create({
   },
   disclaimerText: {  
     color: '#000',
-    width: 300
+    width: '100%'
   },
   buttonContainer: {
     flex: 1,
@@ -184,7 +190,16 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10
+    paddingVertical: 10,
+    backgroundColor: '#3b8041',
+    borderRadius: 5
+  },
+  cancelBut: {
+    marginHorizontal: 10,
+    width: '40%'
+  },
+  textCancel: {
+    fontSize: 25
   },
   loginText: {
     color: 'white',
@@ -223,7 +238,113 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: 'left',
     width: '100%'
-  }
+  },
+  topbar: {
+    backgroundColor: "#eee",
+    width: '100%',
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    zIndex: 9999
+  },
+  topbar_text: {
+    fontSize: 26,
+    color: "#3d3d3d"
+  },
+  cancelBox: {
+    position: 'absolute',
+    width: '80%',
+    paddingTop: 30,
+    paddingHorizontal: 30,
+    paddingBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    top: '50%',
+    transform: [{translateY: -50}],
+    backgroundColor: '#fff',
+    zIndex: 999,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    marginVertical: 20
+  },
+  logoutModalContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 90,
+    paddingBottom: 30,
+    backgroundColor: '#fff',
+    borderRadius: 10
+  },
+  logoutContainer: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#3b8141',
+    borderRadius: 25,
+    position: 'absolute',
+    top: 20,
+    right: 20
+  },
+  logoutButton: {
+    color: '#fff',
+    fontSize: 50,
+  },
+  logout_error: {
+    color: '#f30',
+    fontSize: 25,
+    width: '100%',
+    textAlign: 'center',
+    marginBottom: 20
+  },
+  inputfield_container: {
+    backgroundColor: "#e6e6e6",
+    paddingVertical: 5,
+    marginBottom: 10,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 70,
+    position: 'relative'
+  },
+  inputicon_container: {
+    position: 'absolute',
+    left: 10
+  },
+  inputTabletID: {
+    height: 70,
+    fontSize: 40,
+    textAlign: 'center',
+    color: "#989898",
+  },
+  logoutbutton: {
+    marginVertical: PixelRatio.getPixelSizeForLayoutSize(2),
+    width: 200,
+    height: 60,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: "#3b8041",
+    borderRadius: 35 
+  },
+  logoutText: {
+    color: 'white',
+    fontSize: 35,
+    textAlign: 'center'
+  },
 });
 
 

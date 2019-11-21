@@ -199,6 +199,13 @@ class Sweepstakes(models.Model):
     disclaimer = models.TextField()
     fontsize = models.IntegerField()
     current = models.BooleanField()
+    disclaimer_color = models.CharField("Disclaimer Font Color", max_length=7)
+    header_text = models.CharField("Header Text", max_length=100)
+    header_font_size = models.IntegerField("Header Font Size")
+    header_hex_color = models.CharField("Header Hex Color", max_length=7)
+    button_header_hex_color = models.CharField("Button/Header Hex Color", max_length=7)
+    button_header_font_color = models.CharField("Button/Header Font Hex Color", max_length=7)
+    
 
     class Meta:
         verbose_name_plural = 'Sweepstakes'

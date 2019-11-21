@@ -65,6 +65,7 @@ THIRD_PARTY_APPS = [
     # 'allauth.socialaccount',
     # 'allauth.socialaccount.providers.google',
 ]
+
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
@@ -106,6 +107,8 @@ SUIT_CONFIG = {
     {'label': 'Sweepstakes', 'icon':'icon-bell', 'url': '/admin/home/sweepstakes/' },
     {'label': 'Tablets', 'icon':'icon-camera', 'url': '/admin/home/tablet/'},
     {'label': 'Reports', 'icon':'icon-book', 'url': '/admin/reports/'},
+    {'label': 'Admin', 'icon':'icon-user', 'url': '/admin/admins/'},
+    {'label': 'Surveys', 'icon':'icon-book', 'url': '/admin/surveys/'},
     ),
 }
 
