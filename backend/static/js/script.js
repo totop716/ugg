@@ -57,6 +57,27 @@
                 $(this).addClass('active');
             }
         });
+        $(".field-background_image_after_sweepstake_check input[type='radio']").change(function(){
+           if($(this).val() == 'no'){
+                $(".field-background_image_after_sweepstake").hide();
+           }else{
+                $(".field-background_image_after_sweepstake").show();
+           }
+        })
+        $(".field-survey1_check input[type='radio']").change(function(){
+            if($(this).val() == 'no'){
+                 $(".field-survey1_name").hide();
+            }else{
+                 $(".field-survey1_name").show();
+            }
+         })
+         $(".field-survey2_check input[type='radio']").change(function(){
+            if($(this).val() == 'no'){
+                 $(".field-survey2_name").hide();
+            }else{
+                 $(".field-survey2_name").show();
+            }
+         })
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {

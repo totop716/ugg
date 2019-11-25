@@ -2,6 +2,7 @@ import { createStackNavigator } from 'react-navigation';
 
 import Home from '../containers/Home';
 import SweepStake from '../containers/SweepStake'
+import Survey from '../containers/Survey'
 
 const HomeNavigator = createStackNavigator({
   Home: {
@@ -12,6 +13,12 @@ const HomeNavigator = createStackNavigator({
   },
   SweepStake: {
     screen: SweepStake,
+    navigationOptions: {
+      header: null
+    }
+  },
+  Survey: {
+    screen: Survey,
     navigationOptions: {
       header: null
     }

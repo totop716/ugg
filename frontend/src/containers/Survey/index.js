@@ -1,0 +1,249 @@
+import React, { Component } from 'react';
+import {
+  Image,
+  TouchableOpacity,
+  View, KeyboardAvoidingView, StyleSheet
+} from 'react-native';
+import {
+  Button,
+  Container,
+  Content,
+  Form,
+  Item,
+  Input,
+  Text,
+  Icon,
+  CheckBox,
+  StyleProvider
+} from 'native-base';
+
+import Modal from 'react-native-modal'
+
+import getTheme from '../../../native-base-theme/components';
+import material from '../../../native-base-theme/variables/material';
+
+import {loginAPI, getCheckInTime, updateCheckTime} from '../../services/Authentication'
+import styles from './styles';
+
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
+
+import Utils from '../../utils'
+
+class Survey extends Component {
+  state = {
+    tabletData: null,
+    sweepstakeData: null,
+    cancelBox: false,
+    logoutBox: false,
+    admin_user: null,
+    logout_error: null,
+    sweep_user: null,
+    question_no: 0,
+    selected_answer: -1,
+    survey_questions: [{
+      type: 1,
+      question: 'Did you enjoy the Slot Machine?',
+      answers: [
+        'I enjoyed it', 'I did not enjoy it', 'I did not have time to play it', 'I did not know about the game', 'I did not want to play it'
+      ]
+    },{
+      type: 2,
+      question: 'Which game did you enjoy?',
+      answers: [
+        'tire.jpg', 'tire.jpg', 'tire.jpg', 'tire.jpg', 'tire.jpg', 'tire.jpg', 'tire.jpg', 'tire.jpg', 'tire.jpg'
+      ]
+    }]
+  };
+
+  componentDidMount(){
+    const admin_user = this.props.navigation.getParam('user');
+    const sweepData = this.props.navigation.getParam('sweepstakeData');
+    const sweep_user = this.props.navigation.getParam('sweepuser');
+    const tablet_data = this.props.navigation.getParam('tabletData');
+    this.setState({sweepstakeData: sweepData, admin_user: admin_user[0], sweep_user, tabletData: tablet_data });
+    this.setState({admin_user: {username: 'admin'}})
+  }
+
+  componentWillReceiveProps(props){
+  }
+
+  setCheckEmail = () => {
+    this.setState({checkEmail: !this.state.checkEmail})
+  }
+
+  setCheckSMS = () => {
+    this.setState({checkSMS: !this.state.checkSMS})
+  }
+
+  showCancelBox = () => {
+    this.setState({cancelBox: true})
+  }
+
+  closeCancelBox = () => {
+    this.setState({cancelBox: false})
+  }
+
+  showLogoutBox = () => {
+    this.setState({logoutBox: true})
+  }
+
+  hideLogoutBox = () => {
+    this.setState({logoutBox: false})
+  }
+
+  logout = () => {
+    this.props.navigation.navigate('Login');    
+  }
+
+  submitTabletLogout = () => {
+    console.log(this.state.admin_user.username, this.state.admin_password);
+    loginAPI(this.state.admin_user.username, this.state.admin_password).then(res=>{
+      console.log(res);
+      if(res.user){
+        this.props.navigation.navigate('Login');
+      }
+      if(res.error){
+        this.setState({logout_error: 'You need to input correct password!'});
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  cancelSurvey = () => {
+    this.props.navigation.navigate('SweepStake', {tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user')})
+  }
+
+  gotoPrevQuiz = () => {
+    if(this.state.question_no > 0)
+      this.setState({question_no: this.state.question_no - 1})
+  }
+
+  gotoNextQuiz = () => {
+    if(this.state.question_no < this.state.survey_questions.length - 1){
+      this.setState({question_no: this.state.question_no + 1, selected_answer: -1})
+    }else if(this.state.question_no == this.state.survey_questions.length - 1){
+      const currenttime = new Date();
+      const {navigate} = this.props.navigation;
+      getCheckInTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
+        // const checkedtime = new Date(res1.checkin.check_time.replace(" ", "T"));
+        let checkedtime = '';
+        if(res1.checkin.check_time != null){
+          const checkedtime_array = res1.checkin.check_time.split("T");
+          checkedtime = checkedtime_array[0].split("-");  
+        }
+        if(res1.checkin.check_time == "" || res1.checkin.check_time == null || currenttime.getFullYear() > parseInt(checkedtime[0]) || currenttime.getMonth() > parseInt(checkedtime[1]) - 1 || currenttime.getDate() > parseInt(checkedtime[2])){
+          const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
+          updateCheckTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
+            console.log("Res2", res2);
+          });
+          navigate("SweepStake", {thankyou: true, comeback: false, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user'), sweepuser: this.props.navigation.getParam('sweepuser')})
+        }else{
+          navigate("SweepStake", {comeback: true, thankyou: false, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user'), sweepuser: this.props.navigation.getParam('sweepuser')})
+        }
+      });
+    }
+  }
+
+  render(){
+    const tabletData = this.props.navigation.getParam('tabletData');
+    const image_structure = [[2, 1], [3, 1], [3, 2], [3, 2], [3, 2], [4, 2], [4, 2]];
+    return (
+      <StyleProvider style={getTheme(material)}>
+        <View style={styles.container}>
+          <View style={styles.topbar}>
+            <Text style={styles.topbar_text}>Tablet ID: {tabletData.name}</Text>
+            <AntDesign name="logout" size={32} color="#3d3d3d" onPress={this.showLogoutBox} />
+          </View>
+          <View style={styles.content}>
+            <Modal isVisible={this.state.cancelBox} onBackdropPress={this.closeCancelBox}>
+              <View  style={styles.logoutModalContainer}>
+                <TouchableOpacity style={styles.logoutContainer} onPress={this.closeCancelBox}>
+                  <Icon ios='ios-close' android="md-close" style={styles.logoutButton} />
+                </TouchableOpacity>
+                <Text style={styles.thankyouText}>You must complete the survey to check in. If you quit the survey you will not be checked in.</Text>
+                <View style={styles.buttonsContainer}>
+                  <Button
+                      style={styles.button}
+                      onPress={this.cancelSurvey}
+                    >
+                    <Text style={styles.button_text}>Quit</Text>
+                  </Button>
+                </View>
+              </View>
+            </Modal>
+            <Modal isVisible={this.state.logoutBox} onBackdropPress={this.hideLogoutBox}>
+              <View style={styles.logoutModalContainer}>
+                <TouchableOpacity style={styles.logoutContainer} onPress={this.hideLogoutBox}>
+                  <Icon ios='ios-close' android="md-close" style={styles.logoutButton} />
+                </TouchableOpacity>
+                <View style={styles.inputfield_container}>
+                  <View style={styles.inputicon_container}>
+                    <FontAwesome.Button name="lock" backgroundColor="#989898" color="#fff" size={35} borderRadius={50} iconStyle={{marginRight: 0, paddingHorizontal: 5}}></FontAwesome.Button>
+                  </View>
+                  <Input
+                    style={styles.inputTabletID}
+                    placeholder="Password"
+                    placeholderTextColor="#989898"
+                    autoCapitalize="none"
+                    value={this.state.admin_password}
+                    onChangeText={admin_password => this.setState({ admin_password })}
+                    secureTextEntry
+                  />
+                </View>
+                {this.state.logout_error !== null && <Text style={styles.logout_error}>{this.state.logout_error}</Text>}
+                <Button
+                  style={styles.button}
+                  onPress={this.submitTabletLogout}
+                >
+                  <Text style={styles.loginText}>LOGOUT</Text>
+                </Button>
+              </View>
+            </Modal>
+            <View style={styles.topBar}>
+              <Text style={styles.topBarText}>Complete this survey to check in!</Text>
+              <Text style={styles.topBarText}>{this.state.question_no + 1} of {this.state.survey_questions.length}</Text>
+            </View>
+            <View style={styles.survey_content}>
+              <Text style={styles.servey_question}>{this.state.question_no + 1}.) {this.state.survey_questions[this.state.question_no].question}</Text>
+              {this.state.survey_questions[this.state.question_no].answers.length <=8 ?
+              <View style={[styles.answers_container, this.state.survey_questions[this.state.question_no].type == 2 && styles.answer_img_container]}>
+                {this.state.survey_questions[this.state.question_no].answers.map((value, index) => 
+                  this.state.survey_questions[this.state.question_no].type == 1 ? 
+                    <TouchableOpacity style={styles.answer_container} key={index} onPress={()=>{this.setState({selected_answer: index})}}>
+                      <View style={[styles.answer_radio, this.state.selected_answer == index && {backgroundColor: '#'+this.state.sweepstakeData.primary_hex_color, borderColor: '#'+this.state.sweepstakeData.border_hightlight_hex_color}]}></View>
+                      <Text style={styles.answer_text}>{value}</Text>
+                    </TouchableOpacity>
+                  : <TouchableOpacity style={[styles.answer_image, {width: 96/image_structure[this.state.survey_questions[this.state.question_no].answers.length - 2][0] + '%'}]} key={index}><Image source={{uri: Utils.serverUrl+'static/img/uploads/'+value}} style={{width: '100%', height: '100%'}} /></TouchableOpacity>
+                )}
+                <View style={{width: (image_structure[this.state.survey_questions[this.state.question_no].answers.length - 2][0] * image_structure[this.state.survey_questions[this.state.question_no].answers.length - 2][1] - this.state.survey_questions[this.state.question_no].answers.length ) * 32 + '%'}}></View>
+              </View> : <View style={[styles.answers_container, this.state.survey_questions[this.state.question_no].type == 2 && styles.answer_img_container]}>
+                {this.state.survey_questions[this.state.question_no].answers.map((value, index) => <TouchableOpacity style={[styles.answer_image, index == 0 && this.state.survey_questions[this.state.question_no].answers.length == 9 && {width: '100%'}, index >= this.state.survey_questions[this.state.question_no].answers.length - 8 && {width: '24%'}, index < 3 && this.state.survey_questions[this.state.question_no].answers.length == 11 && {width: '36%'}, this.state.selected_answer == index && {borderColor: '#' + this.state.sweepstakeData.border_hightlight_hex_color, borderWidth: 5, borderRadius: 5}]} onPress={()=>{this.setState({selected_answer: index})}} key={index}>
+                     <Image source={{uri: Utils.serverUrl+'static/img/uploads/'+value}} style={{width: '100%', height: '100%'}} />
+                    </TouchableOpacity>
+                  )
+                }
+              </View>
+              }
+            </View>
+            <View style={styles.button_container}>
+                <TouchableOpacity style={styles.button} onPress={this.showCancelBox}><Text style={styles.button_text}>Cancel</Text></TouchableOpacity>
+                <View style={styles.next_button_container}>
+                  {this.state.question_no > 0 && 
+                    <TouchableOpacity style={[styles.button, styles.backbutton, styles.active_button]} onPress={this.gotoPrevQuiz}><Text style={[styles.button_text, styles.active_button_text]}>Back</Text></TouchableOpacity>
+                  }
+                  {this.state.selected_answer == -1 ?
+                    <View style={styles.button}><Text style={styles.button_text}>Next</Text></View>
+                    :
+                    <TouchableOpacity style={[styles.button, styles.active_button]} onPress={this.gotoNextQuiz}><Text style={[styles.button_text, styles.active_button_text]}>Next</Text></TouchableOpacity>
+                  }
+                </View>
+            </View>
+          </View>
+        </View>
+      </StyleProvider>
+    );
+  }
+}
+
+export default Survey;

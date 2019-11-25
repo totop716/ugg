@@ -19,25 +19,10 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   thankyouBox: {
-    position: 'absolute',
-    width: '80%',
-    paddingTop: 30,
-    paddingHorizontal: 30,
-    paddingBottom: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    top: '50%',
-    transform: [{translateY: -50}],
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     backgroundColor: '#fff',
-    zIndex: 999,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
+    borderRadius: 10
   },
   passwordContainer: {
     position: 'relative',
@@ -53,8 +38,10 @@ const styles = StyleSheet.create({
     right: 10,
   },
   thankyouText: {
-    fontSize: 25,
-    marginBottom: 20
+    fontSize: 33,
+    marginVertical: 20,
+    marginRight: 60,
+    marginLeft: 20,
   },
   closeIcon: {
     position: 'absolute',

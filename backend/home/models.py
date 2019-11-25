@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 from customauth.models import MyUser
 
@@ -91,6 +92,43 @@ class Participants(models.Model):
     @property
     def api(self):
         return f'/api/v1/lottery/{self.id}/'
+    @property
+    def field(self):
+        return 'name'
+
+class Survey(models.Model):
+    name = models.CharField('Survey Name', max_length=100)
+    question_count = models.CharField('Number of Questions', choices=(('1', '1'),('2', '2'),('3', '3'),('4', '4'),('5', '5'),('6', '6'),('7', '7'),('8', '8'),('9', '9'),('10', '10')), default=1, max_length=2)
+    question_type1 = models.CharField('Question 1', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_type2 = models.CharField('Question 2', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_type3 = models.CharField('Question 3', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_type4 = models.CharField('Question 4', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_type5 = models.CharField('Question 5', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_type6 = models.CharField('Question 6', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_type7 = models.CharField('Question 7', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_type8 = models.CharField('Question 8', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_type9 = models.CharField('Question 9', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_type10 = models.CharField('Question 10', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_text1 = models.TextField("Question")
+    question_text2 = models.TextField("Question")
+    question_text3 = models.TextField("Question")
+    question_text4 = models.TextField("Question")
+    question_text5 = models.TextField("Question")
+    question_text6 = models.TextField("Question")
+    question_text7 = models.TextField("Question")
+    question_text8 = models.TextField("Question")
+    question_text9 = models.TextField("Question")
+    question_text10 = models.TextField("Question")
+
+    class Meta:
+        verbose_name_plural = 'survey'
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def api(self):
+        return f'/api/v1/survey/{self.id}/'
     @property
     def field(self):
         return 'name'
@@ -205,7 +243,16 @@ class Sweepstakes(models.Model):
     header_hex_color = models.CharField("Header Hex Color", max_length=7)
     button_header_hex_color = models.CharField("Button/Header Hex Color", max_length=7)
     button_header_font_color = models.CharField("Button/Header Font Hex Color", max_length=7)
-    
+    background_image_after_sweepstake_check = models.CharField(max_length = 5)
+    background_image_after_sweepstake = models.ImageField(null= True, blank = True)
+    survey1_check = models.CharField(max_length = 5)
+    survey1_name = models.ForeignKey(Survey, related_name='survey1_name', on_delete=models.CASCADE, blank=True, null=True)
+    survey2_check = models.CharField(max_length = 5)
+    survey2_name = models.ForeignKey(Survey, related_name='survey2_name', on_delete=models.CASCADE, blank=True, null=True)
+    border_hightlight_hex_color = models.CharField("Border/Highlight Hex Color", max_length=7)
+    primary_hex_color = models.CharField("Primary Hex Color", max_length=7)
+    prioritize_sweepstakes = models.CharField(max_length = 5)
+    customer_checkin_frequency = models.CharField(max_length = 5)
 
     class Meta:
         verbose_name_plural = 'Sweepstakes'

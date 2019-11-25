@@ -108,7 +108,7 @@ SUIT_CONFIG = {
     {'label': 'Tablets', 'icon':'icon-camera', 'url': '/admin/home/tablet/'},
     {'label': 'Reports', 'icon':'icon-book', 'url': '/admin/reports/'},
     {'label': 'Admin', 'icon':'icon-user', 'url': '/admin/admins/'},
-    {'label': 'Surveys', 'icon':'icon-book', 'url': '/admin/surveys/'},
+    {'label': 'Surveys', 'icon':'icon-book', 'url': '/admin/home/survey/'},
     ),
 }
 

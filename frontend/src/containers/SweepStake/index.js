@@ -21,8 +21,7 @@ import {
 
 import styles from './styles';
 import Utils from '../../utils'
-import { loginAPI } from '../../services/Authentication';
-import { getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime, updateTabletKey, updateTabletStatus, getTabletfromKey } from '../../services/Authentication';
+import { loginAPI, getUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime, updateTabletKey, updateTabletStatus, getTabletfromKey } from '../../services/Authentication';
 
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
 
@@ -74,15 +73,31 @@ class SweepStake extends Component {
       this.setState({showPasswordBox: false, showMenu: false, showTabletForm: false, thankyouBoxVisible: false, phoneNumberFormat: '', phoneNumber: '', tabletID: props.navigation.getParam('tabletID'), userData: null, tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
       this.setState({signupBoxVisible: true});
     }
-    console.log(this.state.tabletData, ' ', this.state.sweepstakeData);
+    if(props.navigation.getParam('thankyou') == true){
+      this.setState({thankyouBoxVisible: true});
+      this.setState({phoneNumberFormat: '', phoneNumber: '', userData: props.navigation.getParam('tabletData'), userData: props.navigation.getParam('sweepuser'), tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
+    }
+    if(props.navigation.getParam('comeback') == true){
+      this.setState({comebackBoxVisible: true});
+      this.setState({phoneNumberFormat: '', phoneNumber: '', userData: props.navigation.getParam('tabletData'), userData: props.navigation.getParam('sweepuser'), tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
+    }
   }
 
   componentDidMount() {
+
     const admin_user = this.props.navigation.getParam('user');
     this.setState({admin_user: admin_user[0]});
     const tabletData = this.props.navigation.getParam('tabletData');
     if(this.props.navigation.getParam('exit') == 2){
       this.setState({signupBoxVisible: true});
+    }
+    if(this.props.navigation.getParam('thankyou') == true){
+      this.setState({thankyouBoxVisible: true});
+      this.setState({phoneNumberFormat: '', phoneNumber: '', userData: props.navigation.getParam('tabletData'), userData: props.navigation.getParam('sweepuser'), tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
+    }
+    if(this.props.navigation.getParam('comeback') == true){
+      this.setState({comebackBoxVisible: true});
+      this.setState({phoneNumberFormat: '', phoneNumber: '', userData: props.navigation.getParam('tabletData'), userData: props.navigation.getParam('sweepuser'), tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
     }
     if(tabletData != null){
       this.setState({tabletData});
@@ -159,39 +174,36 @@ class SweepStake extends Component {
   }
 
   showThankyouBox = () => {
-    if(this.state.phoneNumber.length < 10){
+    if(this.state.phoneNumber.length <= 10){
       this.setState({phoneNumberError: "Enter 10 DIGITS TO CHECK IN"})
     }else{
       getUserAPI(this.state.phoneNumber).then((res) => {
         this.setState({userData: res.user});
-        const currenttime = new Date();
-        getCheckInTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
-          // const checkedtime = new Date(res1.checkin.check_time.replace(" ", "T"));
-          let checkedtime = '';
-          if(res1.checkin.check_time != null){
-            const checkedtime_array = res1.checkin.check_time.split("T");
-            checkedtime = checkedtime_array[0].split("-");  
-          }
-          console.log("Check Date", checkedtime);
-          if(res1.checkin.check_time == "" || res1.checkin.check_time == null || currenttime.getFullYear() > parseInt(checkedtime[0]) || currenttime.getMonth() > parseInt(checkedtime[1]) - 1 || currenttime.getDate() > parseInt(checkedtime[2])){
-            this.setState({thankyouBoxVisible: true});
-            const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
-            // const check_time = currentDate.getUTCFullYear() + "-" + (currentDate.getUTCMonth() + 1) + "-" + currentDate.getUTCDate();
-            console.log('Sweepdata', this.state.sweepstakeData);
-            updateCheckTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
-              console.log(res2);
-            })
-            setTimeout(() => {
-              this.setState({thankyouBoxVisible: false});
-            }, 3000);
-          }else{
-            this.setState({comebackBoxVisible: true});
-          }
-          setTimeout(() => {
-            this.setState({phoneNumberFormat: ""});
-          }, 3000)
-        });
+        if(this.state.sweepstakeData.survey1_check == "no" && this.state.sweepstakeData.survey2_check == "no" ){
+          const currenttime = new Date();
+          const {navigate} = this.props.navigation;
+          getCheckInTime(res.user.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
+            // const checkedtime = new Date(res1.checkin.check_time.replace(" ", "T"));
+            let checkedtime = '';
+            if(res1.checkin.check_time != null){
+              const checkedtime_array = res1.checkin.check_time.split("T");
+              checkedtime = checkedtime_array[0].split("-");  
+            }
+            if(res1.checkin.check_time == "" || res1.checkin.check_time == null || currenttime.getFullYear() > parseInt(checkedtime[0]) || currenttime.getMonth() > parseInt(checkedtime[1]) - 1 || currenttime.getDate() > parseInt(checkedtime[2])){
+              const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
+              updateCheckTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
+                console.log("Res2", res2);
+              });
+              this.setState({thankyouBoxVisible: true});
+            }else{
+              this.setState({comebackBoxVisible: true});
+            }
+          });
+        }else{
+          this.props.navigation.navigate("Survey", {sweepuser: res.user, user: this.props.navigation.getParam('user'), tabletData: this.state.tabletData, sweepstakeData: this.state.sweepstakeData});
+        }
       }).catch((error)=>{
+        console.log("err", error)
         if(error)
           this.goToSignup();
       })  
@@ -398,16 +410,14 @@ class SweepStake extends Component {
         </Modal>
         <View style={{ flexGrow: 1 }}>
           <Image source={this.state.sweepbackground} style={styles.backgroundImage} />
-          {this.state.phoneNoAlert && <View style={styles.thankyouBox}>
-            <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePhoneNoAlert}/>
-            <Text style={styles.thankyouText}>You need to input Phone NO</Text>
-          </View>
-          }
-          {this.state.signupBoxVisible && <View style={styles.thankyouBox}>
-            <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideSignupBox}/>
-            <Text style={styles.thankyouText}>Thank you for signing up with Universal Gaming Group</Text>
-          </View>
-          }
+          <Modal isVisible={this.state.signupBoxVisible} onBackdropPress={this.hideSignupBox}>
+            <View style={styles.thankyouBox}>
+              <TouchableOpacity style={styles.logoutContainer} onPress={this.hideSignupBox}>
+                <Icon ios='ios-close' android="md-close" style={styles.logoutButton} />
+              </TouchableOpacity>
+              <Text style={styles.thankyouText}>Thank you for signing up with Universal Gaming Group</Text>
+            </View>
+          </Modal>
           {this.state.showAssignTabletBox && <View style={styles.thankyouBox}>
             <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideAssignTabletBox}/>
             <Text style={styles.thankyouText}>Please assign tablet at first.</Text>
@@ -418,17 +428,22 @@ class SweepStake extends Component {
             <Text style={styles.thankyouText}>Tablet key updated successfully.</Text>
           </View>
           }
-          {this.state.thankyouBoxVisible && <View style={styles.thankyouBox}>
-            <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hideThankyouBox} />
-            <Text style={styles.thankyouText}>Thank you {this.state.userData.first_name} for checking in {this.state.tabletData == null ? '' : this.state.tabletData.name }</Text>
-          </View>
-          }
-          {this.state.comebackBoxVisible && <View style={styles.thankyouBox}>
-            <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidecomeebackBox} />
-            <TouchableOpacity style={styles.closeIcon} onPress={this.hidecomeebackBox}><Icon name="close" /></TouchableOpacity>
-            <Text style={styles.thankyouText}>You have already checked in to {this.state.tabletData == null ? '' : this.state.tabletData.name } for Today. Come back tomorrow.</Text>
-          </View>
-          }
+          <Modal isVisible={this.state.thankyouBoxVisible} onBackdropPress={this.hideThankyouBox}>
+            <View style={styles.thankyouBox}>
+              <TouchableOpacity style={styles.logoutContainer} onPress={this.hideThankyouBox}>
+                <Icon ios='ios-close' android="md-close" style={styles.logoutButton} />
+              </TouchableOpacity>
+              <Text style={styles.thankyouText}>Thank you {this.state.userData == null ? "" : this.state.userData.first_name} for checking in {this.state.tabletData == null ? '' : this.state.tabletData.name }</Text>
+            </View>
+          </Modal>
+          <Modal isVisible={this.state.comebackBoxVisible} onBackdropPress={this.hidecomeebackBox}>
+            <View style={styles.thankyouBox}>
+              <TouchableOpacity style={styles.logoutContainer} onPress={this.hidecomeebackBox}>
+                <Icon ios='ios-close' android="md-close" style={styles.logoutButton} />
+              </TouchableOpacity>
+              <Text style={styles.thankyouText}>You have already checked in to {this.state.tabletData == null ? '' : this.state.tabletData.name } for Today. Come back tomorrow.</Text>
+            </View>
+          </Modal>
           {this.state.showPasswordBox && <View style={styles.thankyouBox}>
               <Icon ios='ios-close' android="md-close" style={styles.closeIcon} onPress={this.hidePasswordBox} /> 
               <Input

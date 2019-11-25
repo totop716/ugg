@@ -13,12 +13,13 @@ import {
   Input,
   Text,
   Icon,
-  CheckBox,
   StyleProvider
 } from 'native-base';
 
 import Modal from 'react-native-modal'
 import { loginAPI } from '../../services/Authentication';
+
+import Checkbox from 'react-native-custom-checkbox';
 
 import getTheme from '../../../native-base-theme/components';
 import material from '../../../native-base-theme/variables/material';
@@ -27,7 +28,7 @@ import styles from './styles';
 
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
 
-import { signupUserAPI, updateCheckTime } from '../../services/Authentication';
+import { signupUserAPI, updateCheckTime, getUserAPI } from '../../services/Authentication';
 import Utils from '../../utils'
 import RNPickerSelect from 'react-native-picker-select';
 
@@ -103,7 +104,7 @@ class Signup extends Component {
   }
 
   cancelRegister = () => {
-    this.props.navigation.navigate('SweepStake', {tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID')});
+    this.props.navigation.navigate('SweepStake', {tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user')});
   }
 
   userRegister = () => {
@@ -150,15 +151,21 @@ class Signup extends Component {
     }
 
     this.setState({error});
-    console.log(this.state.checkEmail);
-    if(this.state.error.name == '' && this.state.error.address == ''){
+    if(this.state.error.firstname == '' && this.state.error.lastname == '' && this.state.error.city == '' && this.state.error.address == '' && this.state.error.zipcode == ''){
+      console.log("Error", this.state.error)
       signupUserAPI(this.state.firstname, this.state.lastname, this.state.address, this.state.city, this.state.txtState, this.state.zipcode, this.state.emailaddress, phoneNo,this.state.po_box_unit_number, this.state.checkEmail, this.state.checkSMS).then(res => {
         const d = new Date();
         const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
         const currenttime = new Date(utc - (3600000*5));
         const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
         // updateCheckTime(res.id, navigation.getParam('tabletData').id, navigation.getParam('sweepstakeData').id, check_time).then((res2) => {
-        this.props.navigation.navigate('SweepStake', {exit: 2, tabletData: navigation.getParam('tabletData'), sweepstakeData: navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID')});
+        getUserAPI(phoneNo).then((res1) => {
+          if(this.state.sweepstakeData.survey1_check == "no" && this.state.sweepstakeData.survey2_check == "no" ){
+            this.props.navigation.navigate('SweepStake', {exit: 2, user: this.props.navigation.getParam('user'), tabletData: navigation.getParam('tabletData'), sweepstakeData: navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), sweep_user: res1.user});
+          }else{
+            this.props.navigation.navigate('Survey', {exit: 2, user: this.props.navigation.getParam('user'), tabletData: navigation.getParam('tabletData'), sweepstakeData: navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), sweep_user: res1.user});
+          }
+        });
         // })
       }).catch(err=> {console.log('errr', err)});
     }
@@ -434,6 +441,7 @@ class Signup extends Component {
       },
     });
     const tabletData = this.props.navigation.getParam('tabletData');
+    const sweepData = this.props.navigation.getParam('sweepstakeData');
     return (
       <StyleProvider style={getTheme(material)}>
         <View style={styles.container}>
@@ -533,7 +541,7 @@ class Signup extends Component {
               />
               <Input
                 style={styles.inputbox}
-                placeholder="Suite/PO Box *"
+                placeholder="Suite/PO Box"
                 placeholderTextColor="#3d3d3d"
                 onChangeText={po_box_unit_number => this.setState({ po_box_unit_number })}
               />
@@ -623,11 +631,11 @@ class Signup extends Component {
             </View>
             <View style={styles.checkContainer}>
               <View style={styles.listItem}>
-                <CheckBox checked={this.state.checkEmail} onPress={this.setCheckEmail} />
+                <Checkbox checked={this.state.checkEmail} style={{backgroundColor: this.props.navigation.getParam('sweepstakeData') == null ? "#fff" : "#"+this.props.navigation.getParam('sweepstakeData').primary_hex_color, color: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color, borderRadius: 5, borderWidth: 2, borderColor: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color}} size={35} onPress={this.setCheckEmail} />
                 <Text style={styles.checkboxText}>Receiving emails, newsletters, and promotions</Text>
               </View>
               <View style={styles.listItem}>
-                <CheckBox checked={this.state.checkSMS} onPress={this.setCheckSMS} />
+                <Checkbox checked={this.state.checkSMS} style={{backgroundColor: this.props.navigation.getParam('sweepstakeData') == null ? "#fff" : "#"+this.props.navigation.getParam('sweepstakeData').primary_hex_color, color: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color, borderRadius: 5, borderWidth: 2, borderColor: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color}} size={35} onPress={this.setCheckSMS} />
                 <Text style={styles.checkboxText}>Receiving SMS text message notifications</Text>
               </View>
             </View>
