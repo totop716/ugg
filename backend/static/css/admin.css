@@ -1,4 +1,8 @@
 
+body{
+  overflow: hidden;
+}
+
 #content-main{
   width: 100%
 }
@@ -142,14 +146,19 @@
   margin-top: -5px;
 }
 
-#sweepstakes_form .field-background_image_after_sweepstake_check .controls, #sweepstakes_form .field-survey1_check .controls, #sweepstakes_form .field-survey2_check .controls, #sweepstakes_form .field-prioritize_sweepstakes .controls, #sweepstakes_form .field-customer_checkin_frequency .controls{
+#sweepstakes_form .field-can_generate_winner_multiple_times .controls,#sweepstakes_form .field-generate_winner_for_each_tabletid .controls,#sweepstakes_form .field-background_image_after_sweepstake_check .controls, #sweepstakes_form .field-survey1_check .controls, #sweepstakes_form .field-survey2_check .controls, #sweepstakes_form .field-prioritize_sweepstakes .controls, #sweepstakes_form .field-customer_checkin_frequency .controls{
   vertical-align: middle;
 }
 
-#sweepstakes_form .field-background_image_after_sweepstake_check .controls ul, #sweepstakes_form .field-survey1_check .controls ul, #sweepstakes_form .field-survey2_check .controls ul, #sweepstakes_form .field-prioritize_sweepstakes .controls ul, #sweepstakes_form .field-customer_checkin_frequency .controls ul{
+#sweepstakes_form .field-can_generate_winner_multiple_times .controls ul,#sweepstakes_form .field-generate_winner_for_each_tabletid .controls ul,#sweepstakes_form .field-background_image_after_sweepstake_check .controls ul, #sweepstakes_form .field-survey1_check .controls ul, #sweepstakes_form .field-survey2_check .controls ul, #sweepstakes_form .field-prioritize_sweepstakes .controls ul, #sweepstakes_form .field-customer_checkin_frequency .controls ul{
   display: flex;
 }
 
-#sweepstakes_form .field-background_image_after_sweepstake_check .controls ul li, #sweepstakes_form .field-survey1_check .controls ul li, #sweepstakes_form .field-survey2_check .controls ul li, #sweepstakes_form .field-prioritize_sweepstakes .controls ul li, #sweepstakes_form .field-customer_checkin_frequency .controls ul li{
+#sweepstakes_form .field-can_generate_winner_multiple_times .controls ul li,#sweepstakes_form .field-generate_winner_for_each_tabletid .controls ul li,#sweepstakes_form .field-background_image_after_sweepstake_check .controls ul li, #sweepstakes_form .field-survey1_check .controls ul li, #sweepstakes_form .field-survey2_check .controls ul li, #sweepstakes_form .field-prioritize_sweepstakes .controls ul li, #sweepstakes_form .field-customer_checkin_frequency .controls ul li{
   margin-right: 10px;
+}
+
+#content-main form .inner-center-column .tab-content{
+  height: 80vh;
+  overflow: auto
 }

@@ -56,6 +56,8 @@ class SweepUsersAdmin(ImportMixin, admin.ModelAdmin):
 admin.site.register(SweepUser, SweepUsersAdmin)
 
 class SweepstakesCreationForm(forms.ModelForm):
+    can_generate_winner_multiple_times = forms.ChoiceField(label='Can Generate Winner Multiple Times', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
+    generate_winner_for_each_tabletid = forms.ChoiceField(label='Generate Winner for Each Tablet ID', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
     background_image_after_sweepstake_check = forms.ChoiceField(label='Background Image After Sweepstakes', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
     survey1_check = forms.ChoiceField(label='Survey1', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
     survey2_check = forms.ChoiceField(label='Survey2', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
@@ -64,10 +66,12 @@ class SweepstakesCreationForm(forms.ModelForm):
 
     class Meta:
         model = Sweepstakes
-        fields =  ('name','startdate','enddate','logo','background','disclaimer','fontsize','current', 'background_image_after_sweepstake_check', 'background_image_after_sweepstake', 'survey1_check', 'survey1_name', 'survey2_check', 'survey2_name', 'border_hightlight_hex_color', 'primary_hex_color', 'prioritize_sweepstakes', 'customer_checkin_frequency')
+        fields =  ('name','startdate','enddate','logo','background','disclaimer','fontsize','current', 'disclaimer_color', 'header_text', 'header_font_size', 'header_hex_color', 'button_header_hex_color', 'button_header_font_color', 'can_generate_winner_multiple_times', 'generate_winner_for_each_tabletid', 'background_image_after_sweepstake_check', 'background_image_after_sweepstake', 'survey1_check', 'survey1_name', 'survey2_check', 'survey2_name', 'border_hightlight_hex_color', 'primary_hex_color', 'prioritize_sweepstakes', 'customer_checkin_frequency')
         labels = {'background_image_after_sweepstake':'', 'survey1_name': '', 'survey2_name': ''}
 
 class SweepstakesChangeForm(forms.ModelForm):
+    can_generate_winner_multiple_times = forms.ChoiceField(label='Can Generate Winner Multiple Times', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
+    generate_winner_for_each_tabletid = forms.ChoiceField(label='Generate Winner for Each Tablet ID', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
     background_image_after_sweepstake_check = forms.ChoiceField(label='Background Image After Sweepstakes', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
     survey1_check = forms.ChoiceField(label='Survey1', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
     survey2_check = forms.ChoiceField(label='Survey2', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
@@ -76,7 +80,7 @@ class SweepstakesChangeForm(forms.ModelForm):
 
     class Meta:
         model = Sweepstakes
-        fields =  ('name','startdate','enddate','logo','background','disclaimer','fontsize','current', 'background_image_after_sweepstake_check', 'background_image_after_sweepstake', 'survey1_check', 'survey1_name', 'survey2_check', 'survey2_name', 'border_hightlight_hex_color', 'primary_hex_color', 'prioritize_sweepstakes', 'customer_checkin_frequency')
+        fields =  ('name','startdate','enddate','logo','background','disclaimer','fontsize','current', 'disclaimer_color', 'header_text', 'header_font_size', 'header_hex_color', 'button_header_hex_color', 'button_header_font_color', 'can_generate_winner_multiple_times', 'generate_winner_for_each_tabletid', 'background_image_after_sweepstake_check', 'background_image_after_sweepstake', 'survey1_check', 'survey1_name', 'survey2_check', 'survey2_name', 'border_hightlight_hex_color', 'primary_hex_color', 'prioritize_sweepstakes', 'customer_checkin_frequency')
         labels = {'background_image_after_sweepstake':'', 'survey1_name': '', 'survey2_name': ''}
 
 class SweepstakesAdmin(admin.ModelAdmin):

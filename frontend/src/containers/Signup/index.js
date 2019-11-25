@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Image,
   TouchableOpacity,
-  View, KeyboardAvoidingView, StyleSheet
+  View, KeyboardAvoidingView, StyleSheet, ScrollView
 } from 'react-native';
 import {
   Button,
@@ -16,6 +16,7 @@ import {
   StyleProvider
 } from 'native-base';
 
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import Modal from 'react-native-modal'
 import { loginAPI } from '../../services/Authentication';
 
@@ -113,37 +114,37 @@ class Signup extends Component {
     let error = this.state.error;
 
     if(this.state.firstname == ''){
-      error.firstname = 'You need to input first name';
+      error.firstname = 'Enter first name';
     }else{
       error.firstname = '';
     }
 
     if(this.state.lastname == ''){
-      error.lastname = 'You need to input last name';
+      error.lastname = 'Enter last name';
     }else{
       error.lastname = '';
     }
 
     if(this.state.address == ''){
-      error.address = 'You need to input address';
+      error.address = 'Enter address';
     }else{
       error.address = '';
     }
 
     if(this.state.city == ''){
-      error.city = 'You need to input city';
+      error.city = 'Enter city';
     }else{
       error.city = '';
     }
 
     if(this.state.txtState == ''){
-      error.txtState = 'You need to input state';
+      error.txtState = 'Enter state';
     }else{
       error.txtState = '';
     }
 
     if(this.state.zipcode == ''){
-      error.zipcode = 'You need to input zipcode';
+      error.zipcode = 'Enter zipcode';
     }else if(this.state.zipcode.length < 5){
       error.zipcode = "zipcode should be at least 5 letters"
     }else{
@@ -508,147 +509,150 @@ class Signup extends Component {
           </Modal>
           <View style={styles.topBar}>
             <Text style={styles.topBarText}>Thank You for Registering!</Text>
-            <AntDesign name="closecircle" size={35} color="#fff" onPress={this.showCancelBox} />
+            <Text style={styles.topBarText} onPress={this.showCancelBox}>Cancel</Text>
           </View>
           {/* Form */}
-          <Form style={styles.form}>
-            <View style={[styles.listItem, styles.formItem]}>
-              <Input
-                style={styles.inputbox}
-                placeholder="First Name *"
-                placeholderTextColor="#3d3d3d"
-                autoCapitalize="none"
-                onChangeText={firstname => this.setState({ firstname })}
-              />
-              <Input
-                style={styles.inputbox}
-                placeholder="Last Name *"
-                placeholderTextColor="#3d3d3d"
-                autoCapitalize="none"
-                onChangeText={lastname => this.setState({ lastname })}
-              />
-            </View>
-            <View style={[styles.listItem, styles.formItem]}>
-              <Text style={[styles.errorMsg, this.state.error.firstname == "" && styles.noError]}>{this.state.error.firstname}</Text>
-              <Text style={[styles.errorMsg, this.state.error.lastname == "" && styles.noError]}>{this.state.error.lastname}</Text>
-            </View>
-            <View style={[styles.listItem, styles.formItem]}>
-              <Input
-                style={styles.inputbox}
-                placeholder="Address *"
-                placeholderTextColor="#3d3d3d"
-                onChangeText={address => this.setState({ address })}
-              />
-              <Input
-                style={styles.inputbox}
-                placeholder="Suite/PO Box"
-                placeholderTextColor="#3d3d3d"
-                onChangeText={po_box_unit_number => this.setState({ po_box_unit_number })}
-              />
-            </View>
-            <View style={[styles.listItem, styles.formItem]}>
-              <Text style={[styles.errorMsg, this.state.error.address == "" && styles.noError]}>{this.state.error.address}</Text>
-            </View>
-            <View style={[styles.listItem, styles.formItem]}>
-            <Input
-                style={styles.inputbox}
-                placeholder="City *"
-                placeholderTextColor="#3d3d3d"
-                onChangeText={city => this.setState({ city })}
-              />
-              <View style={styles.inputbox}>
-                <RNPickerSelect
-                  placeholder={{
-                    label: 'State *',
-                    value: null,
-                  }}
-                  items={usStates}
-                  onValueChange={value => {
-                    this.setState({
-                      txtState: value,
-                    });
-                  }}
-                  style={{
-                    ...pickerSelectStyles,
-                    iconContainer: {
-                      top: 20,
-                      right: 10,
-                    },
-                    placeholder: {
-                      color: '#3d3d3d',
-                      fontSize: 25,
-                    },
-                  }}
-                  value={this.state.txtState}
-                  Icon={() => {
-                    return (
-                      <View
-                        style={{
-                          backgroundColor: 'transparent',
-                          borderTopWidth: 10,
-                          borderTopColor: 'gray',
-                          borderRightWidth: 10,
-                          borderRightColor: 'transparent',
-                          borderLeftWidth: 10,
-                          borderLeftColor: 'transparent',
-                          width: 0,
-                          height: 0,
-                        }}
-                      />
-                    );
-                  }}
+          <KeyboardAwareScrollView enableOnAndroid>
+            <Form style={styles.form}>
+              <View style={[styles.listItem, styles.formItem]}>
+                <Input
+                  style={styles.inputbox}
+                  placeholder="First Name *"
+                  placeholderTextColor="#3d3d3d"
+                  autoCapitalize="none"
+                  onChangeText={firstname => this.setState({ firstname })}
+                />
+                <Input
+                  style={styles.inputbox}
+                  placeholder="Last Name *"
+                  placeholderTextColor="#3d3d3d"
+                  autoCapitalize="none"
+                  onChangeText={lastname => this.setState({ lastname })}
                 />
               </View>
-              {/* <Input
-                style={styles.inputbox}
-                placeholder="State *"
-                placeholderTextColor="#3d3d3d"
-                onChangeText={txtState => this.setState({ txtState })}
-              /> */}
-            </View>
-            <View style={[styles.listItem, styles.formItem]}>
-              <Text style={[styles.errorMsg, this.state.error.city == "" && styles.noError]}>{this.state.error.city}</Text>
-              <Text style={[styles.errorMsg, this.state.error.txtstate == "" && styles.noError]}>{this.state.error.txtstate}</Text>
-            </View>
-            <View style={[styles.listItem, styles.formItem]}>
-              <Input
-                style={styles.inputbox}
-                maxLength={5}
-                placeholder="Zip Code *"
-                keyboardType="numeric"
-                placeholderTextColor="#3d3d3d"
-                onChangeText={zipcode => this.setState({ zipcode })}
-              />
-              <Input
-                style={styles.inputbox}
-                placeholder="Email"
-                placeholderTextColor="#3d3d3d"
-                onChangeText={emailaddress => this.setState({ emailaddress })}
-              />
-            </View>
-            <View style={[styles.listItem, styles.formItem]}>
-             <Text style={[styles.errorMsg, this.state.error.zipcode == "" && styles.noError]}>{this.state.error.zipcode}</Text>
-            </View>
-            <View style={styles.checkContainer}>
-              <View style={styles.listItem}>
-                <Checkbox checked={this.state.checkEmail} style={{backgroundColor: this.props.navigation.getParam('sweepstakeData') == null ? "#fff" : "#"+this.props.navigation.getParam('sweepstakeData').primary_hex_color, color: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color, borderRadius: 5, borderWidth: 2, borderColor: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color}} size={35} onPress={this.setCheckEmail} />
-                <Text style={styles.checkboxText}>Receiving emails, newsletters, and promotions</Text>
+              <View style={[styles.listItem, styles.formItem]}>
+                <Text style={[styles.errorMsg, this.state.error.firstname == "" && styles.noError]}>{this.state.error.firstname}</Text>
+                <Text style={[styles.errorMsg, this.state.error.lastname == "" && styles.noError]}>{this.state.error.lastname}</Text>
               </View>
-              <View style={styles.listItem}>
-                <Checkbox checked={this.state.checkSMS} style={{backgroundColor: this.props.navigation.getParam('sweepstakeData') == null ? "#fff" : "#"+this.props.navigation.getParam('sweepstakeData').primary_hex_color, color: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color, borderRadius: 5, borderWidth: 2, borderColor: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color}} size={35} onPress={this.setCheckSMS} />
-                <Text style={styles.checkboxText}>Receiving SMS text message notifications</Text>
+              <View style={[styles.listItem, styles.formItem]}>
+                <Input
+                  style={styles.inputbox}
+                  placeholder="Address *"
+                  placeholderTextColor="#3d3d3d"
+                  onChangeText={address => this.setState({ address })}
+                />
+                <Input
+                  style={styles.inputbox}
+                  placeholder="Suite/PO Box"
+                  placeholderTextColor="#3d3d3d"
+                  onChangeText={po_box_unit_number => this.setState({ po_box_unit_number })}
+                />
               </View>
-            </View>
-          </Form>
+              <View style={[styles.listItem, styles.formItem]}>
+                <Text style={[styles.errorMsg, this.state.error.address == "" && styles.noError]}>{this.state.error.address}</Text>
+              </View>
+              <View style={[styles.listItem, styles.formItem]}>
+              <Input
+                  style={styles.inputbox}
+                  placeholder="City *"
+                  placeholderTextColor="#3d3d3d"
+                  onChangeText={city => this.setState({ city })}
+                />
+                <View style={styles.inputbox}>
+                  <RNPickerSelect
+                    placeholder={{
+                      label: 'State *',
+                      value: null,
+                    }}
+                    items={usStates}
+                    onValueChange={value => {
+                      this.setState({
+                        txtState: value,
+                      });
+                    }}
+                    style={{
+                      ...pickerSelectStyles,
+                      iconContainer: {
+                        top: 20,
+                        right: 10,
+                      },
+                      placeholder: {
+                        color: '#3d3d3d',
+                        fontSize: 25,
+                      },
+                    }}
+                    value={this.state.txtState}
+                    Icon={() => {
+                      return (
+                        <View
+                          style={{
+                            backgroundColor: 'transparent',
+                            borderTopWidth: 10,
+                            borderTopColor: 'gray',
+                            borderRightWidth: 10,
+                            borderRightColor: 'transparent',
+                            borderLeftWidth: 10,
+                            borderLeftColor: 'transparent',
+                            width: 0,
+                            height: 0,
+                          }}
+                        />
+                      );
+                    }}
+                  />
+                </View>
+                {/* <Input
+                  style={styles.inputbox}
+                  placeholder="State *"
+                  placeholderTextColor="#3d3d3d"
+                  onChangeText={txtState => this.setState({ txtState })}
+                /> */}
+              </View>
+              <View style={[styles.listItem, styles.formItem]}>
+                <Text style={[styles.errorMsg, this.state.error.city == "" && styles.noError]}>{this.state.error.city}</Text>
+                <Text style={[styles.errorMsg, this.state.error.txtstate == "" && styles.noError]}>{this.state.error.txtstate}</Text>
+              </View>
+              <View style={[styles.listItem, styles.formItem]}>
+                <Input
+                  style={styles.inputbox}
+                  maxLength={5}
+                  placeholder="Zip Code *"
+                  keyboardType="numeric"
+                  placeholderTextColor="#3d3d3d"
+                  onChangeText={zipcode => this.setState({ zipcode })}
+                />
+                <Input
+                  style={styles.inputbox}
+                  placeholder="Email"
+                  placeholderTextColor="#3d3d3d"
+                  onChangeText={emailaddress => this.setState({ emailaddress })}
+                />
+              </View>
+              <View style={[styles.listItem, styles.formItem]}>
+              <Text style={[styles.errorMsg, this.state.error.zipcode == "" && styles.noError]}>{this.state.error.zipcode}</Text>
+              </View>
+              <View style={styles.checkContainer}>
+                <View style={styles.listItem}>
+                  <Checkbox checked={this.state.checkEmail} style={{backgroundColor: this.props.navigation.getParam('sweepstakeData') == null ? "#fff" : "#"+this.props.navigation.getParam('sweepstakeData').primary_hex_color, color: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color, borderRadius: 5, borderWidth: 2, borderColor: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color}} size={35} onPress={this.setCheckEmail} />
+                  <Text style={styles.checkboxText}>Receiving emails, newsletters, and promotions</Text>
+                </View>
+                <View style={styles.listItem}>
+                  <Checkbox checked={this.state.checkSMS} style={{backgroundColor: this.props.navigation.getParam('sweepstakeData') == null ? "#fff" : "#"+this.props.navigation.getParam('sweepstakeData').primary_hex_color, color: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color, borderRadius: 5, borderWidth: 2, borderColor: this.props.navigation.getParam('sweepstakeData') == null ? "#000" : "#"+ this.props.navigation.getParam('sweepstakeData').border_hightlight_hex_color}} size={35} onPress={this.setCheckSMS} />
+                  <Text style={styles.checkboxText}>Receiving SMS text message notifications</Text>
+                </View>
+              </View>
+            </Form>
 
-          <View style={styles.buttonContainer}>
-            {/* Login Button */}
-            <Button
-              style={styles.button}
-              onPress={this.userRegister}
-            >
-            <Text style={styles.loginText}>SUBMIT</Text></Button>
-          </View>
+            <View style={styles.buttonContainer}>
+              {/* Login Button */}
+              <Button
+                style={styles.button}
+                onPress={this.userRegister}
+              >
+              <Text style={styles.loginText}>SUBMIT</Text></Button>
+            </View>
+          </KeyboardAwareScrollView>
+          
         </View>
       </View>
       </StyleProvider>

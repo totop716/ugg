@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     width: '50%',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 80,
   },
   item: {
     marginVertical: PixelRatio.getPixelSizeForLayoutSize(15),

@@ -15,8 +15,9 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
     padding: PixelRatio.getPixelSizeForLayoutSize(12),
+    marginTop: 80,
+    justifyContent: 'center',
   },
   logoContainer: {
     justifyContent: 'center',
@@ -60,7 +61,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginLeft: 5,
     marginBottom: 5,
-    marginTop: -5
+    marginTop: -5,
+    textTransform: 'uppercase'
   },
   noError: {
     height: 0,
@@ -170,7 +172,6 @@ const styles = StyleSheet.create({
   },
   checkContainer: {
     marginTop: 10,
-    marginLeft: -10
   },
   buttonContainer: {
     marginTop: PixelRatio.getPixelSizeForLayoutSize(15),
