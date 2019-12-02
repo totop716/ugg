@@ -94,23 +94,44 @@ admin.site.register(Sweepstakes, SweepstakesAdmin)
 
 class SurveyCreationForm(forms.ModelForm):
     question_type1 = forms.ChoiceField(widget=forms.RadioSelect)
+    question_type2 = forms.ChoiceField(widget=forms.RadioSelect)
+    question_type3 = forms.ChoiceField(widget=forms.RadioSelect)
+    question_type4 = forms.ChoiceField(widget=forms.RadioSelect)
+    question_type5 = forms.ChoiceField(widget=forms.RadioSelect)
+    question_type6 = forms.ChoiceField(widget=forms.RadioSelect)
+    question_type7 = forms.ChoiceField(widget=forms.RadioSelect)
+    question_type8 = forms.ChoiceField(widget=forms.RadioSelect)
+    question_type9 = forms.ChoiceField(widget=forms.RadioSelect)
+    question_type10 = forms.ChoiceField(widget=forms.RadioSelect)
+
     class Meta:
         model = Survey
-        fields = ('name', 'question_count', 'question_type1', 'question_text1')
-        labels = {'question_type' : 'Question 1'}
+        fields = ('name', 'question_count', 'question_type1', 'question_text1', 'question_type2', 'question_text2', 'question_type3', 'question_text3', 'question_type4', 'question_text4', 'question_type5', 'question_text5', 'question_type6', 'question_text6', 'question_type7', 'question_text7', 'question_type8', 'question_text8', 'question_type9', 'question_text9', 'question_type10', 'question_text10')
 
 class SurveyChangeForm(forms.ModelForm):
     question_type1 = forms.ChoiceField(choices=[('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')], widget=forms.RadioSelect)
+    question_type2 = forms.ChoiceField(choices=[('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')], widget=forms.RadioSelect)
+    question_type3 = forms.ChoiceField(choices=[('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')], widget=forms.RadioSelect)
+    question_type4 = forms.ChoiceField(choices=[('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')], widget=forms.RadioSelect)
+    question_type5 = forms.ChoiceField(choices=[('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')], widget=forms.RadioSelect)
+    question_type6 = forms.ChoiceField(choices=[('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')], widget=forms.RadioSelect)
+    question_type7 = forms.ChoiceField(choices=[('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')], widget=forms.RadioSelect)
+    question_type8 = forms.ChoiceField(choices=[('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')], widget=forms.RadioSelect)
+    question_type9 = forms.ChoiceField(choices=[('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')], widget=forms.RadioSelect)
+    question_type10 = forms.ChoiceField(choices=[('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')], widget=forms.RadioSelect)
 
     class Meta:
         model = Survey
-        fields = ('name', 'question_count', 'question_type1', 'question_text1')
+        fields = ('name', 'question_count', 'question_type1', 'question_text1', 'question_type2', 'question_text2', 'question_type3', 'question_text3', 'question_type4', 'question_text4', 'question_type5', 'question_text5', 'question_type6', 'question_text6', 'question_type7', 'question_text7', 'question_type8', 'question_text8', 'question_type9', 'question_text9', 'question_type10', 'question_text10')
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['question_type1'].label = 'Question 1'
 
 class SurveyAdmin(admin.ModelAdmin):
     form = SurveyChangeForm
     add_form = SurveyCreationForm
 
-    fields = ('name', 'question_count', 'question_type1', 'question_text1')
+    fields = ('name', 'question_count', 'question_type1', 'question_text1', 'question_type2', 'question_text2', 'question_type3', 'question_text3', 'question_type4', 'question_text4', 'question_type5', 'question_text5', 'question_type6', 'question_text6', 'question_type7', 'question_text7', 'question_type8', 'question_text8', 'question_type9', 'question_text9', 'question_type10', 'question_text10')
 
 
 admin.site.register(Survey, SurveyAdmin)

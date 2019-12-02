@@ -44,9 +44,8 @@ body{
 }
 
 .sweepItems{
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+  height: 80vh;
+  overflow: auto;
 }
 
 #content-main  .saveSettings{
@@ -58,7 +57,7 @@ body{
 
 #content-main  .sweepItemContainer{
   width: 50%;
-  align-self: center;
+  margin: auto;
 }
 
 #content-main  .sweepItem{
@@ -161,4 +160,20 @@ body{
 #content-main form .inner-center-column .tab-content{
   height: 80vh;
   overflow: auto
+}
+
+.modal .remove_tablet_text{
+  text-align: center;
+  font-size: 40px;
+  line-height: 45px;
+  font-weight: normal;
+}
+.modal .button-container{
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.modal .button-container button:first-child{
+  margin-right: 10px;
 }

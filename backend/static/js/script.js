@@ -50,6 +50,37 @@
     $(document).ready(function(){
         // Here you can use regular $ sign
         $("#winnerpopup").hide();
+        $("#survey_form .form-row").each(function(){
+            var classname = $(this).attr('class');
+            if(classname.indexOf('question_type') > -1 && parseInt(classname.substring(classname.indexOf('question_type')+13)) > parseInt($("#id_question_count").val())){
+                $(this).find('li:first-child input[type="radio"]').attr('checked', 'checked');
+                $(this).hide();
+            }else if(classname.indexOf('question_text') > -1 && parseInt(classname.substring(classname.indexOf('question_text')+13)) > parseInt($("#id_question_count").val())){
+                $(this).find('textarea').html('a');
+                $(this).hide();
+            }
+        });
+        $("#id_question_count").change(function(){
+            $("#survey_form .form-row").each(function(){
+                var classname = $(this).attr('class');
+                if(classname.indexOf('question_type') > -1 && parseInt(classname.substring(classname.indexOf('question_type')+13)) > parseInt($("#id_question_count").val())){
+                    var checked = $(this).find('li:first-child input[type="radio"]').attr('checked');
+                    var checked1 = $(this).find('li:last-child input[type="radio"]').attr('checked');
+                    if(checked == undefined && checked1 == undefined){
+                        $(this).find('li:first-child input[type="radio"]').attr('checked', 'checked');
+                    }
+                    $(this).hide();
+                }else if(classname.indexOf('question_text') > -1 && parseInt(classname.substring(classname.indexOf('question_text')+13)) > parseInt($("#id_question_count").val())){
+                    if($(this).find('textarea').html() == '')
+                        $(this).find('textarea').html('a');
+                    $(this).hide();
+                }else if(classname.indexOf('question_type') > -1 || classname.indexOf('question_text') > -1){
+                    $(this).show();
+                    if($(this).find('textarea').html() == 'a')
+                        $(this).find('textarea').html('');
+                }
+            });
+        })
         $('.sweepItem').click(function(){
             if($(this).hasClass('active')){
                 $(this).removeClass('active');
@@ -147,14 +178,16 @@
             }
         });
         $('.selectedsweep').click(function(){
-            var sweep_id = $(this).parent().find(".selectedsweepid").val();
-            $.ajax({
-                url: '/tablets/'+$(this).parent().parent().find('.tabletIDVal').val()+"/?active_sweep="+sweep_id,
-                type: 'PUT',
-                success: function() {
-                    window.location.reload();
-                }
-            });
+            if(!$(this).hasClass("active")){
+                var sweep_id = $(this).parent().find(".selectedsweepid").val();
+                $.ajax({
+                    url: '/tablets/'+$(this).parent().parent().find('.tabletIDVal').val()+"/?active_sweep="+sweep_id,
+                    type: 'PUT',
+                    success: function() {
+                        window.location.reload();
+                    }
+                });    
+            }
         });
         
         $("#searchTabletText").keypress(function(event){

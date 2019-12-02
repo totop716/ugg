@@ -78,7 +78,9 @@
                   {% for sweep in tablet.sweeps %}
                     <div class="sweepstakecontain">
                       {% if sweep.id == tablet.active_sweep|add:"0" %}
-                        <input type='button' class='btn selectedsweep active' value="{{ sweep.name }}" />
+                        <button type='button' class='btn selectedsweep active' data-toggle='modal' data-target="#removeFeatureModal">
+                          {{ sweep.name }}
+                        </button>
                       {% else %}
                         <input type='button' class='btn selectedsweep' value="{{ sweep.name }}" />
                       {% endif %}
@@ -93,5 +95,18 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
+  <div class="modal fade" id="removeFeatureModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h1>Do you want to remove this feature from the tablet?</h1>
+          <div class="button-container">
+            <button class="btn btn-primary">Cancel</button>
+            <button class="btn btn-danger">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}
