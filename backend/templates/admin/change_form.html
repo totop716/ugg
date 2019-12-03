@@ -164,9 +164,313 @@
           {% include 'suit/includes/change_form_includes.html' with position='top' %}
 
           {% block field_sets %}
-            {% for fieldset in adminform %}
-              {% include "admin/includes/fieldset.html" %}
-            {% endfor %}
+            {% if opts.verbose_name == 'survey' %}
+              {% for fieldset in adminform %}
+                <fieldset class="suit-form module aligned {{ fieldset.classes }}">
+                  <div class="form-group" id="survey_main_part"></div>
+                  {% if fieldset.name %}<h2>{{ fieldset.name }}</h2>{% endif %}
+                  {% if fieldset.description %}
+                    <div class="description">{{ fieldset.description|safe }}</div>
+                  {% endif %}
+                  {% for line in fieldset %}
+                    {% with is_single=line.fields|length_is:'1' %}
+                      <div class="form-group row form-row {% if is_single and line.errors or field.errors %} has-danger errors{% endif %}{% if not line.has_visible_field %} hidden{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if field.field.is_hidden %} hidden{% endif %}{% endfor %}">
+                        {% for field in line %}
+                          {% if 'question_' in field.field.name %}
+                            <div class="survey_question_part">
+                              <div class="row">
+                                <div class="col-left">
+                                  {{field.label_tag}}
+                                </div>
+                                <div class="col-right">
+                                  <div class='choice_part'>
+                                      <input type='radio' name="{{field.field.name}}_choice" value="1" />
+                                      <label>Multiple Choice</label>
+                                  </div>
+                                  <div class='choice_part'>
+                                      <input type='radio' name="{{field.field.name}}_choice" value="2" />
+                                      <label>Multiple Choice (Images)</label>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-left">
+                                  <label>Question:</label>
+                                </div>
+                                <div class="col-right">
+                                  <textarea name="{{field.field.name}}_question_text"></textarea>
+                                </div>
+                              </div>
+                              <div class="answer_text_part">
+                                <div class="row">
+                                  <div class="col-left"><label>Number of Options:</label></div>
+                                  <div class="col-right">
+                                      <select name="{{field.field.name}}_number_of_options">
+                                        {% for i in '23456' %}
+                                          <option value="{{i}}">{{i}}</option>
+                                        {% endfor %}
+                                      </select>
+                                    </div>
+                                </div>
+                                {% for i in '123456' %}
+                                <div class="row">
+                                  <div class="col-left"><label>Option {{i}}:</label></div>
+                                  <div class="col-right">
+                                    <div class="answer_part">
+                                      <textarea name="{{field.field.name}}_question_answer_text"></textarea>
+                                      <div class="answer_select_part">
+                                        <div class="answer_goto_question">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_option" />
+                                          <label>If selected, go to question</label>
+                                          <select name="{{field.field.name}}_question_answer_option">
+                                            {% for i in "0123456789" %}
+                                            {% if i|add:1 != field.field.name|slice:"9:10" %}
+                                              <option value="{{i|add:1}}">{{i|add:1}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                          </select>
+                                        </div>
+                                        <div class="answer_goto_question">
+                                            <input type="radio" name="{{field.field.name}}_question_answer_option" />
+                                            <label>If selected, complete survey</label>
+                                          </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endfor %}
+                              </div>
+                              <div class="answer_image_part">
+                                  <div class="row">
+                                    <div class="col-left"><label>Number of Options:</label></div>
+                                    <div class="col-right">
+                                      <div class="numberoption_container">
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="2" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item"></div>
+                                            <div class="option_image_count_item"></div>
+                                          </div>
+                                        </div>
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="3" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                          </div>
+                                        </div>
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="4" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                          </div>
+                                        </div>
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="5" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                          </div>
+                                        </div>
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="6" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                          </div>
+                                        </div>
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="7" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                          </div>
+                                        </div>
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="8" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                          </div>
+                                        </div>
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="9" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item" style="width: 31px; height: 20px"></div>
+                                            <div class="option_image_count_item" style="width: 31px; height: 0px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 10px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 10px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 10px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 10px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 10px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 10px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 10px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 10px"></div>
+                                          </div>
+                                        </div>
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="10" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item" style="width: 31px; height: 20px"></div>
+                                            <div class="option_image_count_item" style="width: 31px; height: 20px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                          </div>
+                                        </div>
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="10" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 20px; height: 15px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                          </div>
+                                        </div>
+                                        <div class="option_col">
+                                          <input type="radio" name="{{field.field.name}}_question_answer_image_number" value="10" />
+                                          <div class="option_image_count">
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                            <div class="option_image_count_item" style="width: 14px; height: 12px"></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {% for i in '123456' %}
+                                  <div class="row">
+                                    <div class="col-left"><label>Option {{i}}:</label></div>
+                                    <div class="col-right">
+                                      <div class="answer_part">
+                                        <input type="file" name="{{field.field.name}}_question_answer_image" accept="image/*" required="" id="id_logo">
+                                        <div class="row">
+                                          <label>Tag: </label>
+                                          <input type="text" name="{{field.field.name}}_question_answer_image_text" />
+                                        </div>
+                                        <div class="answer_select_part">
+                                          <div class="answer_goto_question">
+                                            <input type="radio" name="{{field.field.name}}_question_answer_option" />
+                                            <label>If selected, go to question</label>
+                                            <select name="{{field.field.name}}_question_answer_option">
+                                              {% for i in "0123456789" %}
+                                              {% if i|add:1 != field.field.name|slice:"9:10" %}
+                                                <option value="{{i|add:1}}">{{i|add:1}}</option>
+                                              {% endif %}
+                                              {% endfor %}
+                                            </select>
+                                          </div>
+                                          <div class="answer_goto_question">
+                                              <input type="radio" name="{{field.field.name}}_question_answer_option" />
+                                              <label>If selected, complete survey</label>
+                                            </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {% endfor %}
+                                </div>
+                            </div>
+                          {% else %}
+                              {% if is_single or forloop.first %}
+                                <div class="col-left"><label for="{{ field.field.id_for_label }}" class="form-control-label">{{ field.label_tag }}</label></div>
+                                <div class="col-xs-12 col-sm-9 col-md-10 col-multi-fields">
+                              {% endif %}
+                              {# Open multi-field #}
+                              {% if not is_single %}
+                                <div class="multi-field {% if field.errors %} has-danger errors{% endif %}">
+                                {% if not forloop.first %}
+                                  <label for="{{ field.field.id_for_label }}" class="form-control-label">{{ field.label_tag }}</label>
+                                  <div class="multi-field-content">
+                                {% endif %}
+                              {% endif %}
+                              {% if field.is_readonly %}
+                                <p class="form-control-static">{{ field.contents }}</p>
+                              {% else %}
+                                {{ field.field }}
+                              {% endif %}
+                              {% if field.errors and not is_single and not field.is_readonly %}
+                                <div class="text-help">
+                                  {{ field.errors }}
+                                </div>
+                              {% endif %}
+                              {% if is_single and line.errors %}
+                                <div class="text-help">
+                                  {{ line.errors }}
+                                </div>
+                              {% endif %}
+                              {% if field.field.help_text %}
+                                <small class="text-help">{{ field.field.help_text|safe }}</small>
+                              {% endif %}
+              
+                              {# Close multi-field #}
+                              {% if not is_single %}
+                                  {# Close multi-field-content #}
+                                  {% if not forloop.first %}
+                                      </div>
+                                  {% endif %}
+                                  </div>
+                              {% endif %}
+              
+                              {# Close multi-row first field container #}
+                              {% if is_single or forloop.last %}
+                                  </div>
+                              {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                    {% endwith %}
+                  {% endfor %}
+                </fieldset>
+              {% endfor %}
+            {% else %}
+              {% for fieldset in adminform %}
+                {% include "admin/includes/fieldset.html" %}
+              {% endfor %}
+            {% endif %}
           {% endblock %}
 
           {% block after_field_sets %}{% endblock %}

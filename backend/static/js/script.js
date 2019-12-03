@@ -52,34 +52,60 @@
         $("#winnerpopup").hide();
         $("#survey_form .form-row").each(function(){
             var classname = $(this).attr('class');
-            if(classname.indexOf('question_type') > -1 && parseInt(classname.substring(classname.indexOf('question_type')+13)) > parseInt($("#id_question_count").val())){
-                $(this).find('li:first-child input[type="radio"]').attr('checked', 'checked');
+            if(classname.indexOf('question_') > -1 && parseInt(classname.substring(classname.indexOf('question_')+9)) > parseInt($("#id_questions_count").val())){
                 $(this).hide();
-            }else if(classname.indexOf('question_text') > -1 && parseInt(classname.substring(classname.indexOf('question_text')+13)) > parseInt($("#id_question_count").val())){
-                $(this).find('textarea').html('a');
+            }
+            if(classname.indexOf('question_') == -1){
+                $("#survey_main_part").append($(this));
+            }
+        });
+        $(".answer_select_part select option").each(function(){
+            var question_count = parseInt($("#id_questions_count").val());
+            if(parseInt($(this).html()) > question_count){
                 $(this).hide();
             }
         });
-        $("#id_question_count").change(function(){
-            $("#survey_form .form-row").each(function(){
-                var classname = $(this).attr('class');
-                if(classname.indexOf('question_type') > -1 && parseInt(classname.substring(classname.indexOf('question_type')+13)) > parseInt($("#id_question_count").val())){
-                    var checked = $(this).find('li:first-child input[type="radio"]').attr('checked');
-                    var checked1 = $(this).find('li:last-child input[type="radio"]').attr('checked');
-                    if(checked == undefined && checked1 == undefined){
-                        $(this).find('li:first-child input[type="radio"]').attr('checked', 'checked');
-                    }
-                    $(this).hide();
-                }else if(classname.indexOf('question_text') > -1 && parseInt(classname.substring(classname.indexOf('question_text')+13)) > parseInt($("#id_question_count").val())){
-                    if($(this).find('textarea').html() == '')
-                        $(this).find('textarea').html('a');
-                    $(this).hide();
-                }else if(classname.indexOf('question_type') > -1 || classname.indexOf('question_text') > -1){
-                    $(this).show();
-                    if($(this).find('textarea').html() == 'a')
-                        $(this).find('textarea').html('');
+        $(".survey_question_part").each(function(){
+            var question_choice = null;
+            $(this).find(".choice_part input[type='radio']").each(function(){
+                if($(this).is(':checked')){
+                    question_choice = $(this).val();
                 }
             });
+            if(question_choice != "1"){
+                $(this).find('.answer_text_part').hide();
+            }
+            if(question_choice != "2"){
+                $(this).find('.answer_image_part').hide();
+            }
+        });
+        $(".survey_question_part .choice_part input[type='radio']").click(function(){
+            var question_choice = $(this).val();
+            if(question_choice == "1"){
+                $(this).parent().parent().parent().parent().find('.answer_text_part').show();
+                $(this).parent().parent().parent().parent().find('.answer_image_part').hide();
+            }else if(question_choice == "2"){
+                $(this).parent().parent().parent().parent().find('.answer_image_part').show();
+                $(this).parent().parent().parent().parent().find('.answer_text_part').hide();
+            }
+        });
+        $("#id_questions_count").change(function(){
+            var questions_count = parseInt($("#id_questions_count").val());
+            $("#survey_form .form-row").each(function(){
+                var classname = $(this).attr('class');
+                if(classname.indexOf('question_') > -1 && parseInt(classname.substring(classname.indexOf('question_')+9)) > questions_count){
+                    $(this).hide();
+                }else if(classname.indexOf('question_') > -1){
+                    $(this).show();
+                }
+            });
+            $(".answer_select_part select option").each(function(){
+                if(parseInt($(this).html()) > questions_count){
+                    $(this).hide();
+                }else{
+                    $(this).show();
+                }
+            })
         })
         $('.sweepItem').click(function(){
             if($(this).hasClass('active')){
