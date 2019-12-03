@@ -381,9 +381,9 @@
                                       </div>
                                     </div>
                                   </div>
-                                  {% for i in '123456' %}
-                                  <div class="row">
-                                    <div class="col-left"><label>Option {{i}}:</label></div>
+                                  {% for i in "11111111111" %}
+                                  <div class="image_row row">
+                                    <div class="col-left"><label>Option {{forloop.counter}}:</label></div>
                                     <div class="col-right">
                                       <div class="answer_part">
                                         <input type="file" name="{{field.field.name}}_question_answer_image" accept="image/*" required="" id="id_logo">

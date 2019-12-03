@@ -78,6 +78,13 @@
             if(question_choice != "2"){
                 $(this).find('.answer_image_part').hide();
             }
+            var text_row_count = 0;
+            $(this).find(".answer_text_part .row").each(function(){
+                if(text_row_count > $(this).parent().find("select").val()){
+                    $(this).hide();
+                }
+                text_row_count++;
+            })
         });
         $(".survey_question_part .choice_part input[type='radio']").click(function(){
             var question_choice = $(this).val();
@@ -88,6 +95,37 @@
                 $(this).parent().parent().parent().parent().find('.answer_image_part').show();
                 $(this).parent().parent().parent().parent().find('.answer_text_part').hide();
             }
+            var text_row_count = 0;
+            $(this).parent().parent().parent().parent().find(".answer_text_part .row").each(function(){
+                if(text_row_count > $(this).parent().find("select").val()){
+                    $(this).hide();
+                }else{
+                    $(this).show();
+                }
+                text_row_count++;
+            })
+        });
+        $(".survey_question_part .answer_text_part select").change(function(){
+            var text_row_count = 0; var count_val = $(this).val();
+            $(this).parent().parent().parent().find(".row").each(function(){
+                if(text_row_count > count_val){
+                    $(this).hide();
+                }else{
+                    $(this).show();
+                }
+                text_row_count++;
+            })
+        });
+        $(".survey_question_part .answer_image_part .numberoption_container input[type='radio']").click(function(){
+            var image_row_count = 0; var count_val = $(this).val();
+            $(this).parent().parent().parent().parent().parent().find(".image_row").each(function(){
+                if(image_row_count >= count_val){
+                    $(this).hide();
+                }else{
+                    $(this).show();
+                }
+                image_row_count++;
+            })
         });
         $("#id_questions_count").change(function(){
             var questions_count = parseInt($("#id_questions_count").val());
