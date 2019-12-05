@@ -1,7 +1,7 @@
 from customauth.models import MyUser
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from home.models import CustomText, HomePage, Sweepstakes, Tablet, SweepWinner, SweepUser, Settings, SweepCheckIn
+from home.models import CustomText, HomePage, Sweepstakes, Tablet, SweepWinner, SweepUser, Settings, SweepCheckIn, SurveyQuestions, SurveyAnswerImage, SurveyAnswerText, Survey
 from rest_framework.decorators import api_view
 import base64
 
@@ -197,6 +197,139 @@ class SettingsSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if validated_data.get('device_code') != None:
             instance.device_code = validated_data.get('device_code')
+        instance.save()
+        return instance
+
+class SurveyQuestionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SurveyQuestions
+        fields = '__all__'
+
+    def create(self, validated_data):
+        question = SurveyQuestions.objects.create(
+            question_type=validated_data.get('question_type'),
+            question_text=validated_data.get('question_text'),
+            options_count=validated_data.get('options_count')
+            )
+        question.save()
+        return question
+
+    def update(self, instance, validated_data):
+        if validated_data.get('question_type') != None:
+            instance.question_type = validated_data.get('question_type')
+        if validated_data.get('question_text') != None:
+            instance.question_text = validated_data.get('question_text')
+        if validated_data.get('options_count') != None:
+            instance.options_count = validated_data.get('options_count')
+        instance.save()
+        return instance
+
+class SurveyAnswerTextSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SurveyAnswerText
+        fields = '__all__'
+
+    def create(self, validated_data):
+        answer = SurveyAnswerText.objects.create(
+            option_text=validated_data.get('option_text'),
+            option_complete=validated_data.get('option_complete'),
+            option_goquestion=validated_data.get('option_goquestion'),
+            option_question=validated_data.get('option_question')
+            )
+        answer.save()
+        return answer
+
+    def update(self, instance, validated_data):
+        if validated_data.get('option_text') != None:
+            instance.option_text = validated_data.get('option_text')
+        if validated_data.get('option_complete') != None:
+            instance.option_complete = validated_data.get('option_complete')
+        if validated_data.get('option_goquestion') != None:
+            instance.option_goquestion = validated_data.get('option_goquestion')
+        if validated_data.get('option_question') != None:
+            instance.option_question = validated_data.get('option_question')
+        instance.save()
+        return instance
+
+class SurveyAnswerImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SurveyAnswerImage
+        fields = '__all__'
+
+    def create(self, validated_data):
+        answer_image = SurveyAnswerImage.objects.create(
+            option_image=validated_data.get('option_image'),
+            option_tag=validated_data.get('option_tag'),
+            option_complete=validated_data.get('option_complete'),
+            option_goquestion=validated_data.get('option_goquestion'),
+            option_question=validated_data.get('option_question')
+            )
+        answer_image.save()
+        return answer_image
+
+    def update(self, instance, validated_data):
+        if validated_data.get('option_image') != None:
+            instance.option_image = validated_data.get('option_image')
+        if validated_data.get('option_tag') != None:
+            instance.option_tag = validated_data.get('option_tag')
+        if validated_data.get('option_complete') != None:
+            instance.option_complete = validated_data.get('option_complete')
+        if validated_data.get('option_goquestion') != None:
+            instance.option_goquestion = validated_data.get('option_goquestion')
+        if validated_data.get('option_question') != None:
+            instance.option_question = validated_data.get('option_question')
+        instance.save()
+        return instance
+
+class SurveySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Survey
+        fields = '__all__'
+
+    def create(self, validated_data):
+        survey = Survey.objects.create(
+            name=validated_data.get('name'),
+            questions_count=validated_data.get('questions_count'),
+            created_date=validated_data.get('created_date'),
+            question_1=validated_data.get('question_1'),
+            question_2=validated_data.get('question_2'),
+            question_3=validated_data.get('question_3'),
+            question_4=validated_data.get('question_4'),
+            question_5=validated_data.get('question_5'),
+            question_6=validated_data.get('question_6'),
+            question_7=validated_data.get('question_7'),
+            question_8=validated_data.get('question_8'),
+            question_9=validated_data.get('question_9'),
+            question_10=validated_data.get('question_10'),
+        )
+        survey.save()
+        return survey
+
+    def update(self, instance, validated_data):
+        if validated_data.get('name') != None:
+            instance.name = validated_data.get('name')
+        if validated_data.get('questions_count') != None:
+            instance.questions_count = validated_data.get('questions_count')
+        if validated_data.get('question_1') != None:
+            instance.question_1 = validated_data.get('question_1')
+        if validated_data.get('question_2') != None:
+            instance.question_2 = validated_data.get('question_2')
+        if validated_data.get('question_3') != None:
+            instance.question_3 = validated_data.get('question_3')
+        if validated_data.get('question_4') != None:
+            instance.question_4 = validated_data.get('question_4')
+        if validated_data.get('question_5') != None:
+            instance.question_5 = validated_data.get('question_5')
+        if validated_data.get('question_6') != None:
+            instance.question_6 = validated_data.get('question_6')
+        if validated_data.get('question_7') != None:
+            instance.question_7 = validated_data.get('question_7')
+        if validated_data.get('question_8') != None:
+            instance.question_8 = validated_data.get('question_8')
+        if validated_data.get('question_9') != None:
+            instance.question_9 = validated_data.get('question_9')
+        if validated_data.get('question_10') != None:
+            instance.question_10 = validated_data.get('question_10')
         instance.save()
         return instance
 

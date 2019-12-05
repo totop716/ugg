@@ -53,9 +53,11 @@
                     {% endif %}
                     {% if cl.opts.verbose_name == 'survey' %}
                     <td>
-                        <a href="/admin/sweepstake" class="btn btn-danger">Delete</a>
-                        <a href="/admin/sweepwinners" class="btn btn-info">Edit</a>
-                        <a href="/admin/sweepwinners" class="btn btn-info">Report</a>
+                        {% getsurveys as survey_list %}
+                        {% getdata_by_index survey_list forloop.counter0 request.GET.p as survey_data %}
+                        <button class="btn btn-danger delete-survey-buttt" data-toggle='modal' data-target="#removeSurveyModal" survey_id="{{survey_data.id}}">Delete</button>
+                        <a href="/admin/home/survey/{{survey_data.id}}/change" class="btn btn-info">Edit</a>
+                        <a href="/admin/report" class="btn btn-info">Report</a>
                     </td>
                     {% endif %}
                     {% if cl.opts.verbose_name == 'tablet' %}
@@ -98,4 +100,19 @@
           </div>
         </div>
       </div>
+
+      <div class="modal fade" id="removeSurveyModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <h1 class="remove_tablet_text">Do you want to delete this survey?</h1>
+                  <div class="button-container">
+                    <button class="btn btn-large btn-primary">Cancel</button>
+                    <button class="btn btn-large btn-danger delete_survey">Delete</button>
+                    <input type="hidden" class="survey_id" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 {% endif %}

@@ -8,7 +8,7 @@ from django.db.models import Q, Max, F, Count
 import dateutil.parser
 register = template.Library()
 
-from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser, SweepCheckIn
+from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser, SweepCheckIn, Survey
 
 @register.simple_tag
 def gettablets(id):
@@ -143,6 +143,11 @@ def getsweepstakes(id, current):
   return sweepstakes
 
 @register.simple_tag
+def getsurveys():
+  surveys = Survey.objects.order_by('-id')
+  return surveys
+
+@register.simple_tag
 def getcurrentsweepstakes():
   sweepstakes = Sweepstakes.objects.filter(current = 1).order_by('-id')
   return sweepstakes
@@ -164,3 +169,7 @@ def getdata_by_index(l, i, p):
     return l[i+int(p)*20]
   else:
     return l[i]
+
+@register.simple_tag
+def split(strr, separator):
+  return strr.split(separator)

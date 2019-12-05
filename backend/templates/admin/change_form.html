@@ -1,6 +1,7 @@
 {% extends "admin/base.html" %}
 {% load i18n admin_static admin_modify suit_tags admin_urls %}
 {% load url from suit_compat %}
+{% load custom_tags %}
 
 {% block extrahead %}{{ block.super }}
   {% url 'admin:jsi18n' as jsi18nurl %}
@@ -166,6 +167,8 @@
           {% block field_sets %}
             {% if opts.verbose_name == 'survey' %}
               {% for fieldset in adminform %}
+                {% split request.path '/' as path_array %}
+                <input type="text" class="survey_id" value="{{path_array.4}}" style="display: none;" />
                 <fieldset class="suit-form module aligned {{ fieldset.classes }}">
                   <div class="form-group" id="survey_main_part"></div>
                   {% if fieldset.name %}<h2>{{ fieldset.name }}</h2>{% endif %}
@@ -198,14 +201,14 @@
                                   <label>Question:</label>
                                 </div>
                                 <div class="col-right">
-                                  <textarea name="{{field.field.name}}_question_text"></textarea>
+                                  <textarea name="{{field.field.name}}_question_text" class="question_text"></textarea>
                                 </div>
                               </div>
                               <div class="answer_text_part">
                                 <div class="row">
                                   <div class="col-left"><label>Number of Options:</label></div>
                                   <div class="col-right">
-                                      <select name="{{field.field.name}}_number_of_options">
+                                      <select name="{{field.field.name}}_number_of_options" class="numberofquestions">
                                         {% for i in '23456' %}
                                           <option value="{{i}}">{{i}}</option>
                                         {% endfor %}
@@ -217,12 +220,12 @@
                                   <div class="col-left"><label>Option {{i}}:</label></div>
                                   <div class="col-right">
                                     <div class="answer_part">
-                                      <textarea name="{{field.field.name}}_question_answer_text"></textarea>
+                                      <textarea name="{{field.field.name}}_question_answer_text_{{i}}" class="question_answer_text"></textarea>
                                       <div class="answer_select_part">
                                         <div class="answer_goto_question">
-                                          <input type="radio" name="{{field.field.name}}_question_answer_option" />
+                                          <input type="radio" name="{{field.field.name}}_question_answer_complete_{{i}}" value="1" />
                                           <label>If selected, go to question</label>
-                                          <select name="{{field.field.name}}_question_answer_option">
+                                          <select name="{{field.field.name}}_question_answer_option_{{i}}">
                                             {% for i in "0123456789" %}
                                             {% if i|add:1 != field.field.name|slice:"9:10" %}
                                               <option value="{{i|add:1}}">{{i|add:1}}</option>
@@ -231,7 +234,7 @@
                                           </select>
                                         </div>
                                         <div class="answer_goto_question">
-                                            <input type="radio" name="{{field.field.name}}_question_answer_option" />
+                                            <input type="radio" name="{{field.field.name}}_question_answer_complete_{{i}}" value="2" />
                                             <label>If selected, complete survey</label>
                                           </div>
                                       </div>
@@ -389,13 +392,13 @@
                                         <input type="file" name="{{field.field.name}}_question_answer_image" accept="image/*" required="" id="id_logo">
                                         <div class="row">
                                           <label>Tag: </label>
-                                          <input type="text" name="{{field.field.name}}_question_answer_image_text" />
+                                          <input type="text" name="{{field.field.name}}_question_answer_image_text_{{forloop.counter}}" />
                                         </div>
                                         <div class="answer_select_part">
                                           <div class="answer_goto_question">
-                                            <input type="radio" name="{{field.field.name}}_question_answer_option" />
+                                            <input type="radio" name="{{field.field.name}}_question_answer_image_complete_{{forloop.counter}}" value="1" />
                                             <label>If selected, go to question</label>
-                                            <select name="{{field.field.name}}_question_answer_option">
+                                            <select name="{{field.field.name}}_question_answer_image_option_{{forloop.counter}}">
                                               {% for i in "0123456789" %}
                                               {% if i|add:1 != field.field.name|slice:"9:10" %}
                                                 <option value="{{i|add:1}}">{{i|add:1}}</option>
@@ -404,7 +407,7 @@
                                             </select>
                                           </div>
                                           <div class="answer_goto_question">
-                                              <input type="radio" name="{{field.field.name}}_question_answer_option" />
+                                              <input type="radio" name="{{field.field.name}}_question_answer_image_complete_{{forloop.counter}}" value="2" />
                                               <label>If selected, complete survey</label>
                                             </div>
                                         </div>
@@ -412,7 +415,7 @@
                                     </div>
                                   </div>
                                   {% endfor %}
-                                </div>
+                              </div>
                             </div>
                           {% else %}
                               {% if is_single or forloop.first %}

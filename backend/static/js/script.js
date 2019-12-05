@@ -50,6 +50,88 @@
     $(document).ready(function(){
         // Here you can use regular $ sign
         $("#winnerpopup").hide();
+        $("#survey_form").submit(function(e){
+            e.preventDefault();
+            var data = $(this).serialize();
+            if($('#survey_form .survey_id').val() == "add"){
+                $.ajax({
+                    url: '/savesurvey/',
+                    type: 'POST',
+                    data: data, 
+                    success: function(data) {
+                        location.href="/admin/home/survey/";
+                    }
+                });    
+            }else{
+                $.ajax({
+                    url: '/savesurvey/'+$('#survey_form .survey_id').val()+"/",
+                    type: 'PUT',
+                    data: data,
+                    success: function(data) {
+                        location.href="/admin/home/survey/";
+                    }
+                });
+            }
+        });
+        if($('#survey_form .survey_id').val() !== undefined){
+            $.ajax({
+                url: '/savesurvey/'+$('#survey_form .survey_id').val(),
+                type: 'GET',
+                success: function(data) {
+                    console.log('Data', data);
+                    for(var i = 0; i < data.questions.length; i++){
+                        $('.field-question_'+(i+1)).find('.choice_part input[type="radio"]').each(function(){
+                            if($(this).val() == data.questions[i].question_type){
+                                $(this).attr('checked', 'checked');
+                            }
+                            if(data.questions[i].question_type == "1"){
+                                $('.field-question_'+(i+1)).find('.answer_text_part').show();
+                                $('.field-question_'+(i+1)).find('select.numberofquestions').val(data.questions[i].options_count);
+                                var answer_text_options = data.answer_text.filter(function(value){return value.option_question==data.questions[i].id});
+                                var count = 0;
+                                $('.field-question_'+(i+1)).find('.answer_text_part .answer_part').each(function(){
+                                    if(count < data.questions[i].options_count){
+                                        $(this).find('textarea').html(answer_text_options[count].option_text);
+                                        $(this).find('select').val(answer_text_options[count].option_goquestion)
+                                        $(this).find('input[type="radio"]').each(function(){
+                                            if($(this).val() == answer_text_options[count].option_complete){
+                                                $(this).attr('checked', 'checked');
+                                            }
+                                        });
+                                    }
+                                    count++;
+                                })
+                            }else{
+                                $('.field-question_'+(i+1)).find('.answer_image_part').show();
+                                $('.field-question_'+(i+1)).find('.answer_image_part .numberoption_container input[type="radio"]').each(function(){
+                                    if(parseInt($(this).val()) == data.questions[i].options_count){
+                                        $(this).attr('checked', 'checked');
+                                    }
+                                });
+                                var count = 0;
+                                var answer_image_options = data.answer_image.filter(function(value){return value.option_question==data.questions[i].id});
+                                $('.field-question_'+(i+1)).find('.answer_image_part .image_row').each(function(){
+                                    if(count < data.questions[i].options_count){
+                                        $(this).show();
+                                        $(this).find('input[type="text"]').val(answer_image_options[count].option_tag);
+                                        $(this).find('select').val(answer_image_options[count].option_goquestion)
+                                        $(this).find('input[type="radio"]').each(function(){
+                                            if($(this).val() == answer_image_options[count].option_complete){
+                                                $(this).attr('checked', 'checked');
+                                            }
+                                        });
+                                    }else{
+                                        $(this).hide();
+                                    }
+                                    count++;
+                                })
+                            }
+                        })
+                        $('.field-question_'+(i+1)).find('textarea.question_text').html(data.questions[i].question_text);
+                    }
+                }
+            });      
+        }
         $("#survey_form .form-row").each(function(){
             var classname = $(this).attr('class');
             if(classname.indexOf('question_') > -1 && parseInt(classname.substring(classname.indexOf('question_')+9)) > parseInt($("#id_questions_count").val())){
@@ -65,6 +147,19 @@
                 $(this).hide();
             }
         });
+        $("#removeSurveyModal .delete_survey").click(function(e){
+            e.preventDefault();
+            $.ajax({
+                url: '/savesurvey/'+$(this).parent().find(".survey_id").val()+"/",
+                type: 'DELETE',
+                success: function(data) {
+                    location.href="/admin/home/survey/";
+                }
+            });
+        });
+        $(".delete-survey-buttt").click(function(){
+            $("#removeSurveyModal .survey_id").val($(this).attr("survey_id"));
+        })
         $(".survey_question_part").each(function(){
             var question_choice = null;
             $(this).find(".choice_part input[type='radio']").each(function(){
@@ -95,7 +190,7 @@
                 $(this).parent().parent().parent().parent().find('.answer_image_part').show();
                 $(this).parent().parent().parent().parent().find('.answer_text_part').hide();
             }
-            var text_row_count = 0;
+            var text_row_count = 0; var image_row_count = 0;
             $(this).parent().parent().parent().parent().find(".answer_text_part .row").each(function(){
                 if(text_row_count > $(this).parent().find("select").val()){
                     $(this).hide();
@@ -103,6 +198,15 @@
                     $(this).show();
                 }
                 text_row_count++;
+            })
+
+            $(this).parent().parent().parent().parent().find(".answer_image_part .image_row").each(function(){
+                if($(this).parent().find(".numberoption_container input[type='radio']:checked").val() == undefined || image_row_count > $(this).parent().find(".numberoption_container input[type='radio']:checked").val()){
+                    $(this).hide();
+                }else{
+                    $(this).show();
+                }
+                image_row_count++;
             })
         });
         $(".survey_question_part .answer_text_part select").change(function(){

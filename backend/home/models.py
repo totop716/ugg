@@ -105,7 +105,7 @@ class SurveyQuestions(models.Model):
         verbose_name_plural = 'surveyquestion'
     
     def __str__(self):
-        return self.name
+        return self.question_text
 
 class SurveyAnswerText(models.Model):
     option_text = models.TextField()
@@ -117,7 +117,7 @@ class SurveyAnswerText(models.Model):
         verbose_name_plural = 'surveyanswertext'
     
     def __str__(self):
-        return self.name
+        return self.option_text
 
 class SurveyAnswerImage(models.Model):
     option_image = models.ImageField()
@@ -127,10 +127,10 @@ class SurveyAnswerImage(models.Model):
     option_question = models.ForeignKey(SurveyQuestions, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name_plural = 'survey'
+        verbose_name_plural = 'surveyanswerimage'
     
     def __str__(self):
-        return self.name
+        return self.option_tag
 
 class Survey(models.Model):
     name = models.CharField('Survey Name', max_length=100)
