@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     marginVertical: 20,
-    justifyContent: 'center'
+    justifyContent: 'space-between'
   },
   cancelBut: {
     marginHorizontal: 10,

@@ -89,7 +89,7 @@
 {% block content %}
   <div id="content-main" class="inner-two-columns">
 
-    <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post"
+    <form {% if has_file_field or opts.verbose_name == 'survey' %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post"
           id="{% firstof opts.model_name opts.module_name %}_form" class="form-horizontal" novalidate>
 
       <div class="inner-right-column">
@@ -389,7 +389,7 @@
                                     <div class="col-left"><label>Option {{forloop.counter}}:</label></div>
                                     <div class="col-right">
                                       <div class="answer_part">
-                                        <input type="file" name="{{field.field.name}}_question_answer_image" accept="image/*" required="" id="id_logo">
+                                        <input type="file" name="{{field.field.name}}_question_answer_image_{{forloop.counter}}" accept="image/*" required="" id="id_logo">
                                         <div class="row">
                                           <label>Tag: </label>
                                           <input type="text" name="{{field.field.name}}_question_answer_image_text_{{forloop.counter}}" />

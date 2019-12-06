@@ -1,7 +1,7 @@
 
 from django.conf.urls import url, include
 from .views import home
-from home.api.v1.viewsets import UserLoginViewSet, MyUserViewSet, TabletViewSet, SweepstakeViewSet, SweepwinnerViewSet, SweepUserViewSet, SettingsViewSet, SweepCheckInViewSet, SweepUserIDViewSet, SweepDetailsCheckInViewSet, SurveyViewSet
+from home.api.v1.viewsets import UserLoginViewSet, MyUserViewSet, TabletViewSet, SweepstakeViewSet, MyUploadView, SweepwinnerViewSet, SweepUserViewSet, SettingsViewSet, SweepCheckInViewSet, SweepUserIDViewSet, SweepDetailsCheckInViewSet, SurveyViewSet
 
 urlpatterns = [
     url(r'^$', home, name="home"),
@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^getsweepdetailslist/$', SweepDetailsCheckInViewSet.as_view()),
     url(r'^savesurvey/$', SurveyViewSet.as_view()),
     url(r'^savesurvey/(?P<pk>\d+)/$', SurveyViewSet.as_view()),
+    url(r'^fileupload/$', MyUploadView.as_view()),
 ]

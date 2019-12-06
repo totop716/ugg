@@ -34,6 +34,13 @@ const getUserAPI = (phoneNo) => {
   return users.sendRequest();
 }
 
+const getSurveyAPI = (survey_id) => {
+  const path = 'savesurvey/' + survey_id;
+  const url = `${Utils.serverUrl}${path}/`;
+  const survey_data = new APIClient(url, APIConstants.HTTPMethod.GET);
+  return survey_data.sendRequest();
+}
+
 const getCheckInTime = (user_id, tablet_id, sweep_id) => {
   const path = 'sweepcheckin/?user_id='+user_id+'&tablet_id='+tablet_id+'&sweep_id='+sweep_id;
   const url = `${Utils.serverUrl}${path}`;
@@ -124,4 +131,4 @@ const updateTabletStatus = (tablet_id, login) => {
   return users.sendRequest();
 }
 
-export { loginAPI, signupAPI, getUserAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime, updateTabletKey, updateTabletStatus, getTabletfromKey };
+export { loginAPI, signupAPI, getUserAPI, getSurveyAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime, updateTabletKey, updateTabletStatus, getTabletfromKey };

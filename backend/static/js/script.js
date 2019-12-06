@@ -50,14 +50,25 @@
     $(document).ready(function(){
         // Here you can use regular $ sign
         $("#winnerpopup").hide();
+        var images = [];
+        $("#survey_form input[type='file']").change(function(){
+            var index = images.findIndex(value => value.key==$(this).attr('name'));
+            if(index > -1){
+                images.splice(index, 1);
+            }
+            images.push({key: $(this).attr('name'), file: this.files[0]});
+        });
         $("#survey_form").submit(function(e){
             e.preventDefault();
-            var data = $(this).serialize();
+            var formData = new FormData();
+            for(var i = 0; i < images.length; i++){
+                formData.append(images[i].key, images[i].file);
+            }
             if($('#survey_form .survey_id').val() == "add"){
                 $.ajax({
                     url: '/savesurvey/',
                     type: 'POST',
-                    data: data, 
+                    data: $(this).serialize(),
                     success: function(data) {
                         location.href="/admin/home/survey/";
                     }
@@ -66,9 +77,20 @@
                 $.ajax({
                     url: '/savesurvey/'+$('#survey_form .survey_id').val()+"/",
                     type: 'PUT',
-                    data: data,
+                    data: $(this).serialize(),
                     success: function(data) {
-                        location.href="/admin/home/survey/";
+                        $.ajax({
+                            url: '/fileupload/?survey_id='+$('#survey_form .survey_id').val(),
+                            type: 'PUT',
+                            data: formData,
+                            processData: false,  // Important!
+                            contentType: false,
+                            cache: false,
+                            success: function(data1) {
+                                console.log("RES", data1);
+                                // location.href="/admin/home/survey/";
+                            }
+                        });
                     }
                 });
             }
@@ -91,6 +113,7 @@
                                 var count = 0;
                                 $('.field-question_'+(i+1)).find('.answer_text_part .answer_part').each(function(){
                                     if(count < data.questions[i].options_count){
+                                        $(this).parent().parent().show();
                                         $(this).find('textarea').html(answer_text_options[count].option_text);
                                         $(this).find('select').val(answer_text_options[count].option_goquestion)
                                         $(this).find('input[type="radio"]').each(function(){
@@ -98,6 +121,8 @@
                                                 $(this).attr('checked', 'checked');
                                             }
                                         });
+                                    }else{
+                                        $(this).parent().parent().hide();
                                     }
                                     count++;
                                 })

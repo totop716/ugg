@@ -125,6 +125,8 @@ class SurveyAnswerImage(models.Model):
     option_complete = models.CharField('', choices=(('goto', 'If selected, go to question '), ('complete', 'If selected, complete survey')), max_length=10)
     option_goquestion = models.CharField('', choices=((2, 2), (3, 3), (4, 4), (5, 5), (6, 6)), max_length=10)
     option_question = models.ForeignKey(SurveyQuestions, on_delete=models.CASCADE)
+    question_number = models.CharField('', max_length=2, null=True, blank=True)
+    survey_id = models.CharField('', max_length=10, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'surveyanswerimage'

@@ -1,5 +1,7 @@
 from django.http import QueryDict
 
+from rest_framework.exceptions import ParseError
+from rest_framework.parsers import FileUploadParser
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -9,6 +11,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
+from rest_framework.exceptions import ParseError
+from rest_framework.parsers import FileUploadParser
 
 from django.core import serializers
 from django.http import HttpResponse
@@ -20,6 +24,21 @@ from django.contrib.auth.models import User
 from customauth.models import MyUser
 from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser, Settings, SweepCheckIn, Survey, SurveyQuestions, SurveyAnswerText, SurveyAnswerImage
 from datetime import date
+import base64 
+
+class MyUploadView(APIView):
+    parser_class = (FileUploadParser,)
+
+    def put(self, request, format=None):
+        f = request.FILES
+
+        survey_answer_images = SurveyAnswerImage.objects.filter(survey_id=request.query_params.get('survey_id'))
+        i = 0
+        for survey_answer_image in survey_answer_images:
+            i = i+1
+            survey_answer_image.option_image = f['question_'+survey_answer_image.question_number+'_question_answer_image_'+str(i)]
+            survey_answer_image.save()
+        return Response({'message': 'sucessfully updated'})
 
 class SignupViewSet(ModelViewSet):
     serializer_class = SweepUserSerializer
@@ -183,7 +202,7 @@ class SurveyViewSet(APIView):
                     survey_answer_text.save()
             else:
                 for j in range(0, int(option_count)):
-                    survey_answer_image = SurveyAnswerImage.objects.create(option_image = request.data.get('question_'+str(i+1)+'_question_answer_text_'+str(j+1)), option_tag = request.data.get('question_'+str(i+1)+'_question_answer_image_text_'+str(j+1)), option_complete = request.data.get('question_'+str(i+1)+'_question_answer_image_complete_'+str(j+1)), option_goquestion=request.data.get('question_'+str(i+1)+'_question_answer_image_option_'+str(j+1)), option_question=survey_question)
+                    survey_answer_image = SurveyAnswerImage.objects.create(option_image = request.data.get('question_'+str(i+1)+'_question_answer_image_'+str(j+1)), option_tag = request.data.get('question_'+str(i+1)+'_question_answer_image_text_'+str(j+1)), option_complete = request.data.get('question_'+str(i+1)+'_question_answer_image_complete_'+str(j+1)), option_goquestion=request.data.get('question_'+str(i+1)+'_question_answer_image_option_'+str(j+1)), option_question=survey_question)
                     survey_answer_image.save()
 
         survey = Survey.objects.create(name = request.data.get('name'), questions_count = request.data.get('questions_count'), created_date = date.today(), question_1=questions_data[0] if len(questions_data) >= 1 else None, question_2=questions_data[1] if len(questions_data) >= 2 else None, question_3=questions_data[2] if len(questions_data) >= 3 else None, question_4=questions_data[3] if len(questions_data) >= 4 else None, question_5=questions_data[4] if len(questions_data) >= 5 else None, question_6=questions_data[5] if len(questions_data) >= 6 else None, question_7=questions_data[6] if len(questions_data) >= 7 else None, question_8=questions_data[7] if len(questions_data) >= 8 else None, question_9=questions_data[8] if len(questions_data) >= 9 else None, question_10=questions_data[9] if len(questions_data) >= 10 else None)
@@ -248,13 +267,20 @@ class SurveyViewSet(APIView):
                 elif i == 9:
                     saved_survey.question_10 = survey_question
 
+            survey_answer_texts = SurveyAnswerText.objects.filter(option_question_id=survey_question.id)
+            for answer_text in survey_answer_texts:
+                answer_text.delete()
+            survey_answer_images = SurveyAnswerImage.objects.filter(option_question_id=survey_question.id)
+            for answer_image in survey_answer_images:
+                answer_image.delete()
+            
             if request.data.get('question_'+str(i+1)+'_choice') == '1':
                 for j in range(0, int(option_count)):
                     survey_answer_text = SurveyAnswerText.objects.create(option_text = request.data.get('question_'+str(i+1)+'_question_answer_text_'+str(j+1)), option_complete = request.data.get('question_'+str(i+1)+'_question_answer_complete_'+str(j+1)), option_goquestion=request.data.get('question_'+str(i+1)+'_question_answer_option_'+str(j+1)), option_question=survey_question)
                     survey_answer_text.save()
             else:
                 for j in range(0, int(option_count)):
-                    survey_answer_image = SurveyAnswerImage.objects.create(option_image = request.data.get('question_'+str(i+1)+'_question_answer_text_'+str(j+1)), option_tag = request.data.get('question_'+str(i+1)+'_question_answer_image_text_'+str(j+1)), option_complete = request.data.get('question_'+str(i+1)+'_question_answer_image_complete_'+str(j+1)), option_goquestion=request.data.get('question_'+str(i+1)+'_question_answer_image_option_'+str(j+1)), option_question=survey_question)
+                    survey_answer_image = SurveyAnswerImage.objects.create(option_image = request.data.get('question_'+str(i+1)+'_question_answer_image_'+str(j+1)), option_tag = request.data.get('question_'+str(i+1)+'_question_answer_image_text_'+str(j+1)), option_complete = request.data.get('question_'+str(i+1)+'_question_answer_image_complete_'+str(j+1)), option_goquestion=request.data.get('question_'+str(i+1)+'_question_answer_image_option_'+str(j+1)), option_question=survey_question, survey_id=saved_survey.id, question_number=i+1)
                     survey_answer_image.save()
 
         for i in range(int(request.data.get('questions_count')), 10):
