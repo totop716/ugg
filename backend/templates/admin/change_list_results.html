@@ -62,24 +62,7 @@
                     {% endif %}
                     {% if cl.opts.verbose_name == 'tablet' %}
                     <td>
-                        {% gettablets request.GET.q as tablets_list %}
-                        {% getdata_by_index tablets_list forloop.counter0 request.GET.p as tablet %}
-                        <div class="sweepstakes">
-                            <input type='hidden' class='tabletIDVal' value="{{ tablet.id }}" />
-                            {% for sweep in tablet.sweeps %}
-                              <div class="sweepstakecontain">
-                                {% if sweep.id == tablet.active_sweep|add:"0" %}
-                                    <button type='button' class='btn selectedsweep active' data-toggle='modal' data-target="#removeFeatureModal">
-                                        {{ sweep.name }}
-                                    </button>
-                                {% else %}
-                                  <input type='button' class='btn selectedsweep' value="{{ sweep.name }}" />
-                                {% endif %}
-                                <input type='hidden' class='selectedsweepid' value="{{ sweep.id }}" />
-                              </div>
-                            {% endfor %}
-                        </div>
-                        <a class='btn btn-info' href='/admin/settings?select=sweepstake&id={{tablet.id}}' class='sweep_add'>+ Feature</a>
+                        
                     </td>
                     {% endif %}
                 </tr>
