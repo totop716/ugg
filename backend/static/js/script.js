@@ -70,7 +70,18 @@
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function(data) {
-                        location.href="/admin/home/survey/";
+                        $.ajax({
+                            url: '/fileupload/?survey_id='+$('#survey_form .survey_id').val(),
+                            type: 'PUT',
+                            data: formData,
+                            processData: false,  // Important!
+                            contentType: false,
+                            cache: false,
+                            success: function(data1) {
+                                // console.log("RES", data1);
+                                location.href="/admin/home/survey/";
+                            }
+                        });
                     }
                 });    
             }else{
@@ -87,8 +98,8 @@
                             contentType: false,
                             cache: false,
                             success: function(data1) {
-                                console.log("RES", data1);
-                                // location.href="/admin/home/survey/";
+                                // console.log("RES", data1);
+                                location.href="/admin/home/survey/";
                             }
                         });
                     }
