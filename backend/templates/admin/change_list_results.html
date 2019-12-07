@@ -50,7 +50,8 @@
                         <a href="/admin/sweepstake?id={{ sweepdata.id }}" class="btn btn-info">Go to Detail</a>
                         <a href="/admin/sweepwinners?id={{ sweepdata.id }}" class="btn btn-info">Show Winners</a>
                     </td>
-                    {% elif cl.opts.verbose_name == 'tablet' %}
+                    {% endif %}
+                    {% if cl.opts.verbose_name == 'tablet' %}
                     <td>
                         {% gettablets request.GET.q as tablets_list %}
                         {% getdata_by_index tablets_list forloop.counter0 request.GET.p as tablet %}
@@ -71,7 +72,8 @@
                         </div>
                         <a class='btn btn-info' href='/admin/settings?select=sweepstake&id={{tablet.id}}' class='sweep_add'>+ Feature</a>
                     </td>
-                    {% elif cl.opts.verbose_name == 'survey' %}
+                    {% endif %}
+                    {% if cl.opts.verbose_name == 'survey' %}
                     <td>
                         {% getsurveys as survey_list %}
                         {% getdata_by_index survey_list forloop.counter0 request.GET.p as survey_data %}
