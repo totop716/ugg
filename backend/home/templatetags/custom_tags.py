@@ -17,17 +17,17 @@ def gettablets(id):
   else:
     tablets = Tablet.objects.all()
     
-  for tablet in tablets:
-    if tablet.sweep_ids != '':
-      sweep_ids = tablet.sweep_ids[:-1].split(',')
-      sweeps = []
-      sweeps_id = []
-      for sweep_id in sweep_ids:
-        sweep = Sweepstakes.objects.filter(id = sweep_id)
-        sweeps_id.append(sweep[0].id)
-        sweeps.append(sweep[0])
-      tablet.sweeps = sweeps
-      tablet.sweeps_id = sweeps_id
+  # for tablet in tablets:
+  #   if tablet.sweep_ids != '':
+  #     sweep_ids = tablet.sweep_ids[:-1].split(',')
+  #     sweeps = []
+  #     sweeps_id = []
+  #     for sweep_id in sweep_ids:
+  #       sweep = Sweepstakes.objects.filter(id = sweep_id)
+  #       sweeps_id.append(sweep[0].id)
+  #       sweeps.append(sweep[0])
+  #     tablet.sweeps = sweeps
+  #     tablet.sweeps_id = sweeps_id
   return tablets
 
 @register.simple_tag
