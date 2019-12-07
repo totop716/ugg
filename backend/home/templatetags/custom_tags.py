@@ -12,7 +12,10 @@ from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser, SweepCheckI
 
 @register.simple_tag
 def gettablets(id):
-  tablets = Tablet.objects.filter(Q(name__icontains=id) | Q(address__icontains=id) | Q(city__icontains=id) | Q(state__icontains=id) | Q(zipcode__icontains=id)).order_by('-id')
+  if id:
+    tablets = Tablet.objects.filter(Q(name__icontains=id) | Q(address__icontains=id) | Q(city__icontains=id) | Q(state__icontains=id) | Q(zipcode__icontains=id)).order_by('-id')
+  else:
+    tablets = Tablet.objects.all()
     
   for tablet in tablets:
     if tablet.sweep_ids != '':
