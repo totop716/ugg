@@ -15,7 +15,7 @@ def gettablets(id):
   if id:
     tablets = Tablet.objects.filter(Q(name__icontains=id) | Q(address__icontains=id) | Q(city__icontains=id) | Q(state__icontains=id) | Q(zipcode__icontains=id)).order_by('-id')
   else:
-    tablets = Tablet.objects.all()
+    tablets = Tablet.objects.all().order_by('-id')
     
   for tablet in tablets:
     if tablet.sweep_ids != '':
@@ -169,7 +169,7 @@ def getselectedsweep(id):
 
 @register.simple_tag
 def getdata_by_index(l, i, p):
-  if p:
+  if p != '':
     return l[i+int(p)*20]
   else:
     return l[i]

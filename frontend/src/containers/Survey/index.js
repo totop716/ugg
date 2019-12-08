@@ -135,9 +135,11 @@ class Survey extends Component {
 
   cancelSurvey = () => {
     const currenttime = new Date();
+    this.setState({cancelBox: false})
     const {navigate} = this.props.navigation;
     getCheckInTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
       // const checkedtime = new Date(res1.checkin.check_time.replace(" ", "T"));
+      console.log("RES1", res1);
       let checkedtime = '';
       if(res1.checkin.check_time != null){
         const checkedtime_array = res1.checkin.check_time.split("T");
