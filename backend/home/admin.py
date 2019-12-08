@@ -62,7 +62,7 @@ class SweepstakesCreationForm(forms.ModelForm):
     survey1_check = forms.ChoiceField(label='Survey1', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
     survey2_check = forms.ChoiceField(label='Survey2', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
     prioritize_sweepstakes = forms.ChoiceField(label='Prioritize Sweepstakes', choices=[('yes', 'Yes'), ('no', 'No')], widget=forms.RadioSelect)
-    customer_checkin_frequency = forms.ChoiceField(label='Customer Check In Frequency', choices=[(0, 'Once Every 24 Hours'), (1, 'Once Every Hour')], widget=forms.RadioSelect)
+    customer_checkin_frequency = forms.ChoiceField(label='Customer Check In Frequency', choices=[(0, 'Once Per Day'), (1, 'Once Every Hour')], widget=forms.RadioSelect)
 
     class Meta:
         model = Sweepstakes
