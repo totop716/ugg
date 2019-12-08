@@ -53,6 +53,19 @@ class LoginViewSet(ViewSet):
     def create(self, request):
         return ObtainAuthToken().post(request)
 
+class SweepTabletRemoveViewSet(APIView):
+    def get(self, request): 
+        data = request.query_params
+        sweep_id = data.get('sweep_id')
+        tablet_id = data.get('tablet_id')
+        tablet = Tablet.objects.filter(Q(id=tablet_id))[0]
+        sweep_ids = tablet.sweep_ids
+        sweep_ids = sweep_ids.replace(sweep_id+',', '')
+        tablet.sweep_ids = sweep_ids
+        tablet.active_sweep = ''
+        tablet.save()
+        return Response({'message': 'successfully removed'})
+
 class UserLoginViewSet(APIView):
     def post(self, request): 
         data = request.query_params

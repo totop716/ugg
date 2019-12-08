@@ -183,6 +183,16 @@
                 $(this).hide();
             }
         });
+        $("#removeFeatureModal .delete_sweepstake_tablet").click(function(e){
+            e.preventDefault();
+            $.ajax({
+                url: '/removesweep_tablet?sweep_id='+$(this).parent().find(".sweepstake_id").val()+'&tablet_id='+$(this).parent().find(".tablet_id").val(),
+                type: 'GET',
+                success: function(data) {
+                    location.href="/admin/home/tablet/";
+                }
+            });
+        });
         $("#removeSurveyModal .delete_survey").click(function(e){
             e.preventDefault();
             $.ajax({
@@ -193,6 +203,10 @@
                 }
             });
         });
+        $(".sweepstakecontain .btn.selectedsweep").click(function(){
+            $("#removeFeatureModal .tablet_id").val($(this).attr("data-tabletid"));
+            $("#removeFeatureModal .sweepstake_id").val($(this).attr("data-sweepid"));
+        })
         $(".delete-survey-buttt").click(function(){
             $("#removeSurveyModal .survey_id").val($(this).attr("survey_id"));
         })
