@@ -238,7 +238,7 @@ class SweepUser(models.Model):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     check_time = models.CharField(max_length =200, null=True)
-    suite_po_box = models.CharField("Suite/PO Box", max_length =50, default='')
+    suite_po_box = models.CharField("Suite/PO Box", max_length =50, default='', null=True, blank=True)
     label = models.CharField(max_length = 100, default="Added by Admin")
     password = models.CharField(max_length = 100, default='', blank=True)
     checkSMS = models.BooleanField('SMS', default=False)
