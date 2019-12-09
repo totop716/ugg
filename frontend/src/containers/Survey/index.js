@@ -139,7 +139,6 @@ class Survey extends Component {
     const {navigate} = this.props.navigation;
     getCheckInTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
       // const checkedtime = new Date(res1.checkin.check_time.replace(" ", "T"));
-      console.log("RES1", res1);
       let checkedtime = '';
       if(res1.checkin.check_time != null){
         const checkedtime_array = res1.checkin.check_time.split("T");
@@ -163,9 +162,8 @@ class Survey extends Component {
   }
 
   gotoNextQuiz = () => {
-    if(this.state.question_no < this.state.survey_questions.length - 1){
-      this.setState({question_no: this.state.question_no + 1, selected_answer: -1})
-    }else if(this.state.question_no == this.state.survey_questions.length - 1){
+    const answer = this.state.survey_questions[this.state.question_no].answers[this.state.selected_answer];
+    if(answer.option_complete == "2"){
       const currenttime = new Date();
       const {navigate} = this.props.navigation;
       getCheckInTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
@@ -185,7 +183,10 @@ class Survey extends Component {
           navigate("SweepStake", {comeback: true, thankyou: false, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user'), sweepuser: this.props.navigation.getParam('sweepuser')})
         }
       });
-    }
+    }else if(answer.option_complete == "1")
+      this.setState({question_no: answer.option_goquestion - 1, selected_answer: -1});
+    else
+      this.setState({question_no: this.state.question_no + 1, selected_answer: -1});
   }
 
   render(){

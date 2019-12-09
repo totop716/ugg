@@ -78,6 +78,7 @@ class SweepStake extends Component {
       this.setState({phoneNumberFormat: '', phoneNumber: '', userData: props.navigation.getParam('tabletData'), userData: props.navigation.getParam('sweepuser'), tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
     }
     if(props.navigation.getParam('comeback') == true){
+      console.log('comeback', props.navigation.getParam('comeback'));
       this.setState({comebackBoxVisible: true});
       this.setState({phoneNumberFormat: '', phoneNumber: '', userData: props.navigation.getParam('tabletData'), userData: props.navigation.getParam('sweepuser'), tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
     }
@@ -93,11 +94,11 @@ class SweepStake extends Component {
     }
     if(this.props.navigation.getParam('thankyou') == true){
       this.setState({thankyouBoxVisible: true});
-      this.setState({phoneNumberFormat: '', phoneNumber: '', userData: props.navigation.getParam('tabletData'), userData: props.navigation.getParam('sweepuser'), tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
+      this.setState({phoneNumberFormat: '', phoneNumber: '', userData: this.props.navigation.getParam('tabletData'), userData: this.props.navigation.getParam('sweepuser'), tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData')});
     }
     if(this.props.navigation.getParam('comeback') == true){
       this.setState({comebackBoxVisible: true});
-      this.setState({phoneNumberFormat: '', phoneNumber: '', userData: props.navigation.getParam('tabletData'), userData: props.navigation.getParam('sweepuser'), tabletData: props.navigation.getParam('tabletData'), sweepstakeData: props.navigation.getParam('sweepstakeData')});
+      this.setState({phoneNumberFormat: '', phoneNumber: '', userData: this.props.navigation.getParam('tabletData'), userData: this.props.navigation.getParam('sweepuser'), tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData')});
     }
     if(tabletData != null){
       this.setState({tabletData});

@@ -160,11 +160,12 @@ class Signup extends Component {
         const currenttime = new Date(utc - (3600000*5));
         const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
         // updateCheckTime(res.id, navigation.getParam('tabletData').id, navigation.getParam('sweepstakeData').id, check_time).then((res2) => {
-        getUserAPI(phoneNo).then((res1) => {
+        getUserAPI(phoneNo).then(res1 => {
+          console.log("RES1", res1);
           if(this.state.sweepstakeData.survey1_check == "no" && this.state.sweepstakeData.survey2_check == "no" ){
-            this.props.navigation.navigate('SweepStake', {exit: 2, user: this.props.navigation.getParam('user'), tabletData: navigation.getParam('tabletData'), sweepstakeData: navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), sweep_user: res1.user});
+            this.props.navigation.navigate('SweepStake', {exit: 2, user: this.props.navigation.getParam('user'), tabletData: navigation.getParam('tabletData'), sweepstakeData: navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), sweepuser: res1.user});
           }else{
-            this.props.navigation.navigate('Survey', {exit: 2, user: this.props.navigation.getParam('user'), tabletData: navigation.getParam('tabletData'), sweepstakeData: navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), sweep_user: res1.user});
+            this.props.navigation.navigate('Survey', {exit: 2, user: this.props.navigation.getParam('user'), tabletData: navigation.getParam('tabletData'), sweepstakeData: navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), sweepuser: res1.user});
           }
         });
         // })
