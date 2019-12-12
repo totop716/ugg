@@ -9,16 +9,16 @@
     "android:beta": "fastlane android beta"
   },
   "dependencies": {
-    "@expo/vector-icons": "^9.0.0",
+    "@expo/vector-icons": "^10.0.0",
     "color": "^3.1.2",
-    "expo": "^33.0.0",
+    "expo": "^35.0.0",
     "expokit": "^32.0.3",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "native-base": "^2.12.1",
     "prop-types": "^15.6.2",
     "react": "16.8.3",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
     "react-native-custom-checkbox": "^1.5.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-masked-text": "^1.12.2",
@@ -32,7 +32,7 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0",
+    "babel-preset-expo": "^7.0.0",
     "expo-cli": "^2.16.1"
   },
   "private": true
