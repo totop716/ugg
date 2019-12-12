@@ -85,7 +85,6 @@ class Survey extends Component {
         that.setState({survey_questions});
       });
     }
-    this.setState({admin_user: {username: 'admin'}})
   }
 
   componentWillReceiveProps(props){

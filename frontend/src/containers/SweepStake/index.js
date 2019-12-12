@@ -87,7 +87,6 @@ class SweepStake extends Component {
   }
 
   componentDidMount() {
-
     const admin_user = this.props.navigation.getParam('user');
     this.setState({admin_user: admin_user[0]});
     const tabletData = this.props.navigation.getParam('tabletData');
@@ -482,7 +481,7 @@ class SweepStake extends Component {
               <TouchableOpacity style={styles.logoutContainer} onPress={this.hidecomeebackBox}>
                 <Icon ios='ios-close' android="md-close" style={styles.logoutButton} />
               </TouchableOpacity>
-              <Text style={styles.thankyouText}>You have already checked in to {this.state.tabletData == null ? '' : this.state.tabletData.name } for Today. Come back tomorrow.</Text>
+              <Text style={styles.thankyouText}>You have already checked into {this.state.tabletData == null ? '' : this.state.tabletData.name } for Today. Come back tomorrow.</Text>
             </View>
           </Modal>
           {this.state.showPasswordBox && <View style={styles.thankyouBox}>
