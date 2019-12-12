@@ -27,6 +27,8 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons'
 
 import Modal from 'react-native-modal'
 
+import moment from 'moment'
+
 class SweepStake extends Component {
   state = {
     username: '',
@@ -201,7 +203,45 @@ class SweepStake extends Component {
             }
           });
         }else{
-          this.props.navigation.navigate("Survey", {sweepuser: res.user, user: this.props.navigation.getParam('user'), tabletData: this.state.tabletData, sweepstakeData: this.state.sweepstakeData});
+          const {sweepstakeData} = this.state;
+          getCheckInTime(res.user.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
+            var checkedtime = ''; var survey_enter_time = '';
+            if(res1.checkin.survey_enter_time != null){
+              survey_enter_time = res1.checkin.survey_enter_time;
+            }
+            if(res1.checkin.check_time != null){
+              const checkedtime_array = res1.checkin.check_time.split("T");
+              checkedtime = checkedtime_array[0].split("-");  
+            }
+            var hour_diff = moment(survey_enter_time).diff(moment(), 'hours');
+            var day_diff = moment(survey_enter_time).diff(moment(), 'days');
+            var survey_checked = false;
+            if(survey_enter_time != ''){
+              if(sweepstakeData.customer_checkin_frequency == "0"){
+                if(day_diff < 1)
+                  survey_checked = true;
+              }else if(sweepstakeData.customer_checkin_frequency == "1"){
+                if(hour_diff < 1)
+                  survey_checked = true;
+              }
+              if(survey_checked == false){
+                this.props.navigation.navigate("Survey", {sweepuser: res.user, user: this.props.navigation.getParam('user'), tabletData: this.state.tabletData, sweepstakeData: this.state.sweepstakeData});                
+              }else{
+                const currenttime = new Date();
+                if(res1.checkin.check_time == "" || res1.checkin.check_time == null || currenttime.getFullYear() > parseInt(checkedtime[0]) || currenttime.getMonth() > parseInt(checkedtime[1]) - 1 || currenttime.getDate() > parseInt(checkedtime[2])){
+                  const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
+                  updateCheckTime(this.state.userData.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
+                    console.log("Res2", res2);
+                  });
+                  this.setState({thankyouBoxVisible: true});
+                }else{
+                  this.setState({comebackBoxVisible: true});
+                }
+              }
+            }else{
+              this.props.navigation.navigate("Survey", {sweepuser: res.user, user: this.props.navigation.getParam('user'), tabletData: this.state.tabletData, sweepstakeData: this.state.sweepstakeData});
+            }
+          });
         }
       }).catch((error)=>{
         console.log("err", error)

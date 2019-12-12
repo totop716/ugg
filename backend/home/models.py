@@ -329,7 +329,8 @@ class SweepCheckIn(models.Model):
     user_id = models.ForeignKey(SweepUser, on_delete=models.CASCADE, null=True)
     sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE, null=True)
     tablet_id = models.ForeignKey(Tablet, on_delete=models.CASCADE, null=True)
-    check_time = models.DateTimeField()
+    check_time = models.DateTimeField(null=True, blank=True)
+    survey_enter_time = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'SweepCheckIn'

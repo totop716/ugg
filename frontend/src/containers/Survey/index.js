@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Image,
   TouchableOpacity,
-  View, KeyboardAvoidingView, StyleSheet
+  View, KeyboardAvoidingView, StyleSheet, ScrollView
 } from 'react-native';
 import {
   Button,
@@ -22,7 +22,7 @@ import Modal from 'react-native-modal'
 import getTheme from '../../../native-base-theme/components';
 import material from '../../../native-base-theme/variables/material';
 
-import {loginAPI, getCheckInTime, updateCheckTime, getSurveyAPI} from '../../services/Authentication'
+import {loginAPI, getCheckInTime, updateCheckTime, getSurveyAPI, updateSurveyCheckTime} from '../../services/Authentication'
 import styles from './styles';
 
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
@@ -39,6 +39,7 @@ class Survey extends Component {
     logout_error: null,
     sweep_user: null,
     question_no: 0,
+    prev_question_no: -1,
     selected_answer: -1,
     survey_questions: null
   };
@@ -157,8 +158,11 @@ class Survey extends Component {
   }
 
   gotoPrevQuiz = () => {
-    if(this.state.question_no > 0)
+    if(this.state.prev_question_no > -1){
+      this.setState({question_no: this.state.prev_question_no});
+    }else{
       this.setState({question_no: this.state.question_no - 1})
+    }
   }
 
   gotoNextQuiz = () => {
@@ -175,18 +179,23 @@ class Survey extends Component {
         }
         if(res1.checkin.check_time == "" || res1.checkin.check_time == null || currenttime.getFullYear() > parseInt(checkedtime[0]) || currenttime.getMonth() > parseInt(checkedtime[1]) - 1 || currenttime.getDate() > parseInt(checkedtime[2])){
           const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
-          updateCheckTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
-            console.log("Res2", res2);
+          updateSurveyCheckTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res3) => {
+            navigate("SweepStake", {thankyou: true, comeback: false, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user'), sweepuser: this.props.navigation.getParam('sweepuser')})
           });
-          navigate("SweepStake", {thankyou: true, comeback: false, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user'), sweepuser: this.props.navigation.getParam('sweepuser')})
         }else{
-          navigate("SweepStake", {comeback: true, thankyou: false, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user'), sweepuser: this.props.navigation.getParam('sweepuser')})
+          const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
+          updateSurveyCheckTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res3) => {
+            navigate("SweepStake", {comeback: true, thankyou: false, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user'), sweepuser: this.props.navigation.getParam('sweepuser')});
+          });
         }
       });
-    }else if(answer.option_complete == "1")
-      this.setState({question_no: answer.option_goquestion - 1, selected_answer: -1});
-    else
-      this.setState({question_no: this.state.question_no + 1, selected_answer: -1});
+    }else if(answer.option_complete == "1"){
+      const { question_no } = this.state;
+      this.setState({question_no: answer.option_goquestion - 1, selected_answer: -1, prev_question_no: question_no});
+    }else{
+      const { question_no } = this.state;
+      this.setState({question_no: this.state.question_no + 1, selected_answer: -1, prev_question_no: question_no});
+    }
   }
 
   render(){
@@ -200,7 +209,7 @@ class Survey extends Component {
             <Text style={styles.topbar_text}>Tablet ID: {tabletData.name}</Text>
             <AntDesign name="logout" size={32} color="#3d3d3d" onPress={this.showLogoutBox} />
           </View>
-          <View style={styles.content}>
+          <ScrollView style={styles.content} contentContainerStyle={styles.content_layout}>
             <Modal isVisible={this.state.cancelBox} onBackdropPress={this.closeCancelBox}>
               <View  style={styles.logoutModalContainer}>
                 <Text style={styles.thankyouText}>The survey is optional. If you quit the survey you will still be checked in.</Text>
@@ -249,7 +258,7 @@ class Survey extends Component {
               </View>
             </Modal>
             <View style={styles.topBar}>
-              <Text style={styles.topBarText}>Complete this survey to check in!</Text>
+              <Text style={styles.topBarText}>Survey is Optional.</Text>
               <Text style={styles.topBarText}>{this.state.question_no + 1} of {this.state.survey_questions != null &&this.state.survey_questions.length}</Text>
             </View>
             <View style={styles.survey_content}>
@@ -262,11 +271,11 @@ class Survey extends Component {
                       <View style={[styles.answer_radio, this.state.selected_answer == index && {backgroundColor: '#'+this.state.sweepstakeData.primary_hex_color, borderColor: '#'+this.state.sweepstakeData.border_hightlight_hex_color}]}></View>
                       <Text style={styles.answer_text}>{value.option_text}</Text>
                     </TouchableOpacity>
-                  : <TouchableOpacity style={[styles.answer_image, {width: 96/image_structure[this.state.survey_questions[this.state.question_no].answers.length - 2][0] + '%'}, this.state.selected_answer == index && {borderColor: '#' + this.state.sweepstakeData.border_hightlight_hex_color, borderWidth: 5, borderRadius: 5}]} key={index} onPress={()=>{this.setState({selected_answer: index})}}><Image source={{uri: Utils.serverUrl+'static/img/uploads/'+value.option_image}} style={{width: '100%', height: '100%'}} /></TouchableOpacity>
+                  : <TouchableOpacity style={[styles.answer_image, {width: 96/image_structure[this.state.survey_questions[this.state.question_no].answers.length - 2][0] + '%', height: 600/image_structure[this.state.survey_questions[this.state.question_no].answers.length - 2][0]}, this.state.selected_answer == index && {borderColor: '#' + this.state.sweepstakeData.border_hightlight_hex_color, borderWidth: 5, borderRadius: 5}]} key={index} onPress={()=>{this.setState({selected_answer: index})}}><Image source={{uri: Utils.serverUrl+'static/img/uploads/'+value.option_image}} style={{width: '100%', height: '100%'}} /></TouchableOpacity>
                 )}
                 <View style={{width: (image_structure[this.state.survey_questions[this.state.question_no].answers.length - 2][0] * image_structure[this.state.survey_questions[this.state.question_no].answers.length - 2][1] - this.state.survey_questions[this.state.question_no].answers.length ) * 32 + '%'}}></View>
               </View> : <View style={[styles.answers_container, this.state.survey_questions != null && this.state.survey_questions[this.state.question_no].type == 2 && styles.answer_img_container]}>
-                {this.state.survey_questions != null && this.state.survey_questions[this.state.question_no].answers.map((value, index) => <TouchableOpacity style={[styles.answer_image, index == 0 && this.state.survey_questions[this.state.question_no].answers.length == 9 && {width: '100%'}, index >= this.state.survey_questions[this.state.question_no].answers.length - 8 && {width: '24%'}, index < 3 && this.state.survey_questions[this.state.question_no].answers.length == 11 && {width: '36%'}, this.state.selected_answer == index && {borderColor: '#' + this.state.sweepstakeData.border_hightlight_hex_color, borderWidth: 5, borderRadius: 5}]} onPress={()=>{console.log(index); this.setState({selected_answer: index})}} key={index}>
+                {this.state.survey_questions != null && this.state.survey_questions[this.state.question_no].answers.map((value, index) => <TouchableOpacity style={[styles.answer_image, index == 0 && this.state.survey_questions[this.state.question_no].answers.length == 9 && {width: '100%'}, index >= this.state.survey_questions[this.state.question_no].answers.length - 8 && {width: '24%', height: 150,}, index < 3 && this.state.survey_questions[this.state.question_no].answers.length == 11 && {width: '36%', height: 220}, this.state.selected_answer == index && {borderColor: '#' + this.state.sweepstakeData.border_hightlight_hex_color, borderWidth: 5, borderRadius: 5}]} onPress={()=>{console.log(index); this.setState({selected_answer: index})}} key={index}>
                      <Image source={{uri: Utils.serverUrl+'static/img/uploads/'+value.option_image}} style={{width: '100%', height: '100%'}} />
                     </TouchableOpacity>
                   )
@@ -287,7 +296,7 @@ class Survey extends Component {
                   }
                 </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </StyleProvider>
     );

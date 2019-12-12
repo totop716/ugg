@@ -10,11 +10,13 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'space-between',
     width: "90%",
     marginTop: 100,
     marginBottom: 50,
     alignSelf: 'center'
+  },
+  content_layout: {
+    justifyContent: 'space-between'
   },
   cancelBox: {
     position: 'absolute',
@@ -228,9 +230,8 @@ const styles = StyleSheet.create({
   answer_image: {
     marginBottom: 15,
     width: '48%',
-    height: 100
+    height: 300
   }
 });
-
 
 export default styles;

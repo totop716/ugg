@@ -53,7 +53,16 @@ const updateCheckTime = (user_id, tablet_id, sweep_id, check_time) => {
   const path = 'sweepcheckin/?user_id='+user_id+'&tablet_id='+tablet_id+'&sweep_id='+sweep_id+'&check_time='+check_time;
   const url = `${Utils.serverUrl}${path}`;
   let users;
-  users = new APIClient(url, APIConstants.HTTPMethod.POST);
+  users = new APIClient(url, APIConstants.HTTPMethod.PUT);
+  console.log("URL", url);
+  return users.sendRequest();
+}
+
+const updateSurveyCheckTime = (user_id, tablet_id, sweep_id, check_time) => {
+  const path = 'sweepcheckin/?user_id='+user_id+'&tablet_id='+tablet_id+'&sweep_id='+sweep_id+'&check_time='+check_time+'&survey_enter_time='+check_time;
+  const url = `${Utils.serverUrl}${path}`;
+  let users;
+  users = new APIClient(url, APIConstants.HTTPMethod.PUT);
   console.log("URL", url);
   return users.sendRequest();
 }
@@ -131,4 +140,4 @@ const updateTabletStatus = (tablet_id, login) => {
   return users.sendRequest();
 }
 
-export { loginAPI, signupAPI, getUserAPI, getSurveyAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime, updateTabletKey, updateTabletStatus, getTabletfromKey };
+export { loginAPI, signupAPI, getUserAPI, getSurveyAPI, signupUserAPI, updateCheckTime, updateTabletID, getTabletAPI, getSweepstakeAPI, getSettingsAPI, getCheckInTime, updateTabletKey, updateTabletStatus, getTabletfromKey, updateSurveyCheckTime };

@@ -339,15 +339,20 @@ class SweepCheckInViewSet(APIView):
 
     def post(self, request):
         data = request.query_params
-        checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=data.get('check_time'))
+        checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=data.get('check_time'), survey_enter_time=data.get('survey_enter_time'))
         checkin.save()
 
         return Response({"success": "CheckIn '{}' created successfully".format(data)})
 
     def put(self, request, pk=None):
         data = request.query_params
-        checkin = SweepCheckIn.objects.filter(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id')).first()
-        checkin.check_time = data.get('check_time')
+        checkins = SweepCheckIn.objects.filter(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'))
+        if len(checkins) >= 1:
+            checkin = checkins[0]
+            checkin.check_time = data.get('check_time')
+            checkin.survey_enter_time = data.get('survey_enter_time')
+        else:
+            checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=data.get('check_time'), survey_enter_time=data.get('survey_enter_time'))
         checkin.save()
 
         return Response({"success": "CheckIn '{}' updated successfully".format(data)})
