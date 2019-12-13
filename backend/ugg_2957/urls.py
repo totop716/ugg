@@ -19,10 +19,13 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
     url('', include('home.urls')),
-    url(r'^accounts/', include('allauth.urls')),
+    # url(r'^accounts/', include('allauth.urls')),
     url(r'^api/v1/', include('home.api.v1.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^admin/sweepstake', TemplateView.as_view(template_name='admin/sweepstake_detail.html')),
+    url(r'^admin/admins/$', TemplateView.as_view(template_name='admin/admins.html')),
+    url(r'^admin/admin_add/$', TemplateView.as_view(template_name='admin/admin_user_detail.html')),
+    url(r'^admin/admin_edit/$', TemplateView.as_view(template_name='admin/admin_user_detail.html')),
     url(r'^admin/tablets/$', TemplateView.as_view(template_name='admin/tablets.html')),
     url(r'^admin/tabletpass/$', TemplateView.as_view(template_name='admin/change_tablet_pass.html')),
     url(r'^admin/sweepwinners', TemplateView.as_view(template_name='admin/sweepwinner.html')),

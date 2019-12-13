@@ -1,7 +1,7 @@
 
 from django.conf.urls import url, include
 from .views import home
-from home.api.v1.viewsets import UserLoginViewSet, MyUserViewSet, TabletViewSet, SweepstakeViewSet, MyUploadView, SweepwinnerViewSet, SweepUserViewSet, SettingsViewSet, SweepCheckInViewSet, SweepUserIDViewSet, SweepDetailsCheckInViewSet, SurveyViewSet, SweepTabletRemoveViewSet
+from home.api.v1.viewsets import UserLoginViewSet, MyUserViewSet, TabletViewSet, SweepstakeViewSet, MyUploadView, SweepwinnerViewSet, SweepUserViewSet, SettingsViewSet, SweepCheckInViewSet, SweepUserIDViewSet, SweepDetailsCheckInViewSet, SurveyViewSet, SweepTabletRemoveViewSet, SweepAdminRemoveViewSet, AdminUserViewSet
 
 urlpatterns = [
     url(r'^$', home, name="home"),
@@ -21,7 +21,10 @@ urlpatterns = [
     url(r'^myusers/(?P<pk>\d+)/$', MyUserViewSet.as_view()),
     url(r'^getsweepdetailslist/$', SweepDetailsCheckInViewSet.as_view()),
     url(r'^removesweep_tablet/$', SweepTabletRemoveViewSet.as_view()),
+    url(r'^removeadminuser/$', SweepAdminRemoveViewSet.as_view()),
     url(r'^savesurvey/$', SurveyViewSet.as_view()),
     url(r'^savesurvey/(?P<pk>\d+)/$', SurveyViewSet.as_view()),
     url(r'^fileupload/$', MyUploadView.as_view()),
+    url(r'^saveadmin_user/$', AdminUserViewSet.as_view()),
+    url(r'^saveadmin_user/(?P<pk>\d+)/$', AdminUserViewSet.as_view()),
 ]

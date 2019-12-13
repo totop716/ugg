@@ -1,0 +1,77 @@
+{% extends "admin/base.html" %}
+
+{% load i18n admin_static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% load custom_tags %}
+
+{% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li>
+      <a href="/admin/">Home</a>
+      <span class="divider">»</span>
+    </li>
+    <li class="active">
+      Admin
+    </li>
+  </ul>
+{% endblock %}
+
+{% block content %}
+  <div id="content-main" style="max-width: 400px">
+    <div class="admin-top-part">
+      <h1>Admin Users</h1>
+      <a href="/admin/admin_add" class="btn btn-success btn-adminadd">
+        <i class="icon-plus-sign icon-white"></i>&nbsp;Add New
+      </a>    
+    </div>
+    {% getadminusers as adminusers %}
+    <table id="tablet_admin_list" class="table table-striped table-bordered table-hover table-condensed">
+      <thead>
+      <tr>
+        <th scope="col" {{ header.class_attrib }}>
+          Username
+        </th>
+        <th style="width: 120px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in adminusers %}
+          <tr>
+            <td>
+              {{ user.username }}
+            </td>
+            <td><div class="action">
+              <button type='button' class='btn btn-danger btn-delete-admin-user' user-id="{{ user.id }}" data-toggle='modal' data-target="#removeadminModal">
+                Delete
+              </button>
+              <a class='btn btn-info' href='/admin/admin_edit?user_id={{user.id}}'>Edit
+              </a>
+            </div></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="modal fade" id="removeadminModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <input type="hidden" class="user_id" value="" />
+          <h1 style="text-align:center">Do you want to remove this admin user from the tablet?</h1>
+          <div class="button-container">
+            <button class="btn btn-primary btn-cancel-admin-delete">Cancel</button>
+            <button class="btn btn-danger btn-delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

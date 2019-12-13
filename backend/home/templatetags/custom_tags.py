@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.db.models import Q, Max, F, Count
 import dateutil.parser
 register = template.Library()
+from django.contrib.auth.models import User
 
 from home.models import Sweepstakes, Tablet, SweepWinner, SweepUser, SweepCheckIn, Survey
 
@@ -30,6 +31,16 @@ def gettablets(id):
       tablet.sweeps = sweeps
       tablet.sweeps_id = sweeps_id
   return tablets
+
+@register.simple_tag
+def getadminusers():
+  admins = User.objects.all()
+  return admins
+  
+@register.simple_tag
+def getadminuser(id):
+  admins = User.objects.filter(id=id)
+  return admins[0]
 
 @register.simple_tag
 def gettablets_fromsweepid(id, key, pagenumber):

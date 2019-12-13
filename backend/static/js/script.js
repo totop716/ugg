@@ -193,6 +193,16 @@
                 }
             });
         });
+        $("#removeadminModal .button-container .btn-delete").click(function(e){
+            e.preventDefault();
+            $.ajax({
+                url: '/removeadminuser?user_id='+$(this).parent().parent().find(".user_id").val(),
+                type: 'GET',
+                success: function(data) {
+                    location.href="/admin/admins/";
+                }
+            });
+        });
         $("#removeSurveyModal .delete_survey").click(function(e){
             e.preventDefault();
             $.ajax({
@@ -203,6 +213,38 @@
                 }
             });
         });
+        $("#admin-form-content-main form").submit(function(e){
+            e.preventDefault();
+            console.log($(this).find(".admin_user_id").val());
+            if($(this).find(".admin_user_id").val() == ""){
+                $.ajax({
+                    url: '/saveadmin_user/',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        location.href="/admin/admins/";
+                    },
+                    error: function(err){
+                        console.log(err);
+                    }
+                });
+            }else{
+                $.ajax({
+                    url: '/saveadmin_user/?user_id='+$(this).find(".admin_user_id").val(),
+                    type: 'PUT',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        location.href="/admin/admins/";
+                    }
+                });
+            }
+        })
+        $(".btn-delete-admin-user").click(function(){
+            $("#removeadminModal .user_id").val($(this).attr("user-id"));
+        });
+        $(".btn-cancel-admin-delete").click(function(){
+            $("#removeadminModal").modal('toggle');
+        })
         $(".sweepstakecontain .btn.selectedsweep").click(function(){
             $("#removeFeatureModal .tablet_id").val($(this).attr("data-tabletid"));
             $("#removeFeatureModal .sweepstake_id").val($(this).attr("data-sweepid"));

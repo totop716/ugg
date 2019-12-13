@@ -66,6 +66,14 @@ class SweepTabletRemoveViewSet(APIView):
         tablet.save()
         return Response({'message': 'successfully removed'})
 
+class SweepAdminRemoveViewSet(APIView):
+    def get(self, request): 
+        data = request.query_params
+        user_id = data.get('user_id')
+        user = get_object_or_404(User.objects.all(), id=user_id)
+        user.delete()
+        return Response({'message': 'successfully removed'})
+
 class UserLoginViewSet(APIView):
     def post(self, request): 
         data = request.query_params
@@ -356,6 +364,23 @@ class SweepCheckInViewSet(APIView):
         checkin.save()
 
         return Response({"success": "CheckIn '{}' updated successfully".format(data)})
+
+class AdminUserViewSet(APIView):
+    def post(self, request):
+        adminuser = User.objects.create(username=request.data.get('admin_username'), email="admin@example.com")
+        adminuser.set_password(request.data.get('admin_password'))
+        adminuser.save()
+
+        return Response({"success": "Admin User created successfully"})
+
+    def put(self, request, pk=None):
+        data = request.query_params
+        adminuser = User.objects.filter(id=data.get('user_id'))[0]
+        adminuser.username = request.data.get('admin_username')
+        adminuser.set_password(request.data.get('admin_password'))
+        adminuser.save()
+
+        return Response({"success": "Admin User updated successfully"})
 
 
 class SweepstakeViewSet(APIView):

@@ -1,0 +1,86 @@
+{% extends "admin/base.html" %}
+
+{% load i18n admin_static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% load custom_tags %}
+
+{% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li>
+      <a href="/admin/">Home</a>
+      <span class="divider">»</span>
+    </li>
+    <li>
+      <a href="/admin/admins">Admin</a>
+      <span class="divider">»</span>
+    </li>
+    <li class="active">
+      {% if request.GET.user_id %}
+        Edit Admin User
+      {% else %}
+        New Admin User
+      {% endif %}
+    </li>
+  </ul>
+{% endblock %}
+
+{% block content %}
+  <div id="admin-form-content-main">
+    {% if request.GET.user_id %}
+      {% getadminuser request.GET.user_id as adminuser %}
+    {% endif %}
+    <form class="form-horizontal" method="post">
+      <div class="form-right-part">
+        <div class="box save-box">
+            <button class="btn btn-info btn-save-button" type="submit">Save</button>
+            {% if request.GET.user_id %}
+              <button type='button' class='btn btn-danger btn-delete-admin-user' user-id="{{ request.GET.user_id }}" data-toggle='modal' data-target="#removeadminModal">
+                Delete
+              </button>
+            {% endif %}    
+        </div>
+      </div>
+      <input type="hidden" class="admin_user_id" value="{{ request.GET.user_id }}" />
+      <div class="content-form">
+        <div class="control-group form-row">
+          <div class="control-label">
+            <label class="admin-form-label">Admin Username *</label>
+          </div>
+          <div class="controls">
+            <input type="text" name="admin_username" placeholder="Username" class="vTextField" value="{{ adminuser.username }}" />
+          </div>
+        </div>
+        <div class="control-group form-row">
+          <div class="control-label">
+            <label class="admin-form-label">Admin Password *</label>
+          </div>
+          <div class="controls">
+              <input type="password" name="admin_password" placeholder="Password" class="vTextField" value="" />
+            </div>
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal fade" id="removeadminModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <input type="hidden" class="user_id" value="" />
+          <h1 style="text-align:center">Do you want to remove this admin user from the tablet?</h1>
+          <div class="button-container">
+            <button class="btn btn-primary btn-cancel-admin-delete">Cancel</button>
+            <button class="btn btn-danger btn-delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -321,3 +321,42 @@ body{
   margin-left: 0;
   margin-top: 5px;
 }
+
+.admin-top-part {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.admin-top-part .btn{
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#admin-form-content-main .content-form, #admin-form-content-main .form-right-part{
+  background: #fff;
+}
+
+#admin-form-content-main .content-form{
+  margin-right: 200px;
+}
+
+#admin-form-content-main .form-right-part{
+  width: 180px;
+  margin-left: 20px;
+  min-height: 50px;
+  float: right;
+}
+
+#admin-form-content-main .form-right-part .save-box{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+}
