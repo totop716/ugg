@@ -60,9 +60,9 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     # 'rest_framework.authtoken',
     'bootstrap4',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     # 'allauth.socialaccount.providers.google',
 ]
 

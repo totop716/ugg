@@ -19,7 +19,7 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
     url('', include('home.urls')),
-    # url(r'^accounts/', include('allauth.urls')),
+    url(r'^accounts/', include('allauth.urls')),
     url(r'^api/v1/', include('home.api.v1.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^admin/sweepstake', TemplateView.as_view(template_name='admin/sweepstake_detail.html')),
