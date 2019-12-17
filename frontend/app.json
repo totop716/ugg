@@ -26,7 +26,8 @@
       "bundleIdentifier": "com.ugg.ugg2957"
     },
     "android": {
-      "package": "com.ugg.ugg2957"
+      "package": "com.ugg.ugg2957",
+      "versionCode": 2
     },
     "description": ""
   }

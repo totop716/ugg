@@ -472,6 +472,11 @@ class SweepUserIDViewSet(APIView):
         users = SweepUser.objects.all()
         serializer = SweepUserSerializer(users, many=True)
         return Response({"users": serializer.data})
+    
+    def delete(self, request, pk=None):
+        user = get_object_or_404(SweepUser.objects.all(), pk=pk)
+        user.delete()
+        return Response({"message": "User with ID `{}` has been deleted.".format(pk)},status=204)
 
 class SweepUserViewSet(APIView):
     def get(self, request, pk=None):

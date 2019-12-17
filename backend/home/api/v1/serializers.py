@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from home.models import CustomText, HomePage, Sweepstakes, Tablet, SweepWinner, SweepUser, Settings, SweepCheckIn, SurveyQuestions, SurveyAnswerImage, SurveyAnswerText, Survey
 from rest_framework.decorators import api_view
 import base64
+from datetime import datetime
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -108,7 +109,8 @@ class SweepUserSerializer(serializers.ModelSerializer):
             suite_po_box=validated_data.get('suite_po_box'),
             label= validated_data.get('label'),
             checkEmail=validated_data.get('checkEmail'),
-            checkSMS=validated_data.get('checkSMS')
+            checkSMS=validated_data.get('checkSMS'),
+            created_date=datetime.now()
         )
         user.save()
         return user

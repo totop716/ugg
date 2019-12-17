@@ -74,6 +74,7 @@
                   <a href="?current=0" class="btn btn-info" id="currentEnded">Previous(Ended)</a>
                 {% endif %}
                 {% if cl.opts.verbose_name == 'sweep user' %}
+                  <input type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeUsersModal" id="deletesweepusers" value="Delete" />
                   <input type="button" class="btn btn-info" id="downloadsweepusers" value="Download" />
                 {% endif %}
                 {% if has_add_permission %}
@@ -102,7 +103,7 @@
           {{ cl.formset.non_form_errors }}
         {% endif %}
 
-        <form id="changelist-form" action="" method="post"
+        <form id="changelist-form" class="{% if cl.opts.verbose_name == 'sweep user' %}user_list_form{% endif %}" action="" method="post"
             {% if cl.formset.is_multipart %}
               enctype="multipart/form-data"{% endif %} class="form-inline" novalidate>{% csrf_token %}
           {% if cl.formset %}
@@ -150,6 +151,19 @@
             {% endif %}
           {% endblock %}
         </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="removeUsersModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h1 class="remove_tablet_text">Do you want to delete the users?</h1>
+          <div class="button-container">
+            <button class="btn btn-large btn-primary cancel-modal">Cancel</button>
+            <button class="btn btn-large btn-danger delete_sweepusers">Delete</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

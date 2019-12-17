@@ -213,6 +213,20 @@
                 }
             });
         });
+        $("#removeUsersModal .cancel-modal").click(function(e){
+            $("#removeUsersModal").modal('hide')
+        });
+        $("#removeUsersModal .delete_sweepusers").click(function(e){
+            $(".user_list_form tbody input[type='checkbox']:checked").each(function(){
+                $.ajax({
+                    url: '/sweepuser/'+$(this).val()+"/",
+                    type: 'DELETE',
+                    success: function(data) {
+                        location.href="/admin/home/sweepuser/";
+                    }
+                });
+            })
+        });
         $("#admin-form-content-main form").submit(function(e){
             e.preventDefault();
             console.log($(this).find(".admin_user_id").val());
