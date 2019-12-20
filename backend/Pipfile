@@ -8,7 +8,7 @@ ipdb = "*"
 django-extensions = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.8"
 
 [packages]
 django = "==2.1.7"
