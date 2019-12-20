@@ -149,6 +149,12 @@
                                 $('.field-question_'+(i+1)).find('.answer_image_part .image_row').each(function(){
                                     if(count < data.questions[i].options_count){
                                         $(this).show();
+                                        if(answer_image_options[count].option_image != null){
+                                            $(this).find('.image_change').show();
+                                            $(this).find('.image_change span').html(answer_image_options[count].option_image);
+                                            $(this).find('.image_change .option_image_name').val(answer_image_options[count].option_image);
+                                            $(this).find('.image_field_container span').show();    
+                                        }
                                         $(this).find('input[type="text"]').val(answer_image_options[count].option_tag);
                                         $(this).find('select').val(answer_image_options[count].option_goquestion)
                                         $(this).find('input[type="radio"]').each(function(){

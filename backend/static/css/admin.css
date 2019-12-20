@@ -252,6 +252,14 @@ body{
   display: flex;
 }
 
+.survey_question_part .answer_part .image_change{
+  margin-bottom: 10px;
+}
+
+.survey_question_part .answer_part .image_change, .survey_question_part .answer_part .image_field_container span{
+  display: none;
+}
+
 .survey_question_part .answer_select_part{
   margin-left: 20px;
 }

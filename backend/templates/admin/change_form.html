@@ -389,7 +389,13 @@
                                     <div class="col-left"><label>Option {{forloop.counter}}:</label></div>
                                     <div class="col-right">
                                       <div class="answer_part">
-                                        <input type="file" name="{{field.field.name}}_question_answer_image_{{forloop.counter}}" accept="image/*" required="" id="id_logo">
+                                        <div class="image_change">
+                                          Currently: <span></span> <input type="hidden" class="option_image_name" name="{{field.field.name}}_question_answer_imagename_{{forloop.counter}}" />                                        
+                                        </div>
+                                        <div class="image_field_container">
+                                          <span>Change To: </span>
+                                          <input type="file" name="{{field.field.name}}_question_answer_image_{{forloop.counter}}" accept="image/*" required="">
+                                        </div>
                                         <div class="row">
                                           <label>Tag: </label>
                                           <input type="text" name="{{field.field.name}}_question_answer_image_text_{{forloop.counter}}" />

@@ -36,8 +36,9 @@ class MyUploadView(APIView):
         i = 0
         for survey_answer_image in survey_answer_images:
             i = i+1
-            survey_answer_image.option_image = f['question_'+survey_answer_image.question_number+'_question_answer_image_'+str(i)]
-            survey_answer_image.save()
+            if 'question_'+survey_answer_image.question_number+'_question_answer_image_'+str(i) in f:
+                survey_answer_image.option_image = f['question_'+survey_answer_image.question_number+'_question_answer_image_'+str(i)]
+                survey_answer_image.save()
         return Response({'message': 'sucessfully updated'})
 
 class SignupViewSet(ModelViewSet):
@@ -301,7 +302,7 @@ class SurveyViewSet(APIView):
                     survey_answer_text.save()
             else:
                 for j in range(0, int(option_count)):
-                    survey_answer_image = SurveyAnswerImage.objects.create(option_image = request.data.get('question_'+str(i+1)+'_question_answer_image_'+str(j+1)), option_tag = request.data.get('question_'+str(i+1)+'_question_answer_image_text_'+str(j+1)), option_complete = request.data.get('question_'+str(i+1)+'_question_answer_image_complete_'+str(j+1)), option_goquestion=request.data.get('question_'+str(i+1)+'_question_answer_image_option_'+str(j+1)), option_question=survey_question, survey_id=saved_survey.id, question_number=i+1)
+                    survey_answer_image = SurveyAnswerImage.objects.create(option_image = request.data.get('question_'+str(i+1)+'_question_answer_imagename_'+str(j+1)), option_tag = request.data.get('question_'+str(i+1)+'_question_answer_image_text_'+str(j+1)), option_complete = request.data.get('question_'+str(i+1)+'_question_answer_image_complete_'+str(j+1)), option_goquestion=request.data.get('question_'+str(i+1)+'_question_answer_image_option_'+str(j+1)), option_question=survey_question, survey_id=saved_survey.id, question_number=i+1)
                     survey_answer_image.save()
 
         for i in range(int(request.data.get('questions_count')), 10):

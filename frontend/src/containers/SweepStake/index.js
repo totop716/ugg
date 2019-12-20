@@ -223,6 +223,7 @@ class SweepStake extends Component {
                 if(hour_diff < 1)
                   survey_checked = true;
               }
+              console.log("Survey Checkin", sweepstakeData.customer_checkin_frequency, " ", hour_diff, " ", day_diff);
               if(survey_checked == false){
                 this.props.navigation.navigate("Survey", {sweepuser: res.user, user: this.props.navigation.getParam('user'), tabletData: this.state.tabletData, sweepstakeData: this.state.sweepstakeData});                
               }else{
@@ -236,6 +237,7 @@ class SweepStake extends Component {
                 }else{
                   this.setState({comebackBoxVisible: true});
                 }
+                this.setState({phoneNumber: '', phoneNumberFormat: ''});
               }
             }else{
               this.props.navigation.navigate("Survey", {sweepuser: res.user, user: this.props.navigation.getParam('user'), tabletData: this.state.tabletData, sweepstakeData: this.state.sweepstakeData});
