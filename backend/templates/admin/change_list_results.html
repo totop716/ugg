@@ -79,7 +79,7 @@
                         {% getdata_by_index survey_list forloop.counter0 request.GET.p as survey_data %}
                         <button class="btn btn-danger delete-survey-buttt" data-toggle='modal' data-target="#removeSurveyModal" survey_id="{{survey_data.id}}">Delete</button>
                         <a href="/admin/home/survey/{{survey_data.id}}/change" class="btn btn-info">Edit</a>
-                        <a href="/admin/report" class="btn btn-info">Report</a>
+                        <button class="btn btn-info btn-reportsurvey" survey-id="{{survey_data.id}}">Report</a>
                     </td>
                     {% endif %}
                 </tr>

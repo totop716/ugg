@@ -41,7 +41,8 @@ class Survey extends Component {
     question_no: 0,
     prev_question_no: -1,
     selected_answer: -1,
-    survey_questions: null
+    survey_questions: null,
+    survey_answers: null,
   };
 
   componentDidMount(){
@@ -54,7 +55,7 @@ class Survey extends Component {
     const that = this;
     if(sweepData.survey1_check == "yes"){
       getSurveyAPI(sweepData.survey1_name).then(function(res){
-        var survey_questions = new Array();
+        var survey_questions = new Array(); var survey_answers = new Array();
         for(var i = 0; i < res.questions.length; i++){
           var question = new Object();
           question.type = parseInt(res.questions[i].question_type);
@@ -80,9 +81,10 @@ class Survey extends Component {
             question.answers = answers;
           }
           survey_questions.push(question);
+          survey_answers.push("");
           console.log("Survey1", survey_questions);
         }
-        that.setState({survey_questions});
+        that.setState({survey_questions, survey_answers});
       });
     }
   }
@@ -169,6 +171,8 @@ class Survey extends Component {
     if(answer.option_complete == "2"){
       const currenttime = new Date();
       const {navigate} = this.props.navigation;
+      var survey_answers = this.state.survey_answers; var selected_answer = this.state.selected_answer;
+      survey_answers[this.state.question_no] = selected_answer;
       getCheckInTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id).then((res1) => {
         // const checkedtime = new Date(res1.checkin.check_time.replace(" ", "T"));
         let checkedtime = '';
@@ -178,22 +182,28 @@ class Survey extends Component {
         }
         if(res1.checkin.check_time == "" || res1.checkin.check_time == null || currenttime.getFullYear() > parseInt(checkedtime[0]) || currenttime.getMonth() > parseInt(checkedtime[1]) - 1 || currenttime.getDate() > parseInt(checkedtime[2])){
           const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
-          updateSurveyCheckTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res3) => {
-            navigate("SweepStake", {thankyou: true, comeback: false, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user'), sweepuser: this.props.navigation.getParam('sweepuser')})
+          updateCheckTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res2) => {
+            updateSurveyCheckTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time, survey_answers).then((res3) => {
+              navigate("SweepStake", {thankyou: true, comeback: false, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user'), sweepuser: this.props.navigation.getParam('sweepuser')})
+            });
           });
         }else{
           const check_time = currenttime.getFullYear() + "-" + (currenttime.getMonth() + 1) + "-" + currenttime.getDate() + " " + currenttime.getHours() + ":" + currenttime.getMinutes() + ":" + currenttime.getSeconds();
-          updateSurveyCheckTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time).then((res3) => {
+          updateSurveyCheckTime(this.state.sweep_user.id, this.state.tabletData.id, this.state.sweepstakeData.id, check_time, survey_answers).then((res3) => {
             navigate("SweepStake", {comeback: true, thankyou: false, tabletData: this.props.navigation.getParam('tabletData'), sweepstakeData: this.props.navigation.getParam('sweepstakeData'), tabletID: this.props.navigation.getParam('tabletID'), user: this.props.navigation.getParam('user'), sweepuser: this.props.navigation.getParam('sweepuser')});
           });
         }
       });
     }else if(answer.option_complete == "1"){
       const { question_no } = this.state;
-      this.setState({question_no: answer.option_goquestion - 1, selected_answer: -1, prev_question_no: question_no});
+      var survey_answers = this.state.survey_answers; var selected_answer = this.state.selected_answer;
+      survey_answers[question_no] = selected_answer;
+      this.setState({question_no: answer.option_goquestion - 1, selected_answer: -1, prev_question_no: question_no, survey_answers});
     }else{
       const { question_no } = this.state;
-      this.setState({question_no: this.state.question_no + 1, selected_answer: -1, prev_question_no: question_no});
+      var survey_answers = this.state.survey_answers; var selected_answer = this.state.selected_answer;
+      survey_answers[question_no] = selected_answer;
+      this.setState({question_no: this.state.question_no + 1, selected_answer: -1, prev_question_no: question_no, survey_answers});
     }
   }
 

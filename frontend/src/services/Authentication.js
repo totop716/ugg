@@ -58,9 +58,17 @@ const updateCheckTime = (user_id, tablet_id, sweep_id, check_time) => {
   return users.sendRequest();
 }
 
-const updateSurveyCheckTime = (user_id, tablet_id, sweep_id, check_time) => {
-  const path = 'sweepcheckin/?user_id='+user_id+'&tablet_id='+tablet_id+'&sweep_id='+sweep_id+'&check_time='+check_time+'&survey_enter_time='+check_time;
+const updateSurveyCheckTime = (user_id, tablet_id, sweep_id, check_time, survey_answers) => {
+  var path = 'sweepcheckin/?user_id='+user_id+'&tablet_id='+tablet_id+'&sweep_id='+sweep_id+'&survey_enter_time='+check_time;
+  console.log("111", survey_answers);
+  for(var i = 0; i < 10; i ++){
+    path += '&survey_question_'+(i+1)+'=';
+    if(i < survey_answers.length){
+      path+= survey_answers[i];
+    }
+  }
   const url = `${Utils.serverUrl}${path}`;
+  console.log(url);
   let users;
   users = new APIClient(url, APIConstants.HTTPMethod.PUT);
   console.log("URL", url);

@@ -332,6 +332,16 @@ class SweepCheckIn(models.Model):
     tablet_id = models.ForeignKey(Tablet, on_delete=models.CASCADE, null=True)
     check_time = models.DateTimeField(null=True, blank=True)
     survey_enter_time = models.DateTimeField(null=True, blank=True)
+    survey_question_1 = models.CharField(max_length=10, null=True, blank=True)
+    survey_question_2 = models.CharField(max_length=10, null=True, blank=True)
+    survey_question_3 = models.CharField(max_length=10, null=True, blank=True)
+    survey_question_4 = models.CharField(max_length=10, null=True, blank=True)
+    survey_question_5 = models.CharField(max_length=10, null=True, blank=True)
+    survey_question_6 = models.CharField(max_length=10, null=True, blank=True)
+    survey_question_7 = models.CharField(max_length=10, null=True, blank=True)
+    survey_question_8 = models.CharField(max_length=10, null=True, blank=True)
+    survey_question_9 = models.CharField(max_length=10, null=True, blank=True)
+    survey_question_10 = models.CharField(max_length=10, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'SweepCheckIn'

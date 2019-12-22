@@ -343,6 +343,57 @@
                 image_row_count++;
             })
         });
+        $(".btn-reportsurvey").click(function(e){
+            e.preventDefault();
+            var survey_id = $(this).attr('survey-id');
+
+            $.ajax({
+                url: '/getsurveydetailslist/?survey_id='+survey_id,
+                type: 'GET',
+                success: function(res) {
+                    var headers = {
+                        tabletID: "Tablet ID",
+                        sweepstakes: "Sweepstakes",
+                        question_1: 'Q1',
+                        question_2: 'Q2',
+                        question_3: 'Q3',
+                        question_4: 'Q4',
+                        question_5: 'Q5',
+                        question_6: 'Q6',
+                        question_7: 'Q7',
+                        question_8: 'Q8',
+                        question_9: 'Q9',
+                        question_10: 'Q10',
+                    };
+                    
+                    var fileTitle = 'survey_report'+survey_id;
+
+                    var itemsFormatted = [];
+                    var question_answer = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+                    $.each(res, function(i){
+                        itemsFormatted.push({tabletID: '', sweepstakes: '', question_1: res[i].fields.survey_question_1 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_1)], question_2: res[i].fields.survey_question_2 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_2)], question_3: res[i].fields.survey_question_3 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_3)], question_4: res[i].fields.survey_question_4 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_4)], question_5: res[i].fields.survey_question_5 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_5)], question_6: res[i].fields.survey_question_6 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_6)], question_7: res[i].fields.survey_question_7 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_7)], question_8: res[i].fields.survey_question_8 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_8)], question_9: res[i].fields.survey_question_9 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_9)], question_10: res[i].fields.survey_question_10 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_10)]});
+                        $.ajax({
+                            url: '/sweepstakes/'+ res[i].fields.sweep_id,
+                            type: 'GET',
+                            success: function(res1) {
+                                itemsFormatted[i].sweepstakes = res1.sweepstake.name;
+
+                                $.ajax({
+                                    url: '/tablets/'+ res[i].fields.tablet_id,
+                                    type: 'GET',
+                                    success: function(res2) {
+                                        itemsFormatted[i].tabletID = res2.tablets[0].name;
+                                        if(i == res.length - 1){
+                                            exportCSVFile(headers, itemsFormatted, fileTitle);
+                                        }
+                                    }
+                                })
+                            }
+                        });
+                    });
+                }
+            });
+        });
         $("#id_questions_count").change(function(){
             var questions_count = parseInt($("#id_questions_count").val());
             $("#survey_form .form-row").each(function(){

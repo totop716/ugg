@@ -349,6 +349,16 @@ class SweepCheckInViewSet(APIView):
     def post(self, request):
         data = request.query_params
         checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=data.get('check_time'), survey_enter_time=data.get('survey_enter_time'))
+        checkin.survey_question_1 = data.get('survey_question_1')
+        checkin.survey_question_2 = data.get('survey_question_2')
+        checkin.survey_question_3 = data.get('survey_question_3')
+        checkin.survey_question_4 = data.get('survey_question_4')
+        checkin.survey_question_5 = data.get('survey_question_5')
+        checkin.survey_question_6 = data.get('survey_question_6')
+        checkin.survey_question_7 = data.get('survey_question_7')
+        checkin.survey_question_8 = data.get('survey_question_8')
+        checkin.survey_question_9 = data.get('survey_question_9')
+        checkin.survey_question_10 = data.get('survey_question_10')
         checkin.save()
 
         return Response({"success": "CheckIn '{}' created successfully".format(data)})
@@ -358,10 +368,22 @@ class SweepCheckInViewSet(APIView):
         checkins = SweepCheckIn.objects.filter(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'))
         if len(checkins) >= 1:
             checkin = checkins[0]
-            checkin.check_time = data.get('check_time')
-            checkin.survey_enter_time = data.get('survey_enter_time')
+            if data.get('check_time') != None:
+                checkin.check_time = data.get('check_time')
+            if data.get('survey_enter_time') != None:
+                checkin.survey_enter_time = data.get('survey_enter_time')
         else:
             checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=data.get('check_time'), survey_enter_time=data.get('survey_enter_time'))
+        checkin.survey_question_1 = data.get('survey_question_1')
+        checkin.survey_question_2 = data.get('survey_question_2')
+        checkin.survey_question_3 = data.get('survey_question_3')
+        checkin.survey_question_4 = data.get('survey_question_4')
+        checkin.survey_question_5 = data.get('survey_question_5')
+        checkin.survey_question_6 = data.get('survey_question_6')
+        checkin.survey_question_7 = data.get('survey_question_7')
+        checkin.survey_question_8 = data.get('survey_question_8')
+        checkin.survey_question_9 = data.get('survey_question_9')
+        checkin.survey_question_10 = data.get('survey_question_10')
         checkin.save()
 
         return Response({"success": "CheckIn '{}' updated successfully".format(data)})
@@ -461,6 +483,21 @@ class SweepDetailsCheckInViewSet(APIView):
             tabletsData.append(tablet)
 
         response=serializers.serialize("json", tabletsData)
+
+        return HttpResponse(response, content_type="application/json")
+
+class SurveyDetailsCheckInViewSet(APIView):
+    def get(self, request, pk=None):
+        query_data = request.query_params
+        survey_id = query_data.get('survey_id')
+        sweepstakes = Sweepstakes.objects.filter(Q(survey1_name_id=survey_id) | Q(survey2_name_id=survey_id))
+        survey_checkin = []
+        for sweepstake in sweepstakes:
+            checkins = SweepCheckIn.objects.filter(Q(sweep_id_id=sweepstake.id))
+            for checkin in checkins:
+                survey_checkin.append(checkin)
+
+        response=serializers.serialize("json", survey_checkin)
 
         return HttpResponse(response, content_type="application/json")
 
