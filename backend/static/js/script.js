@@ -653,7 +653,6 @@
                         city: "City",
                         state: "State",
                         zipcode: "Zip Code",
-                        suite: "Suite",
                         checkSMS: "SMS",
                         checkEmail: "Email"
                     };
