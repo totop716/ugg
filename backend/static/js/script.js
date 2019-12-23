@@ -354,6 +354,8 @@
                     var headers = {
                         tabletID: "Tablet ID",
                         sweepstakes: "Sweepstakes",
+                        survey_date: "Date",
+                        survey_time: "Time",
                         question_1: 'Q1',
                         question_2: 'Q2',
                         question_3: 'Q3',
@@ -371,7 +373,8 @@
                     var itemsFormatted = [];
                     var question_answer = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
                     $.each(res, function(i){
-                        itemsFormatted.push({tabletID: '', sweepstakes: '', question_1: res[i].fields.survey_question_1 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_1)], question_2: res[i].fields.survey_question_2 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_2)], question_3: res[i].fields.survey_question_3 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_3)], question_4: res[i].fields.survey_question_4 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_4)], question_5: res[i].fields.survey_question_5 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_5)], question_6: res[i].fields.survey_question_6 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_6)], question_7: res[i].fields.survey_question_7 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_7)], question_8: res[i].fields.survey_question_8 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_8)], question_9: res[i].fields.survey_question_9 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_9)], question_10: res[i].fields.survey_question_10 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_10)]});
+                        var survey_date = new Date(res[i].fields.survey_enter_time).toLocaleString("en-US", {timeZone: "America/Chicago"}).split(",");
+                        itemsFormatted.push({tabletID: '', sweepstakes: '', survey_date: survey_date[0], survey_time: survey_date[1].substring(1), question_1: res[i].fields.survey_question_1 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_1)], question_2: res[i].fields.survey_question_2 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_2)], question_3: res[i].fields.survey_question_3 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_3)], question_4: res[i].fields.survey_question_4 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_4)], question_5: res[i].fields.survey_question_5 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_5)], question_6: res[i].fields.survey_question_6 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_6)], question_7: res[i].fields.survey_question_7 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_7)], question_8: res[i].fields.survey_question_8 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_8)], question_9: res[i].fields.survey_question_9 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_9)], question_10: res[i].fields.survey_question_10 == '' ? 'N/A' : question_answer[parseInt(res[i].fields.survey_question_10)]});
                         $.ajax({
                             url: '/sweepstakes/'+ res[i].fields.sweep_id,
                             type: 'GET',
