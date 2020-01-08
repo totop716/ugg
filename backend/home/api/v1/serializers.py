@@ -159,6 +159,7 @@ class SweepCheckInSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        print('checkin create!')
         tablet = SweepCheckIn.objects.create(
             user_id=validated_data.get('user_id_id'),
             sweep_id=validated_data.get('sweep_id_id'),
@@ -168,6 +169,7 @@ class SweepCheckInSerializer(serializers.ModelSerializer):
         return tablet
 
     def update(self, instance, validated_data):
+        print('checkin update!')
         if validated_data.get('user_id_id') != None:
             instance.user_id_id = validated_data.get('user_id_id')
         if validated_data.get('sweep_id_id') != None:

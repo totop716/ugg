@@ -5,6 +5,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAdminUser
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework import generics
@@ -45,6 +46,23 @@ class SignupViewSet(ModelViewSet):
     serializer_class = SweepUserSerializer
     http_method_names = ['post']
 
+
+class CustomAuthToken(ObtainAuthToken):
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user': {
+                "email": user.email
+            }
+        })
+
+
 class LoginViewSet(ViewSet):
     serializer_class = AuthTokenSerializer
 
@@ -52,7 +70,7 @@ class LoginViewSet(ViewSet):
         return Response({"username": request.get('username')})
 
     def create(self, request):
-        return ObtainAuthToken().post(request)
+        return CustomAuthToken().post(request)
 
 class SweepTabletRemoveViewSet(APIView):
     def get(self, request): 
@@ -343,6 +361,11 @@ class SweepCheckInViewSet(APIView):
     def get(self, request, pk=None):
         data = request.query_params
         checkin = SweepCheckIn.objects.filter(Q(user_id_id=data.get('user_id')) & Q(tablet_id_id=data.get('tablet_id')) & Q(sweep_id_id=data.get('sweep_id'))).order_by('-check_time').first()
+        
+        # add end sweepstakes logic
+        if checkin is not None:
+            return Response({"message": "You have already checked into The Office today. Come back and check in again tomorrow!"},status=422)
+        
         serializer = SweepCheckInSerializer(checkin)
         return Response({"checkin": serializer.data})
 

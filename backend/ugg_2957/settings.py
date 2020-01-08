@@ -58,7 +58,7 @@ LOCAL_APPS = [
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
-    # 'rest_framework.authtoken',
+    'rest_framework.authtoken',
     'bootstrap4',
     'allauth',
     'allauth.account',
@@ -175,6 +175,19 @@ USE_L10N = True
 
 USE_TZ = True
 
+MEDIA_URL = '/media/'
+
+# AWS_ACCESS_KEY_ID = env.str('AWS_ACCESS_KEY_ID', '')
+# AWS_SECRET_ACCESS_KEY = env.str('AWS_SECRET_ACCESS_KEY', '')
+AWS_QUERYSTRING_AUTH = False
+AWS_ACCESS_KEY_ID = 'AKIA4KGTUZ6KB25CDRGJ'
+AWS_SECRET_ACCESS_KEY = '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'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_DEFAULT_ACL = 'public-read'
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+AWS_STORAGE_BUCKET_NAME = 'ugg-2957'
+AWS_S3_REGION_NAME = 'us-east-1'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -186,6 +199,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

@@ -6,6 +6,7 @@ name = "pypi"
 [dev-packages]
 ipdb = "*"
 django-extensions = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.7"
@@ -23,3 +24,5 @@ django-import-export = "*"
 django-suit = "==0.2.26"
 pillow = "*"
 django-allauth = "*"
+django-storages = "*"
+boto3 = "*"
