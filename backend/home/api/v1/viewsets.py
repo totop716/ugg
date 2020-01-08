@@ -1,4 +1,5 @@
 from django.http import QueryDict
+import datetime
 
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
@@ -117,7 +118,41 @@ class TabletViewSet(APIView):
             else:
                 tablet = Tablet.objects.filter(Q(name=data.get('tablet_id')) & Q(password = ''))
             serializer = TabletSerializer(tablet, many=True)
-            return Response({"tablet": serializer.data})
+            if serializer.data is not None and \
+                serializer.data[0] is not None and \
+                serializer.data[0]['sweep_ids'] is not None and \
+                len(serializer.data[0]['sweep_ids']) > 0 and \
+                    serializer.data[0]['sweep_ids'].split(',')[0] is not None:
+
+                first_sweep = Sweepstakes.objects.get(
+                    pk=serializer.data[0]['sweep_ids'].split(',')[0]
+                )
+
+                sweepstakes_serializer = SweepstakesSerializer(
+                    first_sweep
+                )
+
+                # if sweepstakes_serializer.is_valid():
+                return Response({
+                    "tablet": serializer.data,
+                    "first_sweep": sweepstakes_serializer.data
+                })
+
+                # return Response({
+                    # "tablet": serializer.data
+                # })
+            else:
+                return Response({"tablet": serializer.data})
+
+
+            # if deserialized.is_valid():
+            #     print(
+            #         'from deserialized.data!!',
+            #         deserialized.validated_data['sweep_ids']
+            #     )
+            #     return Response({"tablet": deserialized.data})
+
+            return Response({"message": "error."}, status=503)
         elif data.get('tablet_id_code'):
             tablet = Tablet.objects.filter(Q(tablet_id_code=data.get('tablet_id_code')) & Q(login_status = True))
             serializer = TabletSerializer(tablet, many=True)
