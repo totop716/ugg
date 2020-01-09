@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "UGG",
+    "name": "UGG Check In",
     "slug": "ugg-2957",
     "privacy": "unlisted",
-    "sdkVersion": "35.0.0",
+    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android"
@@ -27,7 +27,7 @@
     },
     "android": {
       "package": "com.ugg.ugg2957",
-      "versionCode": 4
+      "versionCode": 5
     },
     "description": ""
   }

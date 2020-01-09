@@ -2,7 +2,6 @@ import { AsyncStorage } from 'react-native';
 
 import Constants from '../../constants';
 
-
 const APIUtils = {
   convertQueryString: (queryParams = {}) => {
     const esc = encodeURIComponent;
@@ -14,14 +13,20 @@ const APIUtils = {
   },
 
   getAccessToken: async () => {
-    const token = await AsyncStorage.getItem(Constants.IDENTIFIERS.ACCESS_TOKEN);
-    return token;
-  },
+    try {
+      const userSession = await AsyncStorage.getItem(
+        // Constants.IDENTIFIERS.ACCESS_TOKEN
+        'userData'
+      );
+      return JSON.parse(userSession).token;
+    } catch (e) {
+      return '';
+    }
+  }
 
-  setAccessToken: async (token) => {
-    AsyncStorage.setItem(Constants.IDENTIFIERS.ACCESS_TOKEN, token);
-  },
-
+  // setAccessToken: async token => {
+  //   AsyncStorage.setItem(Constants.IDENTIFIERS.ACCESS_TOKEN, token);
+  // }
 };
 
 export default APIUtils;

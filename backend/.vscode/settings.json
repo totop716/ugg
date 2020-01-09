@@ -1,3 +1,7 @@
 {
-    "python.pythonPath": "/Users/tyro/.local/share/virtualenvs/backend--acgme2r/bin/python"
+    "python.pythonPath": "/Users/tyro/.local/share/virtualenvs/backend--acgme2r/bin/python",
+    "python.linting.banditEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.enabled": true
 }

@@ -2,7 +2,8 @@
 from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
 
-from home.api.v1.viewsets import SignupViewSet, TabletViewSet, LoginViewSet, \
+from home.api.v1.viewsets import SignupViewSet, \
+    TabletViewSet, LoginViewSet, LogoutViewSet, IsAuthedViewSet, \
     SweepstakeViewSet, SweepCheckInViewSet, SurveyViewSet, \
     HomePageViewSet, CustomTextViewSet, SettingsViewSet, SweepwinnerViewSet, \
     MyUserViewSet, SurveyDetailsCheckInViewSet, SweepTabletRemoveViewSet, \
@@ -14,9 +15,12 @@ router.register('signup', SignupViewSet, 'signup')
 router.register('login', LoginViewSet, 'login')
 router.register('customtext', CustomTextViewSet)
 router.register('homepage', HomePageViewSet)
+router.register('logout', LogoutViewSet, 'logout')
 
 urlpatterns = [
     url(r'', include(router.urls)),
+    url(r'isauthed', IsAuthedViewSet.as_view(), name="instances")
+
     # url(r'^tablets/$', TabletViewSet.as_view()),
     # url(r'^tablets/(?P<pk>\d+)/$', TabletViewSet.as_view()),
 

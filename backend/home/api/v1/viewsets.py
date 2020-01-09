@@ -7,7 +7,7 @@ from rest_framework.authentication import SessionAuthentication, TokenAuthentica
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework import generics
 from rest_framework.response import Response
@@ -15,6 +15,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
+from rest_framework import status
 
 from django.core import serializers
 from django.http import HttpResponse
@@ -73,6 +74,44 @@ class LoginViewSet(ViewSet):
     def create(self, request):
         return CustomAuthToken().post(request)
 
+
+class LogoutViewSet(ViewSet):
+    # serializer_class = AuthTokenSerializer
+    authentication_classes = [TokenAuthentication]
+
+    def create(self, request):
+
+        data = request.data
+        username = data.get('username')
+        password = data.get('password')
+        user = User.objects.filter(Q(username=username))
+        if(len(user) > 0):
+            if user[0].check_password(password):
+                request.user.auth_token.delete()
+                return Response({
+                    "message": "Successfully logged out."
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    "error": "Password is not correct!"
+                }, status=status.HTTP_403_FORBIDDEN)
+        else:
+            return Response({
+                "error": "The user with current username does not exist!"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+
+class IsAuthedViewSet(APIView):
+    # serializer_class = AuthTokenSerializer
+    # queryset = User.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_class = [IsAuthenticated]
+
+    def get(self, request):
+        print("is authed!", request.auth)
+        return Response(status=status.HTTP_200_OK)
+
+
 class SweepTabletRemoveViewSet(APIView):
     def get(self, request): 
         data = request.query_params
@@ -86,6 +125,7 @@ class SweepTabletRemoveViewSet(APIView):
         tablet.save()
         return Response({'message': 'successfully removed'})
 
+
 class SweepAdminRemoveViewSet(APIView):
     def get(self, request): 
         data = request.query_params
@@ -93,6 +133,7 @@ class SweepAdminRemoveViewSet(APIView):
         user = get_object_or_404(User.objects.all(), id=user_id)
         user.delete()
         return Response({'message': 'successfully removed'})
+
 
 class UserLoginViewSet(APIView):
     def post(self, request): 
@@ -108,6 +149,7 @@ class UserLoginViewSet(APIView):
                 return Response({"error": "Password is not correct!"})
         else:
             return Response({"error": "The user with current username does not exist!"})
+
 
 class TabletViewSet(APIView):
     def get(self, request, pk=None):
@@ -398,8 +440,14 @@ class SweepCheckInViewSet(APIView):
         checkin = SweepCheckIn.objects.filter(Q(user_id_id=data.get('user_id')) & Q(tablet_id_id=data.get('tablet_id')) & Q(sweep_id_id=data.get('sweep_id'))).order_by('-check_time').first()
         
         # add end sweepstakes logic
-        if checkin is not None:
-            return Response({"message": "You have already checked into The Office today. Come back and check in again tomorrow!"},status=422)
+        # if checkin is not None:
+        #     serializer = SweepCheckInSerializer(checkin)
+        #     print('checkincheckin', serializer.data)
+        #     return Response({
+        #             "message": "You have already checked into The Office today. Come back and check in again tomorrow!"
+        #         },
+        #         status=422
+        #     )
         
         serializer = SweepCheckInSerializer(checkin)
         return Response({"checkin": serializer.data})

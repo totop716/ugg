@@ -1,11 +1,16 @@
 
 from django.conf.urls import url, include
 from .views import home
-from home.api.v1.viewsets import UserLoginViewSet, MyUserViewSet, TabletViewSet, SweepstakeViewSet, MyUploadView, SweepwinnerViewSet, SweepUserViewSet, SettingsViewSet, SweepCheckInViewSet, SweepUserIDViewSet, SweepDetailsCheckInViewSet, SurveyViewSet, SweepTabletRemoveViewSet, SweepAdminRemoveViewSet, AdminUserViewSet, SurveyDetailsCheckInViewSet
+from home.api.v1.viewsets import UserLoginViewSet, \
+    MyUserViewSet, TabletViewSet, SweepstakeViewSet, MyUploadView, \
+    SweepwinnerViewSet, SweepUserViewSet, SettingsViewSet, \
+    SweepCheckInViewSet, SweepUserIDViewSet, SweepDetailsCheckInViewSet, \
+    SurveyViewSet, SweepTabletRemoveViewSet, SweepAdminRemoveViewSet, \
+    AdminUserViewSet, SurveyDetailsCheckInViewSet
 
 urlpatterns = [
     url(r'^$', home, name="home"),
-    url(r'^login/$', UserLoginViewSet.as_view()),
+    # url(r'^login/$', UserLoginViewSet.as_view()),
     url(r'^sweepusers/$', SweepUserViewSet.as_view()),
     url(r'^sweepusers/(?P<pk>\d+)/$', SweepUserViewSet.as_view()),
     url(r'^sweepuser/(?P<pk>\d+)/$', SweepUserIDViewSet.as_view()),
