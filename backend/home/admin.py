@@ -7,6 +7,7 @@ from django import forms
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from commons.utils import utils
+from rest_framework.authtoken.models import Token
 
 from .models import Entry, Lottery, SweepUser, Sweepstakes, Tablet, Survey
 from import_export.admin import ImportExportModelAdmin, ImportMixin
@@ -159,6 +160,4 @@ admin.site.register(Tablet, TabletAdmin)
 admin.site.unregister(Site)
 admin.site.unregister(User)
 
-# from rest_framework.authtoken.models import Token
-
-# admin.site.unregister(Token)
+admin.site.unregister(Token)

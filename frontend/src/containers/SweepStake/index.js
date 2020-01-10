@@ -644,7 +644,6 @@ class SweepStake extends Component {
     logoutAPI(this.state.admin_user.username, this.state.admin_password)
       .then(res => {
         firstRes = res;
-        console.log('firstResfirstRes', firstRes);
         if (firstRes && firstRes.error) {
           this.setState({
             logout_error: 'You need to input correct password!'

@@ -70,26 +70,27 @@ class APIClient {
 
       if (authorize) {
         APIUtils.getAccessToken().then(token => {
+          if (!token) return;
           fetchParams.headers.Authorization = `${authType} ${token}`;
 
-          // console.log(
-          //   'authed! fetchParamsfetchParams params',
-          //   this.url,
-          //   this.method,
-          //   fetchParams,
-          //   params
-          // );
+          console.log(
+            'authed! fetchParamsfetchParams params',
+            this.url,
+            this.method,
+            fetchParams,
+            params
+          );
 
           this.fetchRequest(this.url, fetchParams, resolve, reject);
         });
       } else {
-        // console.log(
-        //   'fetchParamsfetchParams params',
-        //   this.url,
-        //   this.method,
-        //   fetchParams,
-        //   params
-        // );
+        console.log(
+          'fetchParamsfetchParams params',
+          this.url,
+          this.method,
+          fetchParams,
+          params
+        );
 
         this.fetchRequest(this.url, fetchParams, resolve, reject);
       }

@@ -22,6 +22,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Modal from 'react-native-modal';
 import { loginAPI } from '../../services/Authentication';
+import { capitaliseFirstChar } from '../../utils/index';
 
 import Checkbox from 'react-native-custom-checkbox';
 
@@ -640,14 +641,22 @@ class Signup extends Component {
                     placeholder="First Name *"
                     placeholderTextColor="#3d3d3d"
                     autoCapitalize="none"
-                    onChangeText={firstname => this.setState({ firstname })}
+                    onChangeText={firstname =>
+                      this.setState({
+                        firstname: capitaliseFirstChar(firstname)
+                      })
+                    }
                   />
                   <Input
                     style={styles.inputbox}
                     placeholder="Last Name *"
                     placeholderTextColor="#3d3d3d"
                     autoCapitalize="none"
-                    onChangeText={lastname => this.setState({ lastname })}
+                    onChangeText={firstname =>
+                      this.setState({
+                        lastname: capitaliseFirstChar(lastname)
+                      })
+                    }
                   />
                 </View>
                 <View style={[styles.listItem, styles.formItem]}>

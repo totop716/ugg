@@ -51,24 +51,26 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.redirects',
-    'import_export',
-    'home'
+    'import_export'
+    # 'home'
 ]
 LOCAL_APPS = [
-    # 'home',
+    'home',
     'customauth'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
-    # 'rest_framework.authtoken',
+    # 'rest_auth',
+    # 'rest_auth.registration',
+    'rest_framework.authtoken',
     'bootstrap4',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
+    'allauth.socialaccount'
     # 'allauth.socialaccount.providers.google',
 ]
 
-INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS += THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
