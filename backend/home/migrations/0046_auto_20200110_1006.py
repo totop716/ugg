@@ -15,15 +15,163 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='survey',
+            model_name='customtext',
             name='created_at',
             field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='survey',
+            model_name='customtext',
             name='updated_at',
             field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='entry',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='entry',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='homepage',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='homepage',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='lottery',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='lottery',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='participants',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='participants',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='settings',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='settings',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='surveyanswerimage',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='surveyanswerimage',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='surveyanswertext',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='surveyanswertext',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='surveyquestions',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='surveyquestions',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='sweepcheckin',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='sweepcheckin',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='sweepstakes',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='sweepstakes',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='sweepuser',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='sweepuser',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='sweepwinner',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='sweepwinner',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AddField(
+            model_name='tablet',
+            name='created_at',
+            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name='tablet',
+            name='updated_at',
+            field=models.DateTimeField(auto_now=True, default=django.utils.timezone.now),
+        ),
+        migrations.AlterField(
+            model_name='sweepstakes',
+            name='background',
+            field=models.ImageField(storage=storages.backends.s3boto3.S3Boto3Storage(), upload_to=home.models.Sweepstakes.file_name, validators=[home.models.validate_image]),
         ),
         migrations.AlterField(
             model_name='sweepstakes',
