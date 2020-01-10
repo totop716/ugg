@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import environ
+from django.conf.locale.en import formats as en_formats
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -58,7 +60,7 @@ LOCAL_APPS = [
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
     'bootstrap4',
     'allauth',
     'allauth.account',
@@ -168,6 +170,10 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Chicago'
+# DATE_FORMAT = 'm/d/Y'
+# TIME_FORMAT = 'H:i A'
+# DATETIME_FORMAT = DATE_FORMAT + ' ' + TIME_FORMAT
+en_formats.DATETIME_FORMAT = 'm/d/Y H:i A'
 
 USE_I18N = True
 

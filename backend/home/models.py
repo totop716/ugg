@@ -9,6 +9,8 @@ from datetime import datetime
 from django.core.exceptions import ValidationError
 from storages.backends.s3boto3 import S3Boto3Storage
 
+from commons.models import AbstractTableTimestamp
+
 sthree = S3Boto3Storage()
 
 
@@ -24,7 +26,7 @@ def validate_image(image):
         raise ValidationError("Max size of file is %s MB" % limit_mb)
 
 
-class CustomText(models.Model):
+class CustomText(AbstractTableTimestamp):
     title = models.CharField(max_length=150)
 
     def __str__(self):
@@ -39,7 +41,7 @@ class CustomText(models.Model):
         return 'title'
 
 
-class HomePage(models.Model):
+class HomePage(AbstractTableTimestamp):
     body = models.TextField()
 
     @property
@@ -51,7 +53,7 @@ class HomePage(models.Model):
         return 'body'
 
 
-class Entry(models.Model):
+class Entry(AbstractTableTimestamp):
     name = models.CharField(max_length=100)
 
     class Meta:
@@ -69,7 +71,7 @@ class Entry(models.Model):
         return 'name'
 
 
-class Lottery(models.Model):
+class Lottery(AbstractTableTimestamp):
     name = models.CharField(max_length=100)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
 
@@ -88,7 +90,7 @@ class Lottery(models.Model):
         return 'name'
 
 
-class Settings(models.Model):
+class Settings(AbstractTableTimestamp):
     device_code = models.CharField(max_length=100)
 
     class Meta:
@@ -106,7 +108,7 @@ class Settings(models.Model):
         return 'device_code'
 
 
-class Participants(models.Model):
+class Participants(AbstractTableTimestamp):
     name = models.CharField(max_length=100)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
 
@@ -125,7 +127,7 @@ class Participants(models.Model):
         return 'name'
 
 
-class SurveyQuestions(models.Model):
+class SurveyQuestions(AbstractTableTimestamp):
     question_type = models.CharField('Question 1', choices=((
         'type_1',
         'Multiple Choice'
@@ -140,7 +142,7 @@ class SurveyQuestions(models.Model):
         return self.question_text
 
 
-class SurveyAnswerText(models.Model):
+class SurveyAnswerText(AbstractTableTimestamp):
     option_text = models.TextField()
     option_complete = models.CharField('', choices=(('goto', 'If selected, go to question '), ('complete', 'If selected, complete survey')), max_length=10)
     option_goquestion = models.CharField('', choices=((2, 2), (3, 3), (4, 4), (5, 5), (6, 6)), max_length=10)
@@ -153,7 +155,7 @@ class SurveyAnswerText(models.Model):
         return self.option_text
 
 
-class SurveyAnswerImage(models.Model):
+class SurveyAnswerImage(AbstractTableTimestamp):
     option_image = models.ImageField()
     option_tag = models.CharField(max_length=100)
     option_complete = models.CharField('', choices=(('goto', 'If selected, go to question '), ('complete', 'If selected, complete survey')), max_length=10)
@@ -171,7 +173,7 @@ class SurveyAnswerImage(models.Model):
         return self.option_tag
 
 
-class Survey(models.Model):
+class Survey(AbstractTableTimestamp):
     name = models.CharField('Survey Name', max_length=100)
     questions_count = models.CharField('Number of Questions', choices=(('1', '1'),('2', '2'),('3', '3'),('4', '4'),('5', '5'),('6', '6'),('7', '7'),('8', '8'),('9', '9'),('10', '10')), default=1, max_length=2)
     created_date = models.CharField('Date Created', max_length=100)
@@ -200,7 +202,7 @@ class Survey(models.Model):
         return 'name'
 
 
-class SweepUser(models.Model):
+class SweepUser(AbstractTableTimestamp):
     first_name = models.CharField("First Name", max_length =50)
     last_name = models.CharField("Last Name", max_length =50)
     email = models.EmailField(
@@ -298,7 +300,7 @@ class SweepUser(models.Model):
         return 'email'
 
 
-class Sweepstakes(models.Model):
+class Sweepstakes(AbstractTableTimestamp):
     name = models.CharField(max_length=100)
     startdate = models.DateTimeField(help_text="Time is in UTC - 5")
     enddate = models.DateTimeField(help_text="Time is in UTC - 5")
@@ -358,7 +360,7 @@ class Sweepstakes(models.Model):
     def field(self):
         return 'name'
 
-class Tablet(models.Model):
+class Tablet(AbstractTableTimestamp):
     name = models.CharField('Tablet ID', max_length=100)
     user_id = models.ForeignKey(SweepUser, on_delete=models.CASCADE, blank=True, null=True)
     address = models.CharField(max_length=100)
@@ -385,7 +387,7 @@ class Tablet(models.Model):
     def field(self):
         return 'name'
 
-class SweepCheckIn(models.Model):
+class SweepCheckIn(AbstractTableTimestamp):
     user_id = models.ForeignKey(SweepUser, on_delete=models.CASCADE, null=True)
     sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE, null=True)
     tablet_id = models.ForeignKey(Tablet, on_delete=models.CASCADE, null=True)
@@ -412,7 +414,7 @@ class SweepCheckIn(models.Model):
     def field(self):
         return 'id'
 
-class SweepWinner(models.Model):
+class SweepWinner(AbstractTableTimestamp):
     windate = models.DateTimeField()
     sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE, null=True)
     checkIn_id = models.ForeignKey(SweepCheckIn, on_delete=models.CASCADE, null=True)
