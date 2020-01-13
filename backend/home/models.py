@@ -27,7 +27,7 @@ def validate_image(image):
         raise ValidationError("Max size of file is %s MB" % limit_mb)
 
 
-class CustomText(AbstractTableTimestamp):
+class CustomText(models.Model):
     title = models.CharField(max_length=150)
 
     def __str__(self):
@@ -42,7 +42,7 @@ class CustomText(AbstractTableTimestamp):
         return 'title'
 
 
-class HomePage(AbstractTableTimestamp):
+class HomePage(models.Model):
     body = models.TextField()
 
     @property
@@ -72,7 +72,7 @@ class Entry(models.Model):
         return 'name'
 
 
-class Lottery(AbstractTableTimestamp):
+class Lottery(models.Model):
     name = models.CharField(max_length=100)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
 
@@ -91,7 +91,7 @@ class Lottery(AbstractTableTimestamp):
         return 'name'
 
 
-class Settings(AbstractTableTimestamp):
+class Settings(models.Model):
     device_code = models.CharField(max_length=100)
 
     class Meta:
@@ -109,7 +109,7 @@ class Settings(AbstractTableTimestamp):
         return 'device_code'
 
 
-class Participants(AbstractTableTimestamp):
+class Participants(models.Model):
     name = models.CharField(max_length=100)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
 
@@ -128,7 +128,7 @@ class Participants(AbstractTableTimestamp):
         return 'name'
 
 
-class SurveyQuestions(AbstractTableTimestamp):
+class SurveyQuestions(models.Model):
     question_type = models.CharField('Question 1', choices=((
         'type_1',
         'Multiple Choice'
@@ -143,7 +143,7 @@ class SurveyQuestions(AbstractTableTimestamp):
         return self.question_text
 
 
-class SurveyAnswerText(AbstractTableTimestamp):
+class SurveyAnswerText(models.Model):
     option_text = models.TextField()
     option_complete = models.CharField('', choices=(('goto', 'If selected, go to question '), ('complete', 'If selected, complete survey')), max_length=10)
     option_goquestion = models.CharField('', choices=((2, 2), (3, 3), (4, 4), (5, 5), (6, 6)), max_length=10)
@@ -156,7 +156,7 @@ class SurveyAnswerText(AbstractTableTimestamp):
         return self.option_text
 
 
-class SurveyAnswerImage(AbstractTableTimestamp):
+class SurveyAnswerImage(models.Model):
     option_image = models.ImageField()
     option_tag = models.CharField(max_length=100)
     option_complete = models.CharField('', choices=(('goto', 'If selected, go to question '), ('complete', 'If selected, complete survey')), max_length=10)
