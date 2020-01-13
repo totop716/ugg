@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     # 'home'
 ]
 LOCAL_APPS = [
+    'commons',
     'home',
     'customauth'
 ]
