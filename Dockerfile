@@ -9,6 +9,7 @@ RUN apk add --no-cache --update \
   python3 \
   python3-dev \
   py3-pip \
+  curl \
   # Pillow dependencies
   jpeg-dev \
   zlib-dev \
