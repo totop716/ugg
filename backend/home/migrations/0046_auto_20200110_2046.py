@@ -26,17 +26,6 @@ class Migration(migrations.Migration):
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='entry',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
-            preserve_default=False,
-        ),
-        migrations.AddField(
-            model_name='entry',
-            name='updated_at',
-            field=models.DateTimeField(auto_now=True),
-        ),
-        migrations.AddField(
             model_name='homepage',
             name='created_at',
             field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),

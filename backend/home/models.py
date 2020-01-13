@@ -54,7 +54,7 @@ class HomePage(AbstractTableTimestamp):
         return 'body'
 
 
-class Entry(AbstractTableTimestamp):
+class Entry(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
