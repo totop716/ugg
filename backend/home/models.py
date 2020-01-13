@@ -8,6 +8,7 @@ from django.db import models
 from datetime import datetime
 from django.core.exceptions import ValidationError
 from storages.backends.s3boto3 import S3Boto3Storage
+import django.utils.timezone
 
 from commons.models import AbstractTableTimestamp
 
@@ -279,7 +280,7 @@ class SweepUser(AbstractTableTimestamp):
     is_admin = models.BooleanField(default=False)
     check_time = models.CharField(max_length =200, null=True)
     suite_po_box = models.CharField("Suite/PO Box", max_length =50, default='', null=True, blank=True)
-    created_date = models.DateTimeField("Created", default=datetime.now())
+    created_date = models.DateTimeField("Created", default=django.utils.timezone.now)
     label = models.CharField(max_length = 100, default="Added by Admin")
     password = models.CharField(max_length = 100, default='', blank=True)
     checkSMS = models.BooleanField('SMS', default=False)
