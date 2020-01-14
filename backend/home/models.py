@@ -203,7 +203,7 @@ class Survey(AbstractTableTimestamp):
         return 'name'
 
 
-class SweepUser(AbstractTableTimestamp):
+class SweepUser(models.Model):
     first_name = models.CharField("First Name", max_length =50)
     last_name = models.CharField("Last Name", max_length =50)
     email = models.EmailField(
@@ -301,7 +301,7 @@ class SweepUser(AbstractTableTimestamp):
         return 'email'
 
 
-class Sweepstakes(AbstractTableTimestamp):
+class Sweepstakes(models.Model):
     name = models.CharField(max_length=100)
     startdate = models.DateTimeField(help_text="Time is in UTC - 5")
     enddate = models.DateTimeField(help_text="Time is in UTC - 5")
@@ -361,7 +361,7 @@ class Sweepstakes(AbstractTableTimestamp):
     def field(self):
         return 'name'
 
-class Tablet(AbstractTableTimestamp):
+class Tablet(models.Model):
     name = models.CharField('Tablet ID', max_length=100)
     user_id = models.ForeignKey(SweepUser, on_delete=models.CASCADE, blank=True, null=True)
     address = models.CharField(max_length=100)
@@ -388,7 +388,7 @@ class Tablet(AbstractTableTimestamp):
     def field(self):
         return 'name'
 
-class SweepCheckIn(AbstractTableTimestamp):
+class SweepCheckIn(models.Model):
     user_id = models.ForeignKey(SweepUser, on_delete=models.CASCADE, null=True)
     sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE, null=True)
     tablet_id = models.ForeignKey(Tablet, on_delete=models.CASCADE, null=True)
@@ -415,7 +415,7 @@ class SweepCheckIn(AbstractTableTimestamp):
     def field(self):
         return 'id'
 
-class SweepWinner(AbstractTableTimestamp):
+class SweepWinner(models.Model):
     windate = models.DateTimeField()
     sweep_id = models.ForeignKey(Sweepstakes, on_delete=models.CASCADE, null=True)
     checkIn_id = models.ForeignKey(SweepCheckIn, on_delete=models.CASCADE, null=True)
