@@ -119,8 +119,8 @@ class SurveyAdmin(admin.ModelAdmin):
     add_form = SurveyCreationForm
 
     fields = ('name', 'questions_count', 'question_1', 'question_2', 'question_3', 'question_4', 'question_5', 'question_6', 'question_7', 'question_8', 'question_9', 'question_10')
-    list_display = ('name','questions_count', 'created_date')
-    # list_display = ('name','questions_count', 'created_at')
+    # list_display = ('name','questions_count', 'created_date')
+    list_display = ('name','questions_count', 'created_at')
 
 
 admin.site.register(Survey, SurveyAdmin)
