@@ -368,3 +368,11 @@ body{
   align-items: center;
   margin-bottom: 0;
 }
+
+#changelist-form th.action-checkbox-column {
+  display: none;
+}
+
+#changelist-form td.action-checkbox {
+  display: none;
+}
