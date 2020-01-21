@@ -182,6 +182,10 @@ body{
   margin-top: 0;
 }
 
+#survey_form .errors {
+  border: 1px solid #ba2121 !important;
+}
+
 #survey_form .row{
   margin-left: 0;
 }

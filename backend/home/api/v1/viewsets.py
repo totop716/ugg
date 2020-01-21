@@ -267,25 +267,25 @@ class SurveyViewSet(APIView):
     def get(self, request, pk=None):
         saved_survey = Survey.objects.filter(pk=pk)
         survey_questions = []
-        if saved_survey[0].question_1 != None:
+        if saved_survey[0].question_1 is not None:
             survey_questions.append(saved_survey[0].question_1)
-        if saved_survey[0].question_2 != None:
+        if saved_survey[0].question_2 is not None:
             survey_questions.append(saved_survey[0].question_2)
-        if saved_survey[0].question_3 != None:
+        if saved_survey[0].question_3 is not None:
             survey_questions.append(saved_survey[0].question_3)
-        if saved_survey[0].question_4 != None:
+        if saved_survey[0].question_4 is not None:
             survey_questions.append(saved_survey[0].question_4)
-        if saved_survey[0].question_5 != None:
+        if saved_survey[0].question_5 is not None:
             survey_questions.append(saved_survey[0].question_5)
-        if saved_survey[0].question_6 != None:
+        if saved_survey[0].question_6 is not None:
             survey_questions.append(saved_survey[0].question_6)
-        if saved_survey[0].question_7 != None:
+        if saved_survey[0].question_7 is not None:
             survey_questions.append(saved_survey[0].question_7)
-        if saved_survey[0].question_8 != None:
+        if saved_survey[0].question_8 is not None:
             survey_questions.append(saved_survey[0].question_8)
-        if saved_survey[0].question_9 != None:
+        if saved_survey[0].question_9 is not None:
             survey_questions.append(saved_survey[0].question_9)
-        if saved_survey[0].question_10 != None:
+        if saved_survey[0].question_10 is not None:
             survey_questions.append(saved_survey[0].question_10)
         
         answers_text_array = []
