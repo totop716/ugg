@@ -16,6 +16,7 @@ import { UserData } from '.';
 import { isAuthedAPI } from './src/services/Authentication';
 import { getUserSessionSel } from './src/reactn-state/selectors';
 import { defaultEmptyCurrentUser } from './src/reactn-state';
+import { Text } from 'native-base';
 
 const { useEffect, useState, useGlobal } = React;
 
@@ -26,15 +27,21 @@ const App = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
 
   const asyncDidMount = async (): Promise<void> => {
-    await Font.loadAsync({
-      Roboto: require('./src/assets/fonts/Roboto.ttf'),
-      Roboto_medium: require('./src/assets/fonts/Roboto_medium.ttf'),
-      ...Ionicons.font
-    });
+    setLoading(true);
+    try {
+      const fontLoad = await Font.loadAsync({
+        Roboto: require('native-base/Fonts/Roboto.ttf'),
+        Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+        ...Ionicons.font
+      });
+    } catch (e) {
+      console.log('Font.loadAsync e', e);
+    }
 
     try {
       const isAuthed = await isAuthedAPI();
     } catch (e) {
+      console.log('isAuthedAPI e', e);
       if (new RegExp('401').test(e.message)) {
         await setCurrentSessionAsync(
           defaultEmptyCurrentUser,
@@ -43,14 +50,18 @@ const App = (): JSX.Element => {
       }
     }
 
-    // this actually just initialises global currentUser state (if a session exists)
-    await getCurrentSessionAsync(
-      (setCurrentUser as unknown) as (user: UserData) => Promise<void>
-    );
+    try {
+      // this actually just initialises global currentUser state (if a session exists)
+      await getCurrentSessionAsync(
+        (setCurrentUser as unknown) as (user: UserData) => Promise<void>
+      );
 
-    await forceLogoutIfSessionExpired(
-      (setCurrentUser as unknown) as (user: UserData) => Promise<void>
-    );
+      await forceLogoutIfSessionExpired(
+        (setCurrentUser as unknown) as (user: UserData) => Promise<void>
+      );
+    } catch (e) {
+      console.log('getCurrentSessionAsync forceLogoutIfSessionExpired e', e);
+    }
 
     setLoading(false);
     SplashScreen.hide();
@@ -58,7 +69,7 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     asyncDidMount();
-  }, [loading]);
+  }, []);
 
   if (loading) {
     return <View />;

@@ -70,7 +70,7 @@ class APIClient {
 
       if (authorize) {
         APIUtils.getAccessToken().then(token => {
-          if (!token) return;
+          if (!token) return reject({});
           fetchParams.headers.Authorization = `${authType} ${token}`;
 
           console.log(
