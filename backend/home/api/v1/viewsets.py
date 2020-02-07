@@ -160,8 +160,9 @@ class TabletViewSet(APIView):
             else:
                 tablet = Tablet.objects.filter(Q(name=data.get('tablet_id')) & Q(password = ''))
             serializer = TabletSerializer(tablet, many=True)
+            
             if serializer.data is not None and \
-                serializer.data[0] is not None and \
+                len(serializer.data) > 0 and \
                 serializer.data[0]['sweep_ids'] is not None and \
                 len(serializer.data[0]['sweep_ids']) > 0 and \
                     serializer.data[0]['sweep_ids'].split(',')[0] is not None:

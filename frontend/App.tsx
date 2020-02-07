@@ -38,7 +38,7 @@ const App = (): JSX.Element => {
       console.log('Font.loadAsync e', e);
     }
 
-    try {
+    /* try {
       const isAuthed = await isAuthedAPI();
     } catch (e) {
       console.log('isAuthedAPI e', e);
@@ -48,7 +48,7 @@ const App = (): JSX.Element => {
           (setCurrentUser as unknown) as (user: UserData) => Promise<void>
         );
       }
-    }
+    } */
 
     try {
       // this actually just initialises global currentUser state (if a session exists)
