@@ -32,7 +32,7 @@ ADD ./ /app/webapp/
 WORKDIR /app/webapp/frontend
 
 # Install frontend dependencies
-RUN npm ci
+# RUN npm ci
 
 WORKDIR /app/webapp/backend
 

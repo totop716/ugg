@@ -75,7 +75,7 @@ const TabletLogin: React.FC<INavigation> = ({ navigation }) => {
 
       const res = await getTabletAPI(tabletID, password);
 
-      console.log('res!', res);
+      // console.log('res!', res);
       if (res.tablet.length > 0) {
         const isActive =
           res?.first_sweep?.startdate &&

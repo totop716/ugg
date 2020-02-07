@@ -12,9 +12,6 @@ class APIClient {
   fetchRequest = (url, fetchParams, resolve, reject) => {
     fetch(url, fetchParams)
       .then(async response => {
-        console.log('response', response.status);
-        console.log('response', response.statusText);
-        console.error('response', response);
         if (response && response.status) {
           if (response.status >= 400 && response.status <= 505) {
             throw Error(response.status);
