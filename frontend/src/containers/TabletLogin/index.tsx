@@ -47,6 +47,7 @@ const TabletLogin: React.FC<INavigation> = ({ navigation }) => {
   //   background: require('../../assets/images/LoginBackground.png')
   // };
 
+  /*
   const asyncDidMount = async (): Promise<void> => {
     // this actually just initialises global currentUser state (if a session exists)
     await getCurrentSessionAsync(
@@ -65,13 +66,16 @@ const TabletLogin: React.FC<INavigation> = ({ navigation }) => {
   useEffect(() => {
     asyncDidMount();
   }, []);
+  */
 
   const submitTabletLogin = async (): Promise<void> => {
     try {
+      /*
       if (!isLoggedInSel()) {
         navigation.navigate('Login');
         return;
       }
+      */
 
       const res = await getTabletAPI(tabletID, password);
 

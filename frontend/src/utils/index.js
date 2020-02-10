@@ -19,6 +19,11 @@ const Utils = {
   capitaliseFirstChar: str => {
     return str && str.length === 1 ? str.toUpperCase() : str;
   },
+  phoneInputRefInvokeMethod: (itemRef, method = 'focus') => {
+    if (itemRef && typeof itemRef[method] === 'function') {
+      itemRef[method]();
+    }
+  },
   isValidEmail: emailStr => {
     const reg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (reg.test(emailStr) === false) {

@@ -69,10 +69,10 @@ class Survey extends Component {
     const that = this;
     if (sweepData.survey1_check == 'yes') {
       getSurveyAPI(sweepData.survey1_name).then(function(res) {
-        var survey_questions = new Array();
-        var survey_answers = new Array();
+        const survey_questions = [];
+        const survey_answers = [];
         for (var i = 0; i < res.questions.length; i++) {
-          var question = new Object();
+          const question = new Object();
           question.type = parseInt(res.questions[i].question_type);
           question.question = res.questions[i].question_text;
           question.question_count = res.questions[i].options_count;

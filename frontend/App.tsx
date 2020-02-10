@@ -51,14 +51,16 @@ const App = (): JSX.Element => {
     } */
 
     try {
-      // this actually just initialises global currentUser state (if a session exists)
-      await getCurrentSessionAsync(
-        (setCurrentUser as unknown) as (user: UserData) => Promise<void>
-      );
+      /*
+        // this actually just initialises global currentUser state (if a session exists)
+        await getCurrentSessionAsync(
+          (setCurrentUser as unknown) as (user: UserData) => Promise<void>
+        );
 
       await forceLogoutIfSessionExpired(
         (setCurrentUser as unknown) as (user: UserData) => Promise<void>
       );
+      */
     } catch (e) {
       console.log('getCurrentSessionAsync forceLogoutIfSessionExpired e', e);
     }

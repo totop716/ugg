@@ -46,15 +46,15 @@ const Login: React.FC<INavigation> = ({ navigation }) => {
   //   background: require('../../assets/images/LoginBackground.png')
   // };
 
-  const asyncDidMount = async (): Promise<void> => {
-    if (isLoggedInSel()) {
-      navigation.navigate('TabletLogin');
-    }
-  };
+  // const asyncDidMount = async (): Promise<void> => {
+  //   if (isLoggedInSel()) {
+  //     navigation.navigate('TabletLogin');
+  //   }
+  // };
 
-  useEffect(() => {
-    asyncDidMount();
-  }, [isLoggedInSel()]);
+  // useEffect(() => {
+  //   asyncDidMount();
+  // }, [isLoggedInSel()]);
 
   const submitLogin = async (): Promise<void> => {
     try {

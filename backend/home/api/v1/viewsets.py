@@ -455,7 +455,8 @@ class SweepCheckInViewSet(APIView):
 
     def post(self, request):
         data = request.query_params
-        checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=data.get('check_time'), survey_enter_time=data.get('survey_enter_time'))
+        check_time = datetime.datetime.now();
+        checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=check_time, survey_enter_time=data.get('survey_enter_time'))
         checkin.survey_question_1 = data.get('survey_question_1')
         checkin.survey_question_2 = data.get('survey_question_2')
         checkin.survey_question_3 = data.get('survey_question_3')
@@ -471,16 +472,17 @@ class SweepCheckInViewSet(APIView):
         return Response({"success": "CheckIn '{}' created successfully".format(data)})
 
     def put(self, request, pk=None):
+        check_time = datetime.datetime.now();
         data = request.query_params
         checkins = SweepCheckIn.objects.filter(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'))
         if len(checkins) >= 1:
             checkin = checkins[0]
             if data.get('check_time') != None:
-                checkin.check_time = data.get('check_time')
+                checkin.check_time = check_time
             if data.get('survey_enter_time') != None:
                 checkin.survey_enter_time = data.get('survey_enter_time')
         else:
-            checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=data.get('check_time'), survey_enter_time=data.get('survey_enter_time'))
+            checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=check_time, survey_enter_time=data.get('survey_enter_time'))
         checkin.survey_question_1 = data.get('survey_question_1')
         checkin.survey_question_2 = data.get('survey_question_2')
         checkin.survey_question_3 = data.get('survey_question_3')

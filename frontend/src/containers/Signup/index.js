@@ -22,7 +22,6 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Modal from 'react-native-modal';
 import { loginAPI } from '../../services/Authentication';
-import { capitaliseFirstChar } from '../../utils/index';
 
 import Checkbox from 'react-native-custom-checkbox';
 
@@ -71,6 +70,19 @@ class Signup extends Component {
     }
   };
 
+  constructor(props) {
+    super(props);
+    this.firstNameRef = React.createRef();
+    this.lastNameRef = React.createRef();
+    this.addressRef = React.createRef();
+    this.poBoxRef = React.createRef();
+    this.cityRef = React.createRef();
+    this.poBoxRef = React.createRef();
+    this.stateRef = React.createRef();
+    this.zipRef = React.createRef();
+    this.emailRef = React.createRef();
+  }
+
   componentDidMount() {
     const admin_user = this.props.navigation.getParam('user');
     const sweepData = this.props.navigation.getParam('sweepstakeData');
@@ -118,6 +130,14 @@ class Signup extends Component {
 
   logout = () => {
     this.props.navigation.navigate('Login');
+  };
+
+  onSubmitEditingHOC = r => {
+    return () => {
+      if (r && r.current && r.current._root && r.current._root.focus) {
+        r.current._root.focus();
+      }
+    };
   };
 
   cancelRegister = () => {
@@ -637,24 +657,28 @@ class Signup extends Component {
               <Form style={styles.form}>
                 <View style={[styles.listItem, styles.formItem]}>
                   <Input
+                    ref={this.firstNameRef}
+                    onSubmitEditing={this.onSubmitEditingHOC(this.lastNameRef)}
                     style={styles.inputbox}
                     placeholder="First Name *"
                     placeholderTextColor="#3d3d3d"
-                    autoCapitalize="none"
+                    // autoCapitalize="none"
                     onChangeText={firstname =>
                       this.setState({
-                        firstname: capitaliseFirstChar(firstname)
+                        firstname: Utils.capitaliseFirstChar(firstname)
                       })
                     }
                   />
                   <Input
+                    ref={this.lastNameRef}
+                    onSubmitEditing={this.onSubmitEditingHOC(this.addressRef)}
                     style={styles.inputbox}
                     placeholder="Last Name *"
                     placeholderTextColor="#3d3d3d"
-                    autoCapitalize="none"
-                    onChangeText={firstname =>
+                    // autoCapitalize="none"
+                    onChangeText={lastname =>
                       this.setState({
-                        lastname: capitaliseFirstChar(lastname)
+                        lastname: Utils.capitaliseFirstChar(lastname)
                       })
                     }
                   />
@@ -679,12 +703,16 @@ class Signup extends Component {
                 </View>
                 <View style={[styles.listItem, styles.formItem]}>
                   <Input
+                    ref={this.addressRef}
+                    onSubmitEditing={this.onSubmitEditingHOC(this.poBoxRef)}
                     style={styles.inputbox}
                     placeholder="Address *"
                     placeholderTextColor="#3d3d3d"
                     onChangeText={address => this.setState({ address })}
                   />
                   <Input
+                    ref={this.poBoxRef}
+                    onSubmitEditing={this.onSubmitEditingHOC(this.cityRef)}
                     style={styles.inputbox}
                     placeholder="Suite/PO Box"
                     placeholderTextColor="#3d3d3d"
@@ -705,6 +733,8 @@ class Signup extends Component {
                 </View>
                 <View style={[styles.listItem, styles.formItem]}>
                   <Input
+                    ref={this.cityRef}
+                    onSubmitEditing={this.onSubmitEditingHOC(this.stateRef)}
                     style={styles.inputbox}
                     placeholder="City *"
                     placeholderTextColor="#3d3d3d"
@@ -712,12 +742,19 @@ class Signup extends Component {
                   />
                   <View style={styles.inputbox}>
                     <RNPickerSelect
+                      ref={this.stateRef}
                       placeholder={{
                         label: 'State *',
                         value: null
                       }}
                       items={usStates}
                       onValueChange={value => {
+                        if (this.state.txtState !== value) {
+                          const fn = this.onSubmitEditingHOC(this.zipRef);
+                          if (fn && typeof fn === 'function') {
+                            fn();
+                          }
+                        }
                         this.setState({
                           txtState: value
                         });
@@ -780,6 +817,8 @@ class Signup extends Component {
                 </View>
                 <View style={[styles.listItem, styles.formItem]}>
                   <Input
+                    ref={this.zipRef}
+                    onSubmitEditing={this.onSubmitEditingHOC(this.emailRef)}
                     style={styles.inputbox}
                     maxLength={5}
                     placeholder="Zip Code *"
@@ -788,8 +827,10 @@ class Signup extends Component {
                     onChangeText={zipcode => this.setState({ zipcode })}
                   />
                   <Input
+                    ref={this.emailRef}
                     style={styles.inputbox}
                     placeholder="Email"
+                    autoCapitalize="none"
                     placeholderTextColor="#3d3d3d"
                     onChangeText={emailaddress =>
                       this.setState({ emailaddress })

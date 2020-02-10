@@ -5,7 +5,8 @@ import {
   View,
   KeyboardAvoidingView,
   Linking,
-  AsyncStorage
+  AsyncStorage,
+  ActivityIndicator
 } from 'react-native';
 import {
   Container,
@@ -46,6 +47,7 @@ import moment from 'moment';
 
 class SweepStake extends Component {
   state = {
+    loading: false,
     username: '',
     password: '',
     phoneNoAlert: false,
@@ -91,6 +93,7 @@ class SweepStake extends Component {
     //   props.navigation.getParam('tabletDataFirstSweepIsActive'),
     //   props.navigation.getParam('tabletDataFirstSweep')
     // );
+    this.phoneInputRef = React.createRef();
 
     this.state.tabletDataFirstSweepIsActive = props.navigation.getParam(
       'tabletDataFirstSweepIsActive'
@@ -204,6 +207,7 @@ class SweepStake extends Component {
       );
 
       updateTabletStatus(tabletData.id, 1).then(res1 => {
+        console.log('res1res1', res1, this.state.tabletData);
         if (
           this.state.tabletData.active_sweep != null &&
           this.state.tabletData.active_sweep != ''
@@ -295,149 +299,206 @@ class SweepStake extends Component {
     if (this.state.phoneNumber.length <= 10) {
       this.setState({ phoneNumberError: 'Enter 10 DIGITS TO CHECK IN' });
     } else {
-      getUserAPI(this.state.phoneNumber)
-        .then(res => {
-          console.log('showThankyouBox getUserAPI', res);
-          this.setState({ userData: res.user });
-          if (
-            this.state.sweepstakeData.survey1_check == 'no' &&
-            this.state.sweepstakeData.survey2_check == 'no'
-          ) {
-            const currenttime = new Date();
-            const { navigate } = this.props.navigation;
-            getCheckInTime(
-              res.user.id,
-              this.state.tabletData.id,
-              this.state.sweepstakeData.id
-            ).then(res1 => {
-              // const checkedtime = new Date(res1.checkin.check_time.replace(" ", "T"));
-              let checkedtime = '';
-              if (res1.checkin.check_time != null) {
-                const checkedtime_array = res1.checkin.check_time.split('T');
-                checkedtime = checkedtime_array[0].split('-');
-              }
+      if (this.state.loading) {
+        return;
+      }
+      this.setState(
+        {
+          loading: true
+        },
+        () => {
+          getUserAPI(this.state.phoneNumber)
+            .then(res => {
+              this.setState({ userData: res.user });
               if (
-                res1.checkin.check_time == '' ||
-                res1.checkin.check_time == null ||
-                currenttime.getFullYear() > parseInt(checkedtime[0]) ||
-                currenttime.getMonth() > parseInt(checkedtime[1]) - 1 ||
-                currenttime.getDate() > parseInt(checkedtime[2])
+                this.state.sweepstakeData.survey1_check == 'no' &&
+                this.state.sweepstakeData.survey2_check == 'no'
               ) {
-                const check_time =
-                  currenttime.getFullYear() +
-                  '-' +
-                  (currenttime.getMonth() + 1) +
-                  '-' +
-                  currenttime.getDate() +
-                  ' ' +
-                  currenttime.getHours() +
-                  ':' +
-                  currenttime.getMinutes() +
-                  ':' +
-                  currenttime.getSeconds();
-                updateCheckTime(
-                  this.state.userData.id,
+                const currenttime = new Date();
+                const { navigate } = this.props.navigation;
+                getCheckInTime(
+                  res.user.id,
                   this.state.tabletData.id,
-                  this.state.sweepstakeData.id,
-                  check_time
-                ).then(res2 => {
-                  console.log('Res2', res2);
-                });
-                this.setState({ thankyouBoxVisible: true });
-              } else {
-                this.setState({ comebackBoxVisible: true });
-              }
-            });
-          } else {
-            const { sweepstakeData } = this.state;
-            getCheckInTime(
-              res.user.id,
-              this.state.tabletData.id,
-              this.state.sweepstakeData.id
-            ).then(res1 => {
-              var checkedtime = '';
-              var survey_enter_time = '';
-              if (res1.checkin.survey_enter_time != null) {
-                survey_enter_time = res1.checkin.survey_enter_time;
-              }
-              if (res1.checkin.check_time != null) {
-                const checkedtime_array = res1.checkin.check_time.split('T');
-                checkedtime = checkedtime_array[0].split('-');
-              }
-              var hour_diff = moment(survey_enter_time).diff(moment(), 'hours');
-              var day_diff = moment(survey_enter_time).diff(moment(), 'days');
-              var survey_checked = false;
-              if (survey_enter_time != '') {
-                if (sweepstakeData.customer_checkin_frequency == '0') {
-                  if (day_diff < 1) survey_checked = true;
-                } else if (sweepstakeData.customer_checkin_frequency == '1') {
-                  if (hour_diff < 1) survey_checked = true;
-                }
-                console.log(
-                  'Survey Checkin',
-                  sweepstakeData.customer_checkin_frequency,
-                  ' ',
-                  hour_diff,
-                  ' ',
-                  day_diff
-                );
-                if (survey_checked == false) {
-                  this.props.navigation.navigate('Survey', {
-                    sweepuser: res.user,
-                    user: this.props.navigation.getParam('user'),
-                    tabletData: this.state.tabletData,
-                    sweepstakeData: this.state.sweepstakeData
+                  this.state.sweepstakeData.id
+                )
+                  .then(res1 => {
+                    // const checkedtime = new Date(res1.checkin.check_time.replace(" ", "T"));
+                    let checkedtime = '';
+                    if (res1.checkin.check_time != null) {
+                      const checkedtime_array = res1.checkin.check_time.split(
+                        'T'
+                      );
+                      checkedtime = checkedtime_array[0].split('-');
+                    }
+                    if (
+                      res1.checkin.check_time == '' ||
+                      res1.checkin.check_time == null ||
+                      currenttime.getFullYear() > parseInt(checkedtime[0]) ||
+                      currenttime.getMonth() > parseInt(checkedtime[1]) - 1 ||
+                      currenttime.getDate() > parseInt(checkedtime[2])
+                    ) {
+                      const check_time =
+                        currenttime.getFullYear() +
+                        '-' +
+                        (currenttime.getMonth() + 1) +
+                        '-' +
+                        currenttime.getDate() +
+                        ' ' +
+                        currenttime.getHours() +
+                        ':' +
+                        currenttime.getMinutes() +
+                        ':' +
+                        currenttime.getSeconds();
+                      updateCheckTime(
+                        this.state.userData.id,
+                        this.state.tabletData.id,
+                        this.state.sweepstakeData.id,
+                        check_time
+                      ).then(res2 => {
+                        console.log('Res2', res2);
+                      });
+                      this.setState({
+                        thankyouBoxVisible: true,
+                        loading: false
+                      });
+                      Utils.phoneInputRefInvokeMethod(
+                        this.phoneInputRef,
+                        'clear'
+                      );
+                    } else {
+                      this.setState({
+                        comebackBoxVisible: true,
+                        loading: false
+                      });
+                      Utils.phoneInputRefInvokeMethod(
+                        this.phoneInputRef,
+                        'clear'
+                      );
+                    }
+                  })
+                  .catch(e => {
+                    this.setState({ loading: false });
+                    Utils.phoneInputRefInvokeMethod(
+                      this.phoneInputRef,
+                      'clear'
+                    );
                   });
-                } else {
-                  const currenttime = new Date();
-                  if (
-                    res1.checkin.check_time == '' ||
-                    res1.checkin.check_time == null ||
-                    currenttime.getFullYear() > parseInt(checkedtime[0]) ||
-                    currenttime.getMonth() > parseInt(checkedtime[1]) - 1 ||
-                    currenttime.getDate() > parseInt(checkedtime[2])
-                  ) {
-                    const check_time =
-                      currenttime.getFullYear() +
-                      '-' +
-                      (currenttime.getMonth() + 1) +
-                      '-' +
-                      currenttime.getDate() +
-                      ' ' +
-                      currenttime.getHours() +
-                      ':' +
-                      currenttime.getMinutes() +
-                      ':' +
-                      currenttime.getSeconds();
-                    updateCheckTime(
-                      this.state.userData.id,
-                      this.state.tabletData.id,
-                      this.state.sweepstakeData.id,
-                      check_time
-                    ).then(res2 => {
-                      console.log('Res2', res2);
-                    });
-                    this.setState({ thankyouBoxVisible: true });
-                  } else {
-                    this.setState({ comebackBoxVisible: true });
-                  }
-                  this.setState({ phoneNumber: '', phoneNumberFormat: '' });
-                }
               } else {
-                this.props.navigation.navigate('Survey', {
-                  sweepuser: res.user,
-                  user: this.props.navigation.getParam('user'),
-                  tabletData: this.state.tabletData,
-                  sweepstakeData: this.state.sweepstakeData
+                const { sweepstakeData } = this.state;
+                getCheckInTime(
+                  res.user.id,
+                  this.state.tabletData.id,
+                  this.state.sweepstakeData.id
+                ).then(res1 => {
+                  let checkedtime = '';
+                  let survey_enter_time = '';
+                  if (res1.checkin.survey_enter_time != null) {
+                    survey_enter_time = res1.checkin.survey_enter_time;
+                  }
+                  if (res1.checkin.check_time != null) {
+                    const checkedtime_array = res1.checkin.check_time.split(
+                      'T'
+                    );
+                    checkedtime = checkedtime_array[0].split('-');
+                  }
+                  const hour_diff = moment(survey_enter_time).diff(
+                    moment(),
+                    'hours'
+                  );
+                  const day_diff = moment(survey_enter_time).diff(
+                    moment(),
+                    'days'
+                  );
+                  let survey_checked = false;
+                  if (survey_enter_time != '') {
+                    if (sweepstakeData.customer_checkin_frequency == '0') {
+                      if (day_diff < 1) survey_checked = true;
+                    } else if (
+                      sweepstakeData.customer_checkin_frequency == '1'
+                    ) {
+                      if (hour_diff < 1) survey_checked = true;
+                    }
+                    console.log(
+                      'Survey Checkin',
+                      sweepstakeData.customer_checkin_frequency,
+                      ' ',
+                      hour_diff,
+                      ' ',
+                      day_diff
+                    );
+                    if (survey_checked == false) {
+                      this.props.navigation.navigate('Survey', {
+                        sweepuser: res.user,
+                        user: this.props.navigation.getParam('user'),
+                        tabletData: this.state.tabletData,
+                        sweepstakeData: this.state.sweepstakeData
+                      });
+                    } else {
+                      const currenttime = new Date();
+                      if (
+                        res1.checkin.check_time == '' ||
+                        res1.checkin.check_time == null ||
+                        currenttime.getFullYear() > parseInt(checkedtime[0]) ||
+                        currenttime.getMonth() > parseInt(checkedtime[1]) - 1 ||
+                        currenttime.getDate() > parseInt(checkedtime[2])
+                      ) {
+                        const check_time =
+                          currenttime.getFullYear() +
+                          '-' +
+                          (currenttime.getMonth() + 1) +
+                          '-' +
+                          currenttime.getDate() +
+                          ' ' +
+                          currenttime.getHours() +
+                          ':' +
+                          currenttime.getMinutes() +
+                          ':' +
+                          currenttime.getSeconds();
+                        updateCheckTime(
+                          this.state.userData.id,
+                          this.state.tabletData.id,
+                          this.state.sweepstakeData.id,
+                          check_time
+                        ).then(res2 => {
+                          console.log('Res2', res2);
+                        });
+                        this.setState({
+                          thankyouBoxVisible: true,
+                          loading: false
+                        });
+                        Utils.phoneInputRefInvokeMethod(
+                          this.phoneInputRef,
+                          'clear'
+                        );
+                      } else {
+                        this.setState({
+                          comebackBoxVisible: true,
+                          loading: false
+                        });
+                        Utils.phoneInputRefInvokeMethod(
+                          this.phoneInputRef,
+                          'clear'
+                        );
+                      }
+                      this.setState({ phoneNumber: '', phoneNumberFormat: '' });
+                    }
+                  } else {
+                    this.props.navigation.navigate('Survey', {
+                      sweepuser: res.user,
+                      user: this.props.navigation.getParam('user'),
+                      tabletData: this.state.tabletData,
+                      sweepstakeData: this.state.sweepstakeData
+                    });
+                  }
                 });
               }
+            })
+            .catch(error => {
+              console.log('err, user unregistered', error);
+              if (error) this.goToSignup();
             });
-          }
-        })
-        .catch(error => {
-          console.log('err', error);
-          if (error) this.goToSignup();
-        });
+        }
+      );
     }
   };
 
@@ -596,6 +657,14 @@ class SweepStake extends Component {
   };
 
   goToSignup = () => {
+    console.log('when goin', {
+      user: this.props.navigation.getParam('user'),
+      phoneNumber: this.state.phoneNumber,
+      tabletData: this.state.tabletData,
+      sweepstakeData: this.state.sweepstakeData,
+      tabletID: this.state.tabletID
+    });
+
     this.props.navigation.navigate('Signup', {
       user: this.props.navigation.getParam('user'),
       phoneNumber: this.state.phoneNumber,
@@ -1029,12 +1098,13 @@ class SweepStake extends Component {
                     </Text>
                     {this.state.sweepadded && (
                       <TextInputMask
+                        refInput={r => (this.phoneInputRef = r)}
                         value={this.state.phoneNumberFormat}
                         onChangeText={phoneNumberFormat => {
-                          let phoneNumberf = phoneNumberFormat.startsWith('1')
+                          const phoneNumberf = phoneNumberFormat.startsWith('1')
                             ? phoneNumberFormat
                             : '1' + phoneNumberFormat;
-                          let phoneNumber = phoneNumberf
+                          const phoneNumber = phoneNumberf
                             .toString()
                             .replace(/\D+/g, '');
                           this.setState({
@@ -1042,6 +1112,7 @@ class SweepStake extends Component {
                             phoneNumber: phoneNumber
                           });
                         }}
+                        onSubmitEditing={this.showThankyouBox}
                         type={'cel-phone'}
                         maxLength={18}
                         options={
@@ -1063,16 +1134,22 @@ class SweepStake extends Component {
                         {this.state.phoneNumberError}
                       </Text>
                     )}
-                    {this.state.sweepadded && (
-                      <Button
-                        onPress={this.showThankyouBox}
-                        fontSize="20"
-                        style={styles.button}
-                        primary
-                      >
-                        <Text style={styles.loginText}>SUBMIT</Text>
-                      </Button>
-                    )}
+                    {this.state.sweepadded &&
+                      (this.state.loading ? (
+                        <View style={styles.button}>
+                          <ActivityIndicator color="#FFF" />
+                        </View>
+                      ) : (
+                        <Button
+                          loading
+                          onPress={this.showThankyouBox}
+                          fontSize="20"
+                          style={styles.button}
+                          primary
+                        >
+                          <Text style={styles.loginText}>SUBMIT</Text>
+                        </Button>
+                      ))}
                     {this.state.sweepcountdown && (
                       <Text style={styles.countdown}>
                         {Math.floor(this.state.countdown / 86400000) > 1
