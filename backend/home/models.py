@@ -303,8 +303,8 @@ class SweepUser(models.Model):
 
 class Sweepstakes(models.Model):
     name = models.CharField(max_length=100)
-    startdate = models.DateTimeField(help_text="Time is in UTC - 5")
-    enddate = models.DateTimeField(help_text="Time is in UTC - 5")
+    startdate = models.DateTimeField(help_text="Time is in UTC - 6")
+    enddate = models.DateTimeField(help_text="Time is in UTC - 6")
 
     def file_name(self, filename):
         ext = filename.split('.')[-1]

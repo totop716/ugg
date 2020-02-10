@@ -174,9 +174,9 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Chicago'
 # DATE_FORMAT = 'm/d/Y'
-# TIME_FORMAT = 'H:i A'
+# TIME_FORMAT = 'h:i A'
 # DATETIME_FORMAT = DATE_FORMAT + ' ' + TIME_FORMAT
-en_formats.DATETIME_FORMAT = 'm/d/y H:i A'
+en_formats.DATETIME_FORMAT = 'm/d/y h:i A'
 
 USE_I18N = True
 

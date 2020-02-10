@@ -373,10 +373,10 @@ body{
   margin-bottom: 0;
 }
 
-#changelist-form th.action-checkbox-column {
+#changelist-form:not(.user_list_form) th.action-checkbox-column {
   display: none;
 }
 
-#changelist-form td.action-checkbox {
+#changelist-form:not(.user_list_form) td.action-checkbox {
   display: none;
 }
