@@ -104,12 +104,12 @@ class Signup extends Component {
     this.props.navigation.navigate('Login');
   };
 
-  setCheckEmail = () => {
-    this.setState({ checkEmail: !this.state.checkEmail });
+  setCheckEmail = (_, value) => {
+    this.setState({ checkEmail: value });
   };
 
-  setCheckSMS = () => {
-    this.setState({ checkSMS: !this.state.checkSMS });
+  setCheckSMS = (_, value) => {
+    this.setState({ checkSMS: value });
   };
 
   showCancelBox = () => {
@@ -542,14 +542,15 @@ class Signup extends Component {
     return (
       <StyleProvider style={getTheme(material)}>
         <View style={styles.container}>
-          {this.state.sweepstakeData != null && (
+          {/*this.state.sweepstakeData != null && (
             <Image
               source={{
                 uri: this.state.sweepstakeData.background
               }}
               style={styles.backgroundImage}
             />
-          )}
+          )
+            */}
           <View style={styles.topbar}>
             <Text style={styles.topbar_text}>Tablet ID: {tabletData.name}</Text>
             <AntDesign
@@ -877,7 +878,7 @@ class Signup extends Component {
                                 .border_hightlight_hex_color
                       }}
                       size={35}
-                      onPress={this.setCheckEmail}
+                      onChange={this.setCheckEmail}
                     />
                     <Text style={styles.checkboxText}>
                       Receiving emails, newsletters, and promotions
@@ -912,7 +913,7 @@ class Signup extends Component {
                                 .border_hightlight_hex_color
                       }}
                       size={35}
-                      onPress={this.setCheckSMS}
+                      onChange={this.setCheckSMS}
                     />
                     <Text style={styles.checkboxText}>
                       Receiving SMS text message notifications

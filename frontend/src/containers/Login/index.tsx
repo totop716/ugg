@@ -32,13 +32,16 @@ import { loginAPI } from '../../services/Authentication';
 import LoginBackgroundImg from '../../assets/images/LoginBackground.png';
 import { isLoggedInSel } from '../../reactn-state/selectors';
 
-const { useState, useEffect, useGlobal } = React;
+const { useState, useRef, useGlobal } = React;
 
 const Login: React.FC<INavigation> = ({ navigation }) => {
   const [, setCurrentUser] = useGlobal('currentUser');
+  const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const usernameRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInput>(null);
   // state = {
   //   username: '',
   //   password: '',
@@ -58,6 +61,8 @@ const Login: React.FC<INavigation> = ({ navigation }) => {
 
   const submitLogin = async (): Promise<void> => {
     try {
+      if (loading) return;
+      setLoading(true);
       const res = await loginAPI(username, password);
 
       if (res.user && res.token) {
@@ -81,6 +86,7 @@ const Login: React.FC<INavigation> = ({ navigation }) => {
     } catch (e) {
       console.log('loginAPI e', e);
     }
+    setLoading(false);
   };
 
   return (
@@ -104,12 +110,18 @@ const Login: React.FC<INavigation> = ({ navigation }) => {
               ></FontAwesome.Button>
             </View>
             <Input
+              ref={usernameRef}
               style={styles.inputTabletID}
               placeholder="Username"
               placeholderTextColor="#fff"
               autoCapitalize="none"
               value={username}
               onChangeText={setUsername}
+              onSubmitEditing={(): void => {
+                if (username?.length) {
+                  passwordRef?.current?._root?.focus?.();
+                }
+              }}
             />
           </View>
           <View style={styles.inputfield_container}>
@@ -124,10 +136,17 @@ const Login: React.FC<INavigation> = ({ navigation }) => {
               ></FontAwesome.Button>
             </View>
             <Input
+              ref={passwordRef}
               style={styles.inputTabletID}
               placeholder="Password"
               placeholderTextColor="#fff"
               autoCapitalize="none"
+              returnKeyType="send"
+              onSubmitEditing={(): void => {
+                if (password?.length) {
+                  submitLogin();
+                }
+              }}
               value={password}
               onChangeText={setPassword}
               secureTextEntry

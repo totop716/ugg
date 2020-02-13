@@ -5,6 +5,7 @@ import {
   View,
   KeyboardAvoidingView,
   Linking,
+  Alert,
   AsyncStorage,
   ActivityIndicator
 } from 'react-native';
@@ -229,6 +230,7 @@ class SweepStake extends Component {
               this.setState({
                 sweepdisclaimer: this.state.sweepstakeData.disclaimer
               });
+
               this.setState({ begin_date: res2.sweepstake.startdate });
               setTimeout(this.setSweepadded, 1000);
             })
@@ -309,7 +311,7 @@ class SweepStake extends Component {
         () => {
           getUserAPI(this.state.phoneNumber)
             .then(res => {
-              this.setState({ userData: res.user });
+              this.setState({ userData: res.user, loading: false });
               if (
                 this.state.sweepstakeData.survey1_check == 'no' &&
                 this.state.sweepstakeData.survey2_check == 'no'
@@ -358,8 +360,7 @@ class SweepStake extends Component {
                         console.log('Res2', res2);
                       });
                       this.setState({
-                        thankyouBoxVisible: true,
-                        loading: false
+                        thankyouBoxVisible: true
                       });
                       Utils.phoneInputRefInvokeMethod(
                         this.phoneInputRef,
@@ -367,8 +368,7 @@ class SweepStake extends Component {
                       );
                     } else {
                       this.setState({
-                        comebackBoxVisible: true,
-                        loading: false
+                        comebackBoxVisible: true
                       });
                       Utils.phoneInputRefInvokeMethod(
                         this.phoneInputRef,
@@ -377,7 +377,6 @@ class SweepStake extends Component {
                     }
                   })
                   .catch(e => {
-                    this.setState({ loading: false });
                     Utils.phoneInputRefInvokeMethod(
                       this.phoneInputRef,
                       'clear'
@@ -463,8 +462,7 @@ class SweepStake extends Component {
                           console.log('Res2', res2);
                         });
                         this.setState({
-                          thankyouBoxVisible: true,
-                          loading: false
+                          thankyouBoxVisible: true
                         });
                         Utils.phoneInputRefInvokeMethod(
                           this.phoneInputRef,
@@ -472,8 +470,7 @@ class SweepStake extends Component {
                         );
                       } else {
                         this.setState({
-                          comebackBoxVisible: true,
-                          loading: false
+                          comebackBoxVisible: true
                         });
                         Utils.phoneInputRefInvokeMethod(
                           this.phoneInputRef,
@@ -494,6 +491,7 @@ class SweepStake extends Component {
               }
             })
             .catch(error => {
+              this.setState({ loading: false });
               console.log('err, user unregistered', error);
               if (error) this.goToSignup();
             });
@@ -630,9 +628,16 @@ class SweepStake extends Component {
   };
 
   setSweepadded = () => {
+    const { sweepstakeData } = this.state;
+    const hasEnded = moment().isAfter(sweepstakeData.enddate);
+    const bgImage =
+      hasEnded &&
+      sweepstakeData.background_image_after_sweepstake_check === 'yes'
+        ? sweepstakeData.background_image_after_sweepstake
+        : sweepstakeData.background;
     this.setState({
       sweepbackground: {
-        uri: this.state.sweepstakeData.background
+        uri: bgImage
       }
     });
     this.setState({
@@ -652,18 +657,18 @@ class SweepStake extends Component {
       this.interval = setInterval(this.sweepcountdown, 1000);
       this.setState({ sweepadded: false });
     } else {
-      this.setState({ sweepadded: true });
+      this.setState({ sweepadded: !hasEnded });
     }
   };
 
   goToSignup = () => {
-    console.log('when goin', {
+    /*console.log('when goin', {
       user: this.props.navigation.getParam('user'),
       phoneNumber: this.state.phoneNumber,
       tabletData: this.state.tabletData,
       sweepstakeData: this.state.sweepstakeData,
       tabletID: this.state.tabletID
-    });
+    });*/
 
     this.props.navigation.navigate('Signup', {
       user: this.props.navigation.getParam('user'),

@@ -33,12 +33,14 @@ import {
 } from '../../utils/reactn-util';
 import { UserData } from '../../..';
 
-const { useState, useGlobal, useEffect } = React;
+const { useState, useGlobal, useRef } = React;
 
 const TabletLogin: React.FC<INavigation> = ({ navigation }) => {
   const [, setCurrentUser] = useGlobal('currentUser');
   const [tabletID, setTabletID] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const passwordRef = useRef<TextInput>(null);
   const [error, setError] = useState('');
   // state = {
   //   tabletID: '',
@@ -70,6 +72,8 @@ const TabletLogin: React.FC<INavigation> = ({ navigation }) => {
 
   const submitTabletLogin = async (): Promise<void> => {
     try {
+      if (loading) return;
+      setLoading(true);
       /*
       if (!isLoggedInSel()) {
         navigation.navigate('Login');
@@ -115,6 +119,7 @@ const TabletLogin: React.FC<INavigation> = ({ navigation }) => {
     } catch (e) {
       console.log('getTabletAPI e', e);
     }
+    setLoading(false);
   };
 
   return (
@@ -144,6 +149,11 @@ const TabletLogin: React.FC<INavigation> = ({ navigation }) => {
               autoCapitalize="none"
               value={tabletID}
               onChangeText={setTabletID}
+              onSubmitEditing={(): void => {
+                if (tabletID?.length) {
+                  passwordRef?.current?._root?.focus?.();
+                }
+              }}
             />
           </View>
           <View style={styles.inputfield_container}>
@@ -158,12 +168,18 @@ const TabletLogin: React.FC<INavigation> = ({ navigation }) => {
               ></FontAwesome.Button>
             </View>
             <Input
+              ref={passwordRef}
               style={styles.inputTabletID}
               placeholder="Password"
               placeholderTextColor="#fff"
               autoCapitalize="none"
               value={password}
               onChangeText={setPassword}
+              onSubmitEditing={(): void => {
+                if (password?.length) {
+                  submitTabletLogin();
+                }
+              }}
               secureTextEntry
             />
           </View>
