@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   View,
   KeyboardAvoidingView,
+  ScrollView,
   Linking,
   Alert,
   AsyncStorage,
@@ -742,8 +743,8 @@ class SweepStake extends Component {
   render() {
     if (this.state.tabletDataFirstSweepIsActive === true) {
       if (
-        this.state.tabletDataFirstSweep.background_image_after_sweepstake
-        // && this.state.background_image_after_sweepstake_check === 'yes'
+        this.state.tabletDataFirstSweep.background_image_after_sweepstake &&
+        this.state.background_image_after_sweepstake_check === 'yes'
       ) {
         return (
           <KeyboardAvoidingView
@@ -1155,43 +1156,8 @@ class SweepStake extends Component {
                           <Text style={styles.loginText}>SUBMIT</Text>
                         </Button>
                       ))}
-                    {this.state.sweepcountdown && (
-                      <Text style={styles.countdown}>
-                        {Math.floor(this.state.countdown / 86400000) > 1
-                          ? Math.floor(this.state.countdown / 86400000) +
-                            ' Days '
-                          : Math.floor(this.state.countdown / 86400000) > 0
-                          ? '1 Day '
-                          : ''}
-                        {Math.floor(
-                          (this.state.countdown % 86400000) / 3600000
-                        ) >= 10
-                          ? Math.floor(
-                              (this.state.countdown % 86400000) / 3600000
-                            )
-                          : '0' +
-                            Math.floor(
-                              (this.state.countdown % 86400000) / 3600000
-                            )}
-                        :
-                        {Math.floor((this.state.countdown % 3600000) / 60000) >=
-                        10
-                          ? Math.floor((this.state.countdown % 3600000) / 60000)
-                          : '0' +
-                            Math.floor(
-                              (this.state.countdown % 3600000) / 60000
-                            )}
-                        :
-                        {Math.floor((this.state.countdown % 60000) / 1000) >= 10
-                          ? Math.floor((this.state.countdown % 60000) / 1000)
-                          : '0' +
-                            Math.floor(
-                              (this.state.countdown % 60000) / 1000
-                            )}{' '}
-                        Remaining to start
-                      </Text>
-                    )}
-                    <View style={styles.disclaimerContain}>
+
+                    <ScrollView style={styles.disclaimerContain}>
                       <Text
                         style={[
                           styles.disclaimerText,
@@ -1204,7 +1170,7 @@ class SweepStake extends Component {
                       >
                         {this.state.sweepdisclaimer}
                       </Text>
-                    </View>
+                    </ScrollView>
                   </Form>
                   <View style={styles.buttonContainer}>
                     {/* Login Button */}
