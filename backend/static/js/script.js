@@ -1032,7 +1032,7 @@
               zipcode: res.users[i].zipcode,
               checkSMS: res.users[i].checkSMS,
               checkEmail: res.users[i].checkEmail,
-              created: moment(res.users[i].created_date).format('MM/DD/YY hh:mm A')
+              created: moment(res.users[i].created_date).utcOffset('-06:00').format('MM/DD/YY hh:mm A')
             });
           }
           console.log(itemsFormatted);
