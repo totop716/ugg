@@ -1011,7 +1011,8 @@
             state: 'State',
             zipcode: 'Zip Code',
             checkSMS: 'SMS',
-            checkEmail: 'Email'
+            checkEmail: 'Email',
+            created: 'created'
           };
           console.log(res);
 
@@ -1030,7 +1031,8 @@
               state: res.users[i].state,
               zipcode: res.users[i].zipcode,
               checkSMS: res.users[i].checkSMS,
-              checkEmail: res.users[i].checkEmail
+              checkEmail: res.users[i].checkEmail,
+              created: moment(res.users[i].created_date).format('MM/DD/YY hh:mm A')
             });
           }
           console.log(itemsFormatted);

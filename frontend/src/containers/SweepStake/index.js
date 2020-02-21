@@ -223,12 +223,13 @@ class SweepStake extends Component {
                   uri: this.state.sweepstakeData.background
                 }
               });
+              // this.setState({
+              //   sweeplogo: {
+              //     uri: this.state.sweepstakeData.logo
+              //   }
+              // });
               this.setState({
-                sweeplogo: {
-                  uri: this.state.sweepstakeData.logo
-                }
-              });
-              this.setState({
+                header_text: this.state.sweepstakeData.header_text,
                 sweepdisclaimer: this.state.sweepstakeData.disclaimer
               });
 
@@ -631,27 +632,44 @@ class SweepStake extends Component {
   setSweepadded = () => {
     const { sweepstakeData } = this.state;
     const hasEnded = moment().isAfter(sweepstakeData.enddate);
+    const hasntStarted = moment(sweepstakeData.startdate).isAfter(moment());
     const bgImage =
       hasEnded &&
       sweepstakeData.background_image_after_sweepstake_check === 'yes'
         ? sweepstakeData.background_image_after_sweepstake
         : sweepstakeData.background;
+
+    const sweeplogoImage =
+      hasEnded || hasntStarted
+        ? ''
+        : {
+            uri: this.state.sweepstakeData.logo
+          };
+    const sweepdisclaimer =
+      hasEnded || hasntStarted ? '' : this.state.sweepstakeData.disclaimer;
+    const header_text =
+      hasEnded || hasntStarted ? '' : this.state.sweepstakeData.header_text;
+
     this.setState({
+      header_text,
       sweepbackground: {
         uri: bgImage
-      }
+      },
+      sweeplogo: sweeplogoImage
     });
-    this.setState({
-      sweeplogo: {
-        uri: this.state.sweepstakeData.logo
-      }
-    });
-    console.log('Sweep Array', this.state.sweeplogo);
-    this.setState({ sweepdisclaimer: this.state.sweepstakeData.disclaimer });
+
+    console.log('Sweep Array', hasEnded, hasntStarted, this.state.sweeplogo);
+    this.setState({ sweepdisclaimer });
     console.log('SweepData ', this.state.sweepbackground);
     const currentdate = new Date().getTime();
     const begindatetime = new Date(this.state.begin_date).getTime();
-    console.log(currentdate, ' ', begindatetime);
+    console.log(
+      currentdate,
+      ' ',
+      begindatetime,
+      moment(),
+      moment(this.state.begin_date)
+    );
     if (currentdate < begindatetime) {
       this.setState({ sweepcountdown: true });
       this.setState({ countdown: begindatetime - currentdate });
@@ -1084,7 +1102,14 @@ class SweepStake extends Component {
                 <View style={styles.content}>
                   {/* Logo */}
                   <View style={styles.logoContainer}>
-                    <Image style={styles.logo} source={this.state.sweeplogo} />
+                    {this.state.sweeplogo ? (
+                      <Image
+                        style={styles.logo}
+                        source={this.state.sweeplogo}
+                      />
+                    ) : (
+                      <></>
+                    )}
                   </View>
 
                   {/* Form */}
@@ -1100,7 +1125,7 @@ class SweepStake extends Component {
                         }
                       ]}
                     >
-                      {this.state.sweepstakeData.header_text}
+                      {this.state.header_text}
                     </Text>
                     {this.state.sweepadded && (
                       <TextInputMask
@@ -1156,6 +1181,42 @@ class SweepStake extends Component {
                           <Text style={styles.loginText}>SUBMIT</Text>
                         </Button>
                       ))}
+                    {this.state.sweepcountdown && (
+                      <Text style={styles.countdown}>
+                        {Math.floor(this.state.countdown / 86400000) > 1
+                          ? Math.floor(this.state.countdown / 86400000) +
+                            ' Days '
+                          : Math.floor(this.state.countdown / 86400000) > 0
+                          ? '1 Day '
+                          : ''}
+                        {Math.floor(
+                          (this.state.countdown % 86400000) / 3600000
+                        ) >= 10
+                          ? Math.floor(
+                              (this.state.countdown % 86400000) / 3600000
+                            )
+                          : '0' +
+                            Math.floor(
+                              (this.state.countdown % 86400000) / 3600000
+                            )}
+                        :
+                        {Math.floor((this.state.countdown % 3600000) / 60000) >=
+                        10
+                          ? Math.floor((this.state.countdown % 3600000) / 60000)
+                          : '0' +
+                            Math.floor(
+                              (this.state.countdown % 3600000) / 60000
+                            )}
+                        :
+                        {Math.floor((this.state.countdown % 60000) / 1000) >= 10
+                          ? Math.floor((this.state.countdown % 60000) / 1000)
+                          : '0' +
+                            Math.floor(
+                              (this.state.countdown % 60000) / 1000
+                            )}{' '}
+                        Remaining to start
+                      </Text>
+                    )}
 
                     <ScrollView style={styles.disclaimerContain}>
                       <Text

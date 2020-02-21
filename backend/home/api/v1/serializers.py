@@ -78,7 +78,7 @@ class MyUserSerializer(serializers.ModelSerializer):
 class SweepUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = SweepUser
-        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'suite_po_box', 'label', 'password','checkSMS','checkEmail')
+        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'suite_po_box', 'label', 'password','checkSMS','checkEmail', 'created_date')
         extra_kwargs = {
             'first_name' : {
                 'required': True
