@@ -1038,5 +1038,14 @@
         }
       });
     });
+
+    $('td.field-created_date').each(function() {
+      var t = $(this).text();
+      var tSplitted = t.split(' ');
+      if (tSplitted.length === 3) {
+        var newDate = tSplitted[0] + '<br />' + tSplitted[1] + ' ' + tSplitted[2]
+        $(this).html(newDate);
+      }
+  })
   });
 })(Suit.$);
