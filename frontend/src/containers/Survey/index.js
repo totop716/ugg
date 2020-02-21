@@ -312,9 +312,10 @@ class Survey extends Component {
             check_time,
             survey_answers
           ).then(res3 => {
+            const fromSignUp = this.props.navigation.getParam('fromSignUp');
             navigate('SweepStake', {
-              comeback: true,
-              thankyou: false,
+              comeback: fromSignUp === true ? false : true,
+              thankyou: fromSignUp === true ? true : false,
               tabletData: this.props.navigation.getParam('tabletData'),
               sweepstakeData: this.props.navigation.getParam('sweepstakeData'),
               tabletID: this.props.navigation.getParam('tabletID'),

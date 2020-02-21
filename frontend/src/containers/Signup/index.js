@@ -230,33 +230,40 @@ class Signup extends Component {
             currenttime.getMinutes() +
             ':' +
             currenttime.getSeconds();
-          // updateCheckTime(res.id, navigation.getParam('tabletData').id, navigation.getParam('sweepstakeData').id, check_time).then((res2) => {
-          getUserAPI(phoneNo).then(res1 => {
-            console.log('RES1', res1);
-            if (
-              this.state.sweepstakeData.survey1_check == 'no' &&
-              this.state.sweepstakeData.survey2_check == 'no'
-            ) {
-              this.props.navigation.navigate('SweepStake', {
-                exit: 2,
-                user: this.props.navigation.getParam('user'),
-                tabletData: navigation.getParam('tabletData'),
-                sweepstakeData: navigation.getParam('sweepstakeData'),
-                tabletID: this.props.navigation.getParam('tabletID'),
-                sweepuser: res1.user
-              });
-            } else {
-              this.props.navigation.navigate('Survey', {
-                exit: 2,
-                user: this.props.navigation.getParam('user'),
-                tabletData: navigation.getParam('tabletData'),
-                sweepstakeData: navigation.getParam('sweepstakeData'),
-                tabletID: this.props.navigation.getParam('tabletID'),
-                sweepuser: res1.user
-              });
-            }
-          });
-          // })
+          return updateCheckTime(
+            res.id,
+            navigation.getParam('tabletData').id,
+            navigation.getParam('sweepstakeData').id,
+            check_time
+          );
+        })
+        .then(res2 => {
+          return getUserAPI(phoneNo);
+        })
+        .then(res1 => {
+          if (
+            this.state.sweepstakeData.survey1_check == 'no' &&
+            this.state.sweepstakeData.survey2_check == 'no'
+          ) {
+            this.props.navigation.navigate('SweepStake', {
+              exit: 2,
+              user: this.props.navigation.getParam('user'),
+              tabletData: navigation.getParam('tabletData'),
+              sweepstakeData: navigation.getParam('sweepstakeData'),
+              tabletID: this.props.navigation.getParam('tabletID'),
+              sweepuser: res1.user
+            });
+          } else {
+            this.props.navigation.navigate('Survey', {
+              fromSignUp: true,
+              exit: 2,
+              user: this.props.navigation.getParam('user'),
+              tabletData: navigation.getParam('tabletData'),
+              sweepstakeData: navigation.getParam('sweepstakeData'),
+              tabletID: this.props.navigation.getParam('tabletID'),
+              sweepuser: res1.user
+            });
+          }
         })
         .catch(err => {
           console.log('errr', err);

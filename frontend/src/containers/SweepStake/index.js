@@ -199,8 +199,6 @@ class SweepStake extends Component {
       this.setState({ tabletpasswordlogin: '' });
       this.setState({ tabletLoginError: '' });
 
-      console.log('state settinnn', tabletData);
-
       console.log(
         'this.state.tabletData.active_sweep != null &&',
         this.state?.tabletData?.active_sweep != null &&
@@ -313,6 +311,7 @@ class SweepStake extends Component {
         () => {
           getUserAPI(this.state.phoneNumber)
             .then(res => {
+              console.log('oeah??', res);
               this.setState({ userData: res.user, loading: false });
               if (
                 this.state.sweepstakeData.survey1_check == 'no' &&
