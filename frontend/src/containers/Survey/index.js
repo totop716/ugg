@@ -205,9 +205,11 @@ class Survey extends Component {
           sweepuser: this.props.navigation.getParam('sweepuser')
         });
       } else {
+        const fromSignUp = this.props.navigation.getParam('fromSignUp');
+
         navigate('SweepStake', {
-          comeback: true,
-          thankyou: false,
+          comeback: fromSignUp === true ? false : true,
+          thankyou: fromSignUp === true ? true : false,
           tabletData: this.props.navigation.getParam('tabletData'),
           sweepstakeData: this.props.navigation.getParam('sweepstakeData'),
           tabletID: this.props.navigation.getParam('tabletID'),
