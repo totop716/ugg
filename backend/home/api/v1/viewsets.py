@@ -77,17 +77,17 @@ class LoginViewSet(ViewSet):
 
 class LogoutViewSet(ViewSet):
     # serializer_class = AuthTokenSerializer
-    authentication_classes = [TokenAuthentication]
+    # authentication_classes = [TokenAuthentication]
 
     def create(self, request):
-
         data = request.data
         username = data.get('username')
         password = data.get('password')
         user = User.objects.filter(Q(username=username))
+        
         if(len(user) > 0):
             if user[0].check_password(password):
-                request.user.auth_token.delete()
+                # request.user.auth_token.delete()
                 return Response({
                     "message": "Successfully logged out."
                 }, status=status.HTTP_200_OK)
