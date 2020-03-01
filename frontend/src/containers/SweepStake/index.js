@@ -28,7 +28,7 @@ import Utils from '../../utils';
 import { setCurrentSessionAsync } from '../../utils/reactn-util';
 import { defaultEmptyCurrentUser } from '../../reactn-state/index';
 import {
-  logoutAPI,
+  loginAPI,
   getUserAPI,
   updateCheckTime,
   updateTabletID,
@@ -732,28 +732,20 @@ class SweepStake extends Component {
   };
 
   submitTabletLogout = () => {
-    let firstRes = {};
-    logoutAPI(this.state.admin_user.username, this.state.admin_password)
+    loginAPI(this.state.admin_user.username, this.state.admin_password)
       .then(res => {
-        firstRes = res;
-        if (firstRes && firstRes.error) {
-          this.setState({
-            logout_error: 'You need to input correct password!'
-          });
-        } else {
-          AsyncStorage.setItem(
-            'userData',
-            JSON.stringify(defaultEmptyCurrentUser)
-          );
+        console.log(res);
+        if (res.user) {
           this.props.navigation.navigate('Login');
         }
-      })
-      .catch(e => {
-        if (e && e.message && new RegExp('403').test(e.message)) {
+        if (res.error) {
           this.setState({
             logout_error: 'You need to input correct password!'
           });
         }
+      })
+      .catch(err => {
+        console.log(err);
       });
   };
 

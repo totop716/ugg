@@ -2,6 +2,7 @@ import Utils from '../utils';
 import APIClient from '../utils/api';
 import APIConstants from '../utils/api/constants';
 import Constants from 'expo-constants';
+import moment from 'moment';
 
 const loginAPI = (username, password) => {
   const path = 'api/v1/login/';
@@ -16,6 +17,7 @@ const loginAPI = (username, password) => {
   });
 };
 
+// don't use, it deletes django user token and logs out other machines
 const logoutAPI = (username, password) => {
   const path = 'api/v1/logout/';
   const url = `${Utils.serverUrl}${path}`;
@@ -113,7 +115,7 @@ const updateSurveyCheckTime = (
     '&sweep_id=' +
     sweep_id +
     '&survey_enter_time=' +
-    check_time;
+    moment().toISOString();
   console.log('111', survey_answers);
   for (let i = 0; i < 10; i++) {
     path += '&survey_question_' + (i + 1) + '=';
