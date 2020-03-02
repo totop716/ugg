@@ -153,6 +153,13 @@ class HomePageSerializer(serializers.ModelSerializer):
         model = HomePage
         fields = '__all__'
 
+
+class DBSweepCheckInSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SweepCheckIn
+        fields = '__all__'
+
+
 class SweepCheckInSerializer(serializers.ModelSerializer):
     class Meta:
         model = SweepCheckIn

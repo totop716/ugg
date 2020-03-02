@@ -20,7 +20,13 @@ from rest_framework import status
 from django.core import serializers
 from django.http import HttpResponse
 
-from home.api.v1.serializers import UserSerializer, CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer, TabletSerializer, SweepwinnerSerializer, SweepUserSerializer, SettingsSerializer, SweepCheckInSerializer, SurveyAnswerImageSerializer, SurveyAnswerTextSerializer, SurveySerializer, SurveyQuestionsSerializer
+from home.api.v1.serializers import UserSerializer, CustomTextSerializer, \
+    HomePageSerializer, MyUserSerializer, SweepstakesSerializer, \
+    TabletSerializer, SweepwinnerSerializer, SweepUserSerializer, \
+    SettingsSerializer, SweepCheckInSerializer, SurveyAnswerImageSerializer, \
+    SurveyAnswerTextSerializer, SurveySerializer, SurveyQuestionsSerializer, \
+    DBSweepCheckInSerializer
+
 from home.models import CustomText, HomePage
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -434,6 +440,31 @@ class SurveyViewSet(APIView):
         saved_survey = get_object_or_404(Survey.objects.all(), pk=pk)
         saved_survey.delete()
         return Response({"message": "Survey has been deleted."},status=204)
+
+
+class DBSweepCheckInViewSet(APIView):
+    def get(self, request, pk=None):
+        data = request.query_params
+        phone = data.get('phone');
+        checkin = SweepCheckIn.objects.prefetch_related(
+            'user_id'
+        )
+        checkin = checkin.filter(Q(user_id__phone=phone)).order_by('-check_time').first()
+        # .first()
+        # checkin = SweepCheckIn.objects.filter(Q(user_id_id=data.get('user_id')) & Q(tablet_id_id=data.get('tablet_id')) & Q(sweep_id_id=data.get('sweep_id'))).order_by('-check_time').first()
+        
+        # add end sweepstakes logic
+        # if checkin is not None:
+        #     serializer = SweepCheckInSerializer(checkin)
+        #     print('checkincheckin', serializer.data)
+        #     return Response({
+        #             "message": "You have already checked into The Office today. Come back and check in again tomorrow!"
+        #         },
+        #         status=422
+        #     )
+        
+        serializer = DBSweepCheckInSerializer(checkin)
+        return Response({"checkin": serializer.data})
 
 class SweepCheckInViewSet(APIView):
     def get(self, request, pk=None):

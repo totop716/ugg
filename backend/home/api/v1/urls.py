@@ -8,7 +8,9 @@ from home.api.v1.viewsets import SignupViewSet, \
     HomePageViewSet, CustomTextViewSet, SettingsViewSet, SweepwinnerViewSet, \
     MyUserViewSet, SurveyDetailsCheckInViewSet, SweepTabletRemoveViewSet, \
     SweepAdminRemoveViewSet, MyUploadView, AdminUserViewSet, \
-    SweepDetailsCheckInViewSet, SweepUserViewSet, SweepUserIDViewSet
+    SweepDetailsCheckInViewSet, SweepUserViewSet, SweepUserIDViewSet, \
+    DBSweepCheckInViewSet
+
 
 router = DefaultRouter()
 router.register('signup', SignupViewSet, 'signup')
@@ -19,7 +21,8 @@ router.register('logout', LogoutViewSet, 'logout')
 
 urlpatterns = [
     url(r'', include(router.urls)),
-    url(r'isauthed', IsAuthedViewSet.as_view(), name="instances")
+    url(r'isauthed', IsAuthedViewSet.as_view(), name="instances"),
+    url(r'db-checkin', DBSweepCheckInViewSet.as_view()),
 
     # url(r'^tablets/$', TabletViewSet.as_view()),
     # url(r'^tablets/(?P<pk>\d+)/$', TabletViewSet.as_view()),
