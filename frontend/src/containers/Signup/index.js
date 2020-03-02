@@ -187,7 +187,7 @@ class Signup extends Component {
     if (this.state.zipcode == '') {
       error.zipcode = 'Enter zipcode';
     } else if (this.state.zipcode.length < 5) {
-      error.zipcode = 'zipcode should be at least 5 letters';
+      error.zipcode = 'zipcode should be at least 5 numbers';
     } else {
       error.zipcode = '';
     }

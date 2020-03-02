@@ -919,10 +919,10 @@ class SweepStake extends Component {
                 {this.state.userData == null
                   ? ''
                   : this.state.userData.first_name}{' '}
-                for checking in{' '}
+                for checking into{' '}
                 {this.state.tabletData == null
                   ? ''
-                  : this.state.tabletData.name}
+                  : this.state.tabletData.name + '.'}
               </Text>
             </View>
           </Modal>
@@ -946,7 +946,7 @@ class SweepStake extends Component {
                 {this.state.tabletData == null
                   ? ''
                   : this.state.tabletData.name}{' '}
-                Today. Come back and check in again tomorrow!”
+                Today. Come back and check in again tomorrow!
               </Text>
             </View>
           </Modal>
@@ -1209,7 +1209,7 @@ class SweepStake extends Component {
                       </Text>
                     )}
 
-                    <ScrollView style={styles.disclaimerContain}>
+                    <View style={styles.disclaimerContain}>
                       <Text
                         style={[
                           styles.disclaimerText,
@@ -1222,7 +1222,7 @@ class SweepStake extends Component {
                       >
                         {this.state.sweepdisclaimer}
                       </Text>
-                    </ScrollView>
+                    </View>
                   </Form>
                   <View style={styles.buttonContainer}>
                     {/* Login Button */}
