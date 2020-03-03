@@ -988,10 +988,15 @@
               lastname: '',
               phoneno: '',
               tabletID: '',
-              checkin: ''
+              // checkin: ''
             });
             var date = new Date(res[i].fields.check_time);
-            itemsFormatted[i].checkin = date.toString('yy-MM-dd H:i:s');
+            // itemsFormatted[i].checkin = date.toString('yy-MM-dd H:i:s');
+            var offsetHours = moment(date).tz('America/Chicago').utcOffset() / 60;
+            var lessOffsetDateString = moment(date)
+              .add(offsetHours, 'hours')
+              .format('MM/DD/YY hh:mm A');
+            itemsFormatted[i].check_time = lessOffsetDateString;
             $.ajax({
               url: '/sweepuser/' + res[i].fields.user_id,
               type: 'GET',
