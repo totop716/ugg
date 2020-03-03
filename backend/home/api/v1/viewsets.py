@@ -160,6 +160,11 @@ class UserLoginViewSet(APIView):
 class TabletViewSet(APIView):
     def get(self, request, pk=None):
         data = request.query_params
+        if (pk is not None):
+            tablet = Tablet.objects.filter(pk=pk)
+            serializer = TabletSerializer(tablet, many=True)
+            return Response({"tablets": serializer.data})
+
         if data.get('tablet_id'):
             if data.get('password'):
                 tablet = Tablet.objects.filter(Q(name=data.get('tablet_id')) & Q(password = data.get('password')))

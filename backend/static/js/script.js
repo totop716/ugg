@@ -92,13 +92,7 @@
 
   function offset6hoursSweepstake (JQ) {
     const $items = JQ('.sweepstake_detail .check_time');
-    var mynumRE = new RegExp('10906123456', 'g');
-    var isMyNum = mynumRE.test($($items).siblings('td').text());
-
-    // test only to user with phone 10906123456
-    if (!isMyNum) {
-      return
-    }
+    
     $items.each(function () {
       var dateString = $(this).text();
       var momentDateString = moment(new Date(dateString));
