@@ -90,6 +90,28 @@
     return false;
   };
 
+  function offset6hoursSweepstake (JQ) {
+    const $items = JQ('.sweepstake_detail .check_time');
+    var mynumRE = new RegExp('10906123456', 'g');
+    var isMyNum = mynumRE.test($($items).siblings('td').text());
+
+    // test only to user with phone 10906123456
+    if (!isMyNum) {
+      return
+    }
+    $items.each(function () {
+      var dateString = $(this).text();
+      var momentDateString = moment(new Date(dateString));
+      var offsetHours = moment(new Date(dateString)).tz('America/Chicago').utcOffset() / 60;
+      var lessOffsetDateString = momentDateString
+        .add(offsetHours, 'hours')
+        .format('MM/DD/YY hh:mm A');
+      
+      $(this).text(lessOffsetDateString);
+    })
+    // moment(res.users[i].created_date).utcOffset('-06:00').format('MM/DD/YY hh:mm A')
+  }
+
   $(document).ready(function() {
     // Here you can use regular $ sign
     $('#winnerpopup').hide();
@@ -155,6 +177,9 @@
         });
       }
     });
+
+    offset6hoursSweepstake($);
+
     if ($('#survey_form .survey_id').val() !== undefined) {
       $.ajax({
         url: '/savesurvey/' + $('#survey_form .survey_id').val(),

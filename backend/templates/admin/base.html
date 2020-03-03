@@ -10,7 +10,8 @@
 <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static 'admin/' %}{% endfilter %}";</script>
 {% block suit_jquery %}{% if '1.9'|django_version_gte %}<script src="{% static 'suit/js/jquery-2.2.4.min.js' %}">{% else %}<script src="{% static 'suit/js/jquery-1.8.3.min.js' %}">{% endif %}</script><script type="text/javascript">var Suit = { $: $.noConflict() }; if (!$) $ = Suit.$; </script>
 <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>{% endblock %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script type="text/javascript" src="https://momentjs.com/downloads/moment-timezone-with-data-10-year-range.js"></script>{% endblock %}
 
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
