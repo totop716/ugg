@@ -1,11 +1,13 @@
 from django.http import QueryDict
+import datetime
 
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.permissions import IsAdminUser
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework import generics
 from rest_framework.response import Response
@@ -13,11 +15,18 @@ from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
+from rest_framework import status
 
 from django.core import serializers
 from django.http import HttpResponse
 
-from home.api.v1.serializers import UserSerializer, CustomTextSerializer, HomePageSerializer, MyUserSerializer, SweepstakesSerializer, TabletSerializer, SweepwinnerSerializer, SweepUserSerializer, SettingsSerializer, SweepCheckInSerializer, SurveyAnswerImageSerializer, SurveyAnswerTextSerializer, SurveySerializer, SurveyQuestionsSerializer
+from home.api.v1.serializers import UserSerializer, CustomTextSerializer, \
+    HomePageSerializer, MyUserSerializer, SweepstakesSerializer, \
+    TabletSerializer, SweepwinnerSerializer, SweepUserSerializer, \
+    SettingsSerializer, SweepCheckInSerializer, SurveyAnswerImageSerializer, \
+    SurveyAnswerTextSerializer, SurveySerializer, SurveyQuestionsSerializer, \
+    DBSweepCheckInSerializer
+
 from home.models import CustomText, HomePage
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -45,6 +54,23 @@ class SignupViewSet(ModelViewSet):
     serializer_class = SweepUserSerializer
     http_method_names = ['post']
 
+
+class CustomAuthToken(ObtainAuthToken):
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user': {
+                "email": user.email
+            }
+        })
+
+
 class LoginViewSet(ViewSet):
     serializer_class = AuthTokenSerializer
 
@@ -52,7 +78,45 @@ class LoginViewSet(ViewSet):
         return Response({"username": request.get('username')})
 
     def create(self, request):
-        return ObtainAuthToken().post(request)
+        return CustomAuthToken().post(request)
+
+
+class LogoutViewSet(ViewSet):
+    # serializer_class = AuthTokenSerializer
+    # authentication_classes = [TokenAuthentication]
+
+    def create(self, request):
+        data = request.data
+        username = data.get('username')
+        password = data.get('password')
+        user = User.objects.filter(Q(username=username))
+        
+        if(len(user) > 0):
+            if user[0].check_password(password):
+                # request.user.auth_token.delete()
+                return Response({
+                    "message": "Successfully logged out."
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    "error": "Password is not correct!"
+                }, status=status.HTTP_403_FORBIDDEN)
+        else:
+            return Response({
+                "error": "The user with current username does not exist!"
+            }, status=status.HTTP_403_FORBIDDEN)
+
+
+class IsAuthedViewSet(APIView):
+    # serializer_class = AuthTokenSerializer
+    # queryset = User.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_class = [IsAuthenticated]
+
+    def get(self, request):
+        print("is authed!", request.auth)
+        return Response(status=status.HTTP_200_OK)
+
 
 class SweepTabletRemoveViewSet(APIView):
     def get(self, request): 
@@ -67,6 +131,7 @@ class SweepTabletRemoveViewSet(APIView):
         tablet.save()
         return Response({'message': 'successfully removed'})
 
+
 class SweepAdminRemoveViewSet(APIView):
     def get(self, request): 
         data = request.query_params
@@ -74,6 +139,7 @@ class SweepAdminRemoveViewSet(APIView):
         user = get_object_or_404(User.objects.all(), id=user_id)
         user.delete()
         return Response({'message': 'successfully removed'})
+
 
 class UserLoginViewSet(APIView):
     def post(self, request): 
@@ -90,16 +156,57 @@ class UserLoginViewSet(APIView):
         else:
             return Response({"error": "The user with current username does not exist!"})
 
+
 class TabletViewSet(APIView):
     def get(self, request, pk=None):
         data = request.query_params
+        if (pk is not None):
+            tablet = Tablet.objects.filter(pk=pk)
+            serializer = TabletSerializer(tablet, many=True)
+            return Response({"tablets": serializer.data})
+
         if data.get('tablet_id'):
             if data.get('password'):
                 tablet = Tablet.objects.filter(Q(name=data.get('tablet_id')) & Q(password = data.get('password')))
             else:
                 tablet = Tablet.objects.filter(Q(name=data.get('tablet_id')) & Q(password = ''))
             serializer = TabletSerializer(tablet, many=True)
-            return Response({"tablet": serializer.data})
+            
+            if serializer.data is not None and \
+                len(serializer.data) > 0 and \
+                serializer.data[0]['sweep_ids'] is not None and \
+                len(serializer.data[0]['sweep_ids']) > 0 and \
+                    serializer.data[0]['sweep_ids'].split(',')[0] is not None:
+
+                first_sweep = Sweepstakes.objects.get(
+                    pk=serializer.data[0]['sweep_ids'].split(',')[0]
+                )
+
+                sweepstakes_serializer = SweepstakesSerializer(
+                    first_sweep
+                )
+
+                # if sweepstakes_serializer.is_valid():
+                return Response({
+                    "tablet": serializer.data,
+                    "first_sweep": sweepstakes_serializer.data
+                })
+
+                # return Response({
+                    # "tablet": serializer.data
+                # })
+            else:
+                return Response({"tablet": serializer.data})
+
+
+            # if deserialized.is_valid():
+            #     print(
+            #         'from deserialized.data!!',
+            #         deserialized.validated_data['sweep_ids']
+            #     )
+            #     return Response({"tablet": deserialized.data})
+
+            return Response({"message": "error."}, status=503)
         elif data.get('tablet_id_code'):
             tablet = Tablet.objects.filter(Q(tablet_id_code=data.get('tablet_id_code')) & Q(login_status = True))
             serializer = TabletSerializer(tablet, many=True)
@@ -172,25 +279,25 @@ class SurveyViewSet(APIView):
     def get(self, request, pk=None):
         saved_survey = Survey.objects.filter(pk=pk)
         survey_questions = []
-        if saved_survey[0].question_1 != None:
+        if saved_survey[0].question_1 is not None:
             survey_questions.append(saved_survey[0].question_1)
-        if saved_survey[0].question_2 != None:
+        if saved_survey[0].question_2 is not None:
             survey_questions.append(saved_survey[0].question_2)
-        if saved_survey[0].question_3 != None:
+        if saved_survey[0].question_3 is not None:
             survey_questions.append(saved_survey[0].question_3)
-        if saved_survey[0].question_4 != None:
+        if saved_survey[0].question_4 is not None:
             survey_questions.append(saved_survey[0].question_4)
-        if saved_survey[0].question_5 != None:
+        if saved_survey[0].question_5 is not None:
             survey_questions.append(saved_survey[0].question_5)
-        if saved_survey[0].question_6 != None:
+        if saved_survey[0].question_6 is not None:
             survey_questions.append(saved_survey[0].question_6)
-        if saved_survey[0].question_7 != None:
+        if saved_survey[0].question_7 is not None:
             survey_questions.append(saved_survey[0].question_7)
-        if saved_survey[0].question_8 != None:
+        if saved_survey[0].question_8 is not None:
             survey_questions.append(saved_survey[0].question_8)
-        if saved_survey[0].question_9 != None:
+        if saved_survey[0].question_9 is not None:
             survey_questions.append(saved_survey[0].question_9)
-        if saved_survey[0].question_10 != None:
+        if saved_survey[0].question_10 is not None:
             survey_questions.append(saved_survey[0].question_10)
         
         answers_text_array = []
@@ -339,16 +446,53 @@ class SurveyViewSet(APIView):
         saved_survey.delete()
         return Response({"message": "Survey has been deleted."},status=204)
 
+
+class DBSweepCheckInViewSet(APIView):
+    def get(self, request, pk=None):
+        data = request.query_params
+        phone = data.get('phone');
+        checkin = SweepCheckIn.objects.prefetch_related(
+            'user_id'
+        )
+        checkin = checkin.filter(Q(user_id__phone=phone)).order_by('-check_time').first()
+        # .first()
+        # checkin = SweepCheckIn.objects.filter(Q(user_id_id=data.get('user_id')) & Q(tablet_id_id=data.get('tablet_id')) & Q(sweep_id_id=data.get('sweep_id'))).order_by('-check_time').first()
+        
+        # add end sweepstakes logic
+        # if checkin is not None:
+        #     serializer = SweepCheckInSerializer(checkin)
+        #     print('checkincheckin', serializer.data)
+        #     return Response({
+        #             "message": "You have already checked into The Office today. Come back and check in again tomorrow!"
+        #         },
+        #         status=422
+        #     )
+        
+        serializer = DBSweepCheckInSerializer(checkin)
+        return Response({"checkin": serializer.data})
+
 class SweepCheckInViewSet(APIView):
     def get(self, request, pk=None):
         data = request.query_params
         checkin = SweepCheckIn.objects.filter(Q(user_id_id=data.get('user_id')) & Q(tablet_id_id=data.get('tablet_id')) & Q(sweep_id_id=data.get('sweep_id'))).order_by('-check_time').first()
+        
+        # add end sweepstakes logic
+        # if checkin is not None:
+        #     serializer = SweepCheckInSerializer(checkin)
+        #     print('checkincheckin', serializer.data)
+        #     return Response({
+        #             "message": "You have already checked into The Office today. Come back and check in again tomorrow!"
+        #         },
+        #         status=422
+        #     )
+        
         serializer = SweepCheckInSerializer(checkin)
         return Response({"checkin": serializer.data})
 
     def post(self, request):
         data = request.query_params
-        checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=data.get('check_time'), survey_enter_time=data.get('survey_enter_time'))
+        check_time = datetime.datetime.now();
+        checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=check_time, survey_enter_time=data.get('survey_enter_time'))
         checkin.survey_question_1 = data.get('survey_question_1')
         checkin.survey_question_2 = data.get('survey_question_2')
         checkin.survey_question_3 = data.get('survey_question_3')
@@ -364,16 +508,17 @@ class SweepCheckInViewSet(APIView):
         return Response({"success": "CheckIn '{}' created successfully".format(data)})
 
     def put(self, request, pk=None):
+        check_time = datetime.datetime.now();
         data = request.query_params
         checkins = SweepCheckIn.objects.filter(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'))
         if len(checkins) >= 1:
             checkin = checkins[0]
             if data.get('check_time') != None:
-                checkin.check_time = data.get('check_time')
+                checkin.check_time = check_time
             if data.get('survey_enter_time') != None:
                 checkin.survey_enter_time = data.get('survey_enter_time')
         else:
-            checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=data.get('check_time'), survey_enter_time=data.get('survey_enter_time'))
+            checkin = SweepCheckIn.objects.create(user_id_id=data.get('user_id'), tablet_id_id=data.get('tablet_id'), sweep_id_id=data.get('sweep_id'), check_time=check_time, survey_enter_time=data.get('survey_enter_time'))
         checkin.survey_question_1 = data.get('survey_question_1')
         checkin.survey_question_2 = data.get('survey_question_2')
         checkin.survey_question_3 = data.get('survey_question_3')

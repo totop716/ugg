@@ -2,9 +2,12 @@ from django.contrib import admin
 
 # Register your models here.
 
+from django.utils.html import format_html
 from django import forms
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
+from commons.utils import utils
+from rest_framework.authtoken.models import Token
 
 from .models import Entry, Lottery, SweepUser, Sweepstakes, Tablet, Survey
 from import_export.admin import ImportExportModelAdmin, ImportMixin
@@ -103,11 +106,21 @@ class SurveyChangeForm(forms.ModelForm):
         fields = ('name', 'questions_count')
 
 class SurveyAdmin(admin.ModelAdmin):
+    # def created(self, obj):
+    #     return format_html(
+    #         "<a href='{url}'>{created_at}</a>",
+    #         created_at=utils.get_created_at_str(obj),
+    #         url='/admin/home/survey/{}/change/'.format(obj.id)
+    #     )
+
+    # created.short_description = 'Date Created'
+
     form = SurveyChangeForm
     add_form = SurveyCreationForm
 
     fields = ('name', 'questions_count', 'question_1', 'question_2', 'question_3', 'question_4', 'question_5', 'question_6', 'question_7', 'question_8', 'question_9', 'question_10')
-    list_display = ('name','questions_count','created_date')
+    # list_display = ('name','questions_count', 'created_date')
+    list_display = ('name','questions_count', 'created_at')
 
 
 admin.site.register(Survey, SurveyAdmin)
@@ -146,3 +159,5 @@ admin.site.register(Tablet, TabletAdmin)
 
 admin.site.unregister(Site)
 admin.site.unregister(User)
+
+admin.site.unregister(Token)

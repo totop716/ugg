@@ -1,12 +1,31 @@
-from django.db import models
-
 # Create your models here.
 
+import uuid
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
-from django.contrib.auth.models import User
-from customauth.models import MyUser
+# from django.contrib.postgres.fields import ArrayField
+# from django.contrib.auth.models import User
+# from customauth.models import MyUser
 from datetime import datetime
+from django.core.exceptions import ValidationError
+from storages.backends.s3boto3 import S3Boto3Storage
+import django.utils.timezone
+
+from commons.models import AbstractTableTimestamp
+
+sthree = S3Boto3Storage()
+
+
+def validate_image(image):
+    """
+    :image: django.core.files.uploadedfile
+    """
+
+    file_size = image.size
+    limit_mb = 2
+    limit = limit_mb * 1024 * 1024
+    if file_size > limit:
+        raise ValidationError("Max size of file is %s MB" % limit_mb)
+
 
 class CustomText(models.Model):
     title = models.CharField(max_length=150)
@@ -34,78 +53,95 @@ class HomePage(models.Model):
     def field(self):
         return 'body'
 
+
 class Entry(models.Model):
     name = models.CharField(max_length=100)
+
     class Meta:
         verbose_name_plural = 'Entries'
-    
+
     def __str__(self):
         return self.name
 
     @property
     def api(self):
         return f'/api/v1/entry/{self.id}/'
+
     @property
     def field(self):
         return 'name'
 
+
 class Lottery(models.Model):
     name = models.CharField(max_length=100)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+
     class Meta:
         verbose_name_plural = 'Lotteries'
-    
+
     def __str__(self):
         return self.name
 
     @property
     def api(self):
         return f'/api/v1/lottery/{self.id}/'
+
     @property
     def field(self):
         return 'name'
 
+
 class Settings(models.Model):
     device_code = models.CharField(max_length=100)
+
     class Meta:
         verbose_name_plural = 'Settings'
-    
+
     def __str__(self):
         return self.device_code
 
     @property
     def api(self):
         return f'/api/v1/settings/{self.id}/'
+
     @property
     def field(self):
         return 'device_code'
 
+
 class Participants(models.Model):
     name = models.CharField(max_length=100)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+
     class Meta:
         verbose_name_plural = 'Lotteries'
-    
+
     def __str__(self):
         return self.name
 
     @property
     def api(self):
         return f'/api/v1/lottery/{self.id}/'
+
     @property
     def field(self):
         return 'name'
 
+
 class SurveyQuestions(models.Model):
-    question_type = models.CharField('Question 1', choices=(('type_1', 'Multiple Choice'), ('type_2', 'Multiple Choice (Images)')), max_length=10)
+    question_type = models.CharField('Question 1', choices=((
+        'type_1',
+        'Multiple Choice'
+    ), ('type_2', 'Multiple Choice (Images)')), max_length=10)
     question_text = models.TextField("Question")
     options_count = models.CharField('Number of Options', choices=((2, 2), (3, 3), (4, 4), (5, 5), (6, 6)), max_length=10)
 
     class Meta:
         verbose_name_plural = 'surveyquestion'
-    
+
     def __str__(self):
         return self.question_text
+
 
 class SurveyAnswerText(models.Model):
     option_text = models.TextField()
@@ -115,29 +151,33 @@ class SurveyAnswerText(models.Model):
 
     class Meta:
         verbose_name_plural = 'surveyanswertext'
-    
+
     def __str__(self):
         return self.option_text
 
+
 class SurveyAnswerImage(models.Model):
     option_image = models.ImageField()
-    option_tag = models.CharField(max_length = 100)
+    option_tag = models.CharField(max_length=100)
     option_complete = models.CharField('', choices=(('goto', 'If selected, go to question '), ('complete', 'If selected, complete survey')), max_length=10)
-    option_goquestion = models.CharField('', choices=((2, 2), (3, 3), (4, 4), (5, 5), (6, 6)), max_length=10)
+    option_goquestion = models.CharField('', choices=(
+        (2, 2), (3, 3), (4, 4), (5, 5), (6, 6)
+    ), max_length=10)
     option_question = models.ForeignKey(SurveyQuestions, on_delete=models.CASCADE)
     question_number = models.CharField('', max_length=2, null=True, blank=True)
     survey_id = models.CharField('', max_length=10, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'surveyanswerimage'
-    
+
     def __str__(self):
         return self.option_tag
 
-class Survey(models.Model):
+
+class Survey(AbstractTableTimestamp):
     name = models.CharField('Survey Name', max_length=100)
     questions_count = models.CharField('Number of Questions', choices=(('1', '1'),('2', '2'),('3', '3'),('4', '4'),('5', '5'),('6', '6'),('7', '7'),('8', '8'),('9', '9'),('10', '10')), default=1, max_length=2)
-    created_date = models.CharField('Date Created', max_length = 100)
+    created_date = models.CharField('Date Created', max_length=100)
     question_1 = models.ForeignKey(SurveyQuestions, on_delete=models.CASCADE, related_name='question_1', blank=True, null=True)
     question_2 = models.ForeignKey(SurveyQuestions, on_delete=models.CASCADE, related_name='question_2', blank=True, null=True)
     question_3 = models.ForeignKey(SurveyQuestions, on_delete=models.CASCADE, related_name='question_3', blank=True, null=True)
@@ -161,6 +201,7 @@ class Survey(models.Model):
     @property
     def field(self):
         return 'name'
+
 
 class SweepUser(models.Model):
     first_name = models.CharField("First Name", max_length =50)
@@ -239,7 +280,7 @@ class SweepUser(models.Model):
     is_admin = models.BooleanField(default=False)
     check_time = models.CharField(max_length =200, null=True)
     suite_po_box = models.CharField("Suite/PO Box", max_length =50, default='', null=True, blank=True)
-    created_date = models.DateTimeField("Created", default=datetime.now())
+    created_date = models.DateTimeField("Created", default=django.utils.timezone.now)
     label = models.CharField(max_length = 100, default="Added by Admin")
     password = models.CharField(max_length = 100, default='', blank=True)
     checkSMS = models.BooleanField('SMS', default=False)
@@ -247,23 +288,39 @@ class SweepUser(models.Model):
 
     class Meta:
         verbose_name_plural = 'Users'
-    
+
     def __str__(self):
         return self.email
 
     @property
     def api(self):
         return f'/api/v1/sweepusers/{self.phone}/'
+
     @property
     def field(self):
         return 'email'
 
+
 class Sweepstakes(models.Model):
     name = models.CharField(max_length=100)
-    startdate = models.DateTimeField(help_text="Time is in UTC - 5")
-    enddate = models.DateTimeField(help_text="Time is in UTC - 5")
-    logo = models.ImageField()
-    background = models.ImageField()
+    startdate = models.DateTimeField(help_text="Time is in UTC - 6")
+    enddate = models.DateTimeField(help_text="Time is in UTC - 6")
+
+    def file_name(self, filename):
+        ext = filename.split('.')[-1]
+        name = "photo/%s.%s" % (uuid.uuid4(), ext)
+        return name
+
+    logo = models.ImageField(
+        upload_to=file_name,
+        storage=sthree,
+        validators=[validate_image]
+    )
+    background = models.ImageField(
+        upload_to=file_name,
+        storage=sthree,
+        validators=[validate_image]
+    )
     disclaimer = models.TextField()
     fontsize = models.IntegerField()
     current = models.BooleanField()
@@ -276,7 +333,12 @@ class Sweepstakes(models.Model):
     can_generate_winner_multiple_times = models.CharField(max_length = 5)
     generate_winner_for_each_tabletid = models.CharField(max_length = 5)
     background_image_after_sweepstake_check = models.CharField(max_length = 5)
-    background_image_after_sweepstake = models.ImageField(null= True, blank = True)
+    background_image_after_sweepstake = models.ImageField(
+        upload_to=file_name,
+        storage=sthree,
+        validators=[validate_image],
+        blank=True
+    )
     survey1_check = models.CharField(max_length = 5)
     survey1_name = models.ForeignKey(Survey, related_name='survey1_name', on_delete=models.CASCADE, blank=True, null=True)
     survey2_check = models.CharField(max_length = 5)

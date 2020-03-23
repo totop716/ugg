@@ -3,7 +3,6 @@ import _ from 'lodash';
 import APIConstants from './constants';
 import APIUtils from './utils';
 
-
 class APIClient {
   constructor(url, method) {
     this.url = url;
@@ -12,7 +11,13 @@ class APIClient {
 
   fetchRequest = (url, fetchParams, resolve, reject) => {
     fetch(url, fetchParams)
-      .then(async (response) => {
+      .then(async response => {
+        if (response && response.status) {
+          if (response.status >= 400 && response.status <= 505) {
+            throw Error(response.status);
+          }
+        }
+
         if (!response.ok) {
           const data = await response.json();
 
@@ -22,27 +27,28 @@ class APIClient {
         return response;
       })
       .then(response => response.json())
-      .then((responseData) => {
+      .then(responseData => {
         resolve(responseData);
       })
-      .catch((error) => {
+      .catch(error => {
+        console.log('error', error);
         reject(error);
       });
-  }
+  };
 
-  performRequest = (headers, params, authorize, authType = null) => (
+  performRequest = (headers, params, authorize, authType = null) =>
     new Promise(async (resolve, reject) => {
       const defaultHeaders = {
         Accept: APIConstants.ContentType.JSON,
-        'Content-Type': APIConstants.ContentType.JSON,
+        'Content-Type': APIConstants.ContentType.JSON
       };
 
       const fetchParams = {
         method: this.method,
         headers: {
           ...defaultHeaders,
-          ...headers,
-        },
+          ...headers
+        }
       };
 
       if (_.size(params) > 0) {
@@ -63,16 +69,32 @@ class APIClient {
       }
 
       if (authorize) {
-        APIUtils.getAccessToken().then((token) => {
+        APIUtils.getAccessToken().then(token => {
+          if (!token) return reject({});
           fetchParams.headers.Authorization = `${authType} ${token}`;
+
+          // console.log(
+          //   'authed! fetchParamsfetchParams params',
+          //   this.url,
+          //   this.method,
+          //   fetchParams,
+          //   params
+          // );
 
           this.fetchRequest(this.url, fetchParams, resolve, reject);
         });
       } else {
+        // console.log(
+        //   'fetchParamsfetchParams params',
+        //   this.url,
+        //   this.method,
+        //   fetchParams,
+        //   params
+        // );
+
         this.fetchRequest(this.url, fetchParams, resolve, reject);
       }
-    })
-  )
+    });
 
   sendAuthenticatedRequest(authType, params = {}, headers = {}) {
     return this.performRequest(headers, params, true, authType);

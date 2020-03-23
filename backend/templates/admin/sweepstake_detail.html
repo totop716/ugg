@@ -31,7 +31,7 @@
 
 {% block content %}
   {% get_sweepstakedata request.GET.id as sweepstake %}
-  <div id="content-main">
+  <div id="content-main" class="sweepstake_detail">
     <div class="sweepstake_row">
       <h1>{{ sweepstake.name }}</h1>
       <a class='btn btn-info' href='/admin/settings?select=tablet&id={{sweepstake.id}}'>Settings</a>
@@ -77,7 +77,7 @@
             <td>
               {{ tablet.tablet_info.name }}
             </td>
-            <td>
+            <td class="check_time">
               {{ tablet.check_time }}
             </td>
           </tr>

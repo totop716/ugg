@@ -78,7 +78,7 @@ class MyUserSerializer(serializers.ModelSerializer):
 class SweepUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = SweepUser
-        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'suite_po_box', 'label', 'password','checkSMS','checkEmail')
+        fields = ('id', 'first_name', 'last_name', 'phone','email', 'address', 'city', 'state', 'zipcode', 'check_time', 'suite_po_box', 'label', 'password','checkSMS','checkEmail', 'created_date')
         extra_kwargs = {
             'first_name' : {
                 'required': True
@@ -153,12 +153,20 @@ class HomePageSerializer(serializers.ModelSerializer):
         model = HomePage
         fields = '__all__'
 
+
+class DBSweepCheckInSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SweepCheckIn
+        fields = '__all__'
+
+
 class SweepCheckInSerializer(serializers.ModelSerializer):
     class Meta:
         model = SweepCheckIn
         fields = '__all__'
 
     def create(self, validated_data):
+        print('checkin create!')
         tablet = SweepCheckIn.objects.create(
             user_id=validated_data.get('user_id_id'),
             sweep_id=validated_data.get('sweep_id_id'),
@@ -168,6 +176,7 @@ class SweepCheckInSerializer(serializers.ModelSerializer):
         return tablet
 
     def update(self, instance, validated_data):
+        print('checkin update!')
         if validated_data.get('user_id_id') != None:
             instance.user_id_id = validated_data.get('user_id_id')
         if validated_data.get('sweep_id_id') != None:

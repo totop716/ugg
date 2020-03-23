@@ -4,7 +4,10 @@ body{
 }
 
 #content-main{
-  width: 100%
+  width: 100%;
+  max-height: 640px;
+  overflow-y: scroll;
+  padding-bottom: 100px;
 }
 
 .sweepstakes{
@@ -180,6 +183,10 @@ body{
 
 #survey_form.form-horizontal fieldset{
   margin-top: 0;
+}
+
+#survey_form .errors {
+  border: 1px solid #ba2121 !important;
 }
 
 #survey_form .row{
@@ -367,4 +374,12 @@ body{
   justify-content: center;
   align-items: center;
   margin-bottom: 0;
+}
+
+#changelist-form:not(.user_list_form) th.action-checkbox-column {
+  display: none;
+}
+
+#changelist-form:not(.user_list_form) td.action-checkbox {
+  display: none;
 }

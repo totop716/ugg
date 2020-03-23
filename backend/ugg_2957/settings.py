@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import environ
+from django.conf.locale.en import formats as en_formats
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +28,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=True)
+DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = ['*']
 
@@ -49,24 +51,27 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.redirects',
-    'import_export',
-    'home'
+    'import_export'
+    # 'home'
 ]
 LOCAL_APPS = [
-    # 'home',
+    'commons',
+    'home',
     'customauth'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
-    # 'rest_framework.authtoken',
+    # 'rest_auth',
+    # 'rest_auth.registration',
+    'rest_framework.authtoken',
     'bootstrap4',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',
+    'allauth.socialaccount'
     # 'allauth.socialaccount.providers.google',
 ]
 
-INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS += THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -168,12 +173,29 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Chicago'
+# DATE_FORMAT = 'm/d/Y'
+# TIME_FORMAT = 'h:i A'
+# DATETIME_FORMAT = DATE_FORMAT + ' ' + TIME_FORMAT
+en_formats.DATETIME_FORMAT = 'm/d/y h:i A'
 
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
+
+MEDIA_URL = '/media/'
+
+# AWS_ACCESS_KEY_ID = env.str('AWS_ACCESS_KEY_ID', '')
+# AWS_SECRET_ACCESS_KEY = env.str('AWS_SECRET_ACCESS_KEY', '')
+AWS_QUERYSTRING_AUTH = False
+AWS_ACCESS_KEY_ID = 'AKIA4KGTUZ6KB25CDRGJ'
+AWS_SECRET_ACCESS_KEY = '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'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_DEFAULT_ACL = 'public-read'
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+AWS_STORAGE_BUCKET_NAME = 'ugg-2957'
+AWS_S3_REGION_NAME = 'us-east-1'
 
 
 # Static files (CSS, JavaScript, Images)
@@ -186,6 +208,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

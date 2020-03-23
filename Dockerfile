@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.10
 
 # Install system dependencies
 RUN apk add --no-cache --update \
@@ -9,6 +9,7 @@ RUN apk add --no-cache --update \
   python3 \
   python3-dev \
   py3-pip \
+  curl \
   # Pillow dependencies
   jpeg-dev \
   zlib-dev \
@@ -31,7 +32,7 @@ ADD ./ /app/webapp/
 WORKDIR /app/webapp/frontend
 
 # Install frontend dependencies
-RUN npm ci
+# RUN npm ci
 
 WORKDIR /app/webapp/backend
 

@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Image,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import {
   Button,
   Container,
@@ -11,14 +7,14 @@ import {
   Form,
   Item,
   Input,
-  Text,
+  Text
 } from 'native-base';
 
 import styles from './styles';
 
 class Login extends Component {
   state = {
-    email: '',
+    email: ''
   };
 
   // navigate to home after request of forgot password
@@ -26,12 +22,12 @@ class Login extends Component {
     // TODO: Forgot Password
 
     this.props.navigation.navigate('Login');
-  }
+  };
 
   // navigate to login screen
   onLoginButtonPressed = () => {
     this.props.navigation.navigate('Login');
-  }
+  };
 
   render() {
     return (
@@ -48,11 +44,7 @@ class Login extends Component {
 
           {/* Form */}
           <Form style={styles.form}>
-            <Item
-              style={styles.item}
-              rounded
-              last
-            >
+            <Item style={styles.item} rounded last>
               <Input
                 style={styles.input}
                 placeholder="Email"
@@ -62,7 +54,8 @@ class Login extends Component {
               />
             </Item>
             <Text style={styles.resetInstructionsText}>
-              Enter your email below to receive your password reset instructions.
+              Enter your email below to receive your password reset
+              instructions.
             </Text>
           </Form>
 
@@ -82,7 +75,9 @@ class Login extends Component {
 
             {/* Signup Button */}
             <View style={styles.loginContainer}>
-              <Text style={styles.rememberAccountText}>Remember your account?</Text>
+              <Text style={styles.rememberAccountText}>
+                Remember your account?
+              </Text>
               <TouchableOpacity onPress={this.onLoginButtonPressed}>
                 <Text style={styles.loginText}>Login Now.</Text>
               </TouchableOpacity>
